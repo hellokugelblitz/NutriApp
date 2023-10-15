@@ -8,5 +8,7 @@ public class Recipe : PreparedFood<Ingredient>
 
     public string[] Instructions { get; }
 
-    public void AddInstruction(string step) {}
+    public Recipe(string name) : base(name) {}
+
+    public void AddInstruction(string step) => instructions.Add(step);
 }

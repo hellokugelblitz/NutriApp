@@ -7,19 +7,77 @@ public abstract class PreparedFood<T> : Food where T : Food
     private string name;
     private Dictionary<T, double> children;
 
-    /// <summary>
-    /// Food that 
-    /// </summary>
-    public Dictionary<T, double> Children { get; }
-    public Dictionary<T, double> Ingredients { get; }
-    public string Name { get; }
-    public double Calories { get; }
-    public double Fat { get; }
-    public double Protein { get; }
-    public double Fiber { get; }
-    public double Carbohydrates { get; }
+    public Dictionary<T, double> Children => children;
+    public string Name => name;
 
-    public void AddChild(T child, double quantity) {}
+    public Dictionary<Ingredient, double> Ingredients { get; }
+    
+    public double Calories
+    {
+        get
+        {
+            double result = 0.0;
+            foreach (T child in children.Keys)
+                result += child.Calories;
 
-    public void RemoveChild(T child) {}
+            return result;
+        }
+    }
+
+    public double Fat
+    {
+        get
+        {
+            double result = 0.0;
+            foreach (T child in children.Keys)
+                result += child.Fat;
+
+            return result;
+        }
+    }
+
+    public double Protein
+    {
+        get
+        {
+            double result = 0.0;
+            foreach (T child in children.Keys)
+                result += child.Protein;
+
+            return result;
+        }
+    }
+
+    public double Fiber
+    {
+        get
+        {
+            double result = 0.0;
+            foreach (T child in children.Keys)
+                result += child.Fiber;
+
+            return result;
+        }
+    }
+
+    public double Carbohydrates
+    {
+        get
+        {
+            double result = 0.0;
+            foreach (T child in children.Keys)
+                result += child.Carbohydrates;
+
+            return result;
+        }
+    }
+
+    public PreparedFood(string name)
+    {
+        this.name = name;
+    }
+
+    public void AddChild(T child, double quantity) => children.Add(child, quantity);
+
+    public void RemoveChild(T child) => children.Remove(child);
 }
