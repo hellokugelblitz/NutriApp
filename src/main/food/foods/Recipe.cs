@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 
-namespace NutriApp.Food
+namespace NutriApp.Food;
+
+public class Recipe : PreparedFood<Ingredient>
 {
-    public class Recipe : PreparedFood<Ingredient>
-    {
-        private List<string> instructions;
+    private List<string> instructions;
 
-        public string[] Instructions { get; }
+    public string[] Instructions { get; }
 
-        public void AddInstruction(string step) {}
-    }
+    public void AddInstruction(string step) {}
 }

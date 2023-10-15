@@ -1,4 +1,3 @@
-namespace NutriApp.Food
-{
-    public class Meal : PreparedFood<Recipe> { }
-}
+namespace NutriApp.Food;
+
+public class Meal : PreparedFood<Recipe> { }
