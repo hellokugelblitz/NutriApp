@@ -8,15 +8,16 @@ public class User {
     private double weight;
     private DateTime birthday;
 
-    public User(string name, int height, double weight, DateTime birthday) {
+    public User(string name, int height, double weight, DateTime birthday) 
+    {
         this.name = name;
         this.height = height;
         this.weight = weight;
         this.birthday = birthday;
     }
 
-    public string GetName{get => name;}
-    public int GetHeight{get => height;}
-    public double GetWeight{get => weight;}
-    public DateTime GetBirthday{get => birthday;}
+    public string Name => name;
+    public int Height => height;
+    public double Weight => weight;
+    public DateTime Birthday => birthday;
 }
