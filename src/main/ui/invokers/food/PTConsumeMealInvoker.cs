@@ -1,19 +1,13 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp;
+
+class PTConsumeMealInvoker : CommandInvoker
 {
-    class PTConsumeMealInvoker : CommandInvoker
+    public PTConsumeMealInvoker(Command command) : base(command) { }
+
+    public override void Invoke()
     {
-        protected Command command;
-         
-        public PTConsumeMealInvoker(Command command)
-        {
-            this.command = command;
-        }
-
-        public override void Invoke()
-        {
-
-        }
+        
     }
 }

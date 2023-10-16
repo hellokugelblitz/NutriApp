@@ -9,6 +9,4 @@ namespace NutriApp
 
         public abstract void Execute();
     }
-
-    
 }
