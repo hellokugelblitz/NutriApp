@@ -19,7 +19,7 @@ namespace NutriApp
         public WorkoutController WorkoutControl { get => workout; }
         public FoodController FoodControl { get; }
         public DateTime TimeStamp { get => DateTime.Now; }
-        public int DailyCalories { get; }
+        public double DailyCaloriesConsumed { get; }
         public User User { get => user; set => user = value; }
 
         public App() {}

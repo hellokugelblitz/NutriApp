@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NutriApp
 {
@@ -28,35 +29,35 @@ namespace NutriApp
         }
     }
 
-    class Food : Menu
+    class FoodMenu : Menu
     {
         private Dictionary<string, CommandInvoker> actions;
         private UIController uIController;
 
-        public Food(UIController uIController)
+        public FoodMenu(UIController uIController)
         {
             this.uIController = uIController;
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new Food(uIController));
+            uIController.SetMenu(new FoodMenu(uIController));
         }
     }
 
-    class History : Menu
+    class HistoryMenu : Menu
     {
         private Dictionary<string, CommandInvoker> actions;
         private UIController uIController;
 
-        public History(UIController uIController)
+        public HistoryMenu(UIController uIController)
         {
             this.uIController = uIController;
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new History(uIController));
+            uIController.SetMenu(new HistoryMenu(uIController));
         }
     }
 
