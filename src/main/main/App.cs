@@ -1,18 +1,22 @@
 using System;
 using NutriApp.Food;
 using NutriApp.History;
+using NutriApp.Goal;
+using NutriApp.Workout;
 
 namespace NutriApp
 {
     public class App
     {
         private HistoryController history;
-        // private GoalController goal;
+        private GoalController goal;
+        private WorkoutController workout;
         private FoodController food;
         private DateTime date;
         private User user;
         public HistoryController HistoryControl;
-        // public GoalController GoalControl;
+        public GoalController GoalControl { get => goal; }
+        public WorkoutController WorkoutControl { get => workout; }
         public FoodController FoodControl { get; }
         public DateTime TimeStamp { get => DateTime.Now; }
         public int DailyCalories { get; }
