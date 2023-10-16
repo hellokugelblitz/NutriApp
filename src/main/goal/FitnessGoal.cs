@@ -3,7 +3,7 @@ namespace NutriApp.Goal;
 using System.Collections.Generic;
 using NutriApp.Workout;
 
-class FitnessGoal : GoalDecorator {
+public class FitnessGoal : GoalDecorator {
     public List<Workout> RecommendedWorkouts { get; }
 
     public FitnessGoal(IGoal goal, List<Workout> recommendedWorkouts) : base(goal) {

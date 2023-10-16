@@ -3,7 +3,7 @@ namespace NutriApp.Goal;
 using System.Collections.Generic;
 using NutriApp.Workout;
 
-abstract class GoalDecorator : IGoal {
+public abstract class GoalDecorator : IGoal {
     private IGoal goal;
     public double WeightGoal { get; }
     public int DailyCalorieGoal { get; }
