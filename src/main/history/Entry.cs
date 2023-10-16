@@ -10,7 +10,7 @@ public class Entry<T> {
         this.value = value;
     }
 
-    public DateTime GetTimeStamp{get => timeStamp;}
+    public DateTime TimeStamp{get => timeStamp;}
 
-    public T GetValue{get => value;}
+    public T Value{get => value;}
 }

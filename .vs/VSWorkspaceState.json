@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\main",
+    "\\src\\main\\ui",
+    "\\src\\main\\ui\\commands",
+    "\\src\\main\\ui\\commands\\fitness",
+    "\\src\\main\\ui\\invokers",
+    "\\src\\main\\ui\\invokers\\food"
+  ],
+  "SelectedNode": "\\src\\main\\ui\\Command.cs",
+  "PreviewInSolutionExplorer": false
+}
