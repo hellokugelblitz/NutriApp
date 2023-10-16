@@ -3,7 +3,8 @@ namespace NutriApp.Goal;
 using System.Collections.Generic;
 using NutriApp.Workout;
 
-public class MaintainWeightGoal : IGoal {
+public class MaintainWeightGoal : IGoal
+{
     private readonly GoalController controller;
     public double WeightGoal { get; }
     public int DailyCalorieGoal { get; }
@@ -15,7 +16,7 @@ public class MaintainWeightGoal : IGoal {
         this.DailyCalorieGoal = 2500;
     }
 
-    public void CheckWeight(double userWeight) {}
+    public void CheckWeight(double userWeight) { }
 
-	public void IncorporateFitness(List<Workout> recommendedWorkouts) {}
+    public void IncorporateFitness(List<Workout> recommendedWorkouts) { }
 }
