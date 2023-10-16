@@ -1,3 +1,5 @@
+using System;
+
 namespace NutriApp;
 
 public class User {
