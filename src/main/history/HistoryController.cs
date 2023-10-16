@@ -9,11 +9,11 @@ public class HistoryController {
     private List<Entry<Workout.Workout>> workouts = new();
     private List<Entry<double>> weights = new ();
     private List<Entry<Meal>> meals = new ();
-    private List<Entry<(double, double)>> calories = new();
+    private List<Entry<CalorieStorage>> calories = new();
     
     public List<Entry<double>> Weights  => weights; 
     public List<Entry<Meal>> Meals => meals; 
-    public List<Entry<(double, double)>> Calories => calories; 
+    public List<Entry<CalorieStorage>> Calories => calories; 
     public List<Entry<Workout.Workout>> Workouts => workouts;
     
     public HistoryController(App app) 
@@ -34,7 +34,7 @@ public class HistoryController {
 
     public void AddCalories(DateTime date) 
     {
-        calories.Add(new Entry<(double, double)>(app.TimeStamp, (GetCalorieCount(date), -1d)));
+        calories.Add(new Entry<CalorieStorage>(app.TimeStamp, new CalorieStorage(GetCalorieCount(date), -1d)));
     }
 
     public void AddWorkout(Workout.Workout workout) 
@@ -42,6 +42,7 @@ public class HistoryController {
         workouts.Add(new Entry<Workout.Workout>(app.TimeStamp, workout));
     }
 
+    //gets the calories consumed on the day given from the history.
     public double GetCalorieCount(DateTime date) 
     {
         double calorieCount = 0;
@@ -58,5 +59,6 @@ public class HistoryController {
 
     private void Save() { }
     private void Load() { }
-
 }
+
+public record CalorieStorage(double consumedCalories, double targetCalories);

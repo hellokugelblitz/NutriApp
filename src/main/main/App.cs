@@ -14,7 +14,8 @@ namespace NutriApp
         private FoodController food;
         private DateTime date;
         private User user;
-        public HistoryController HistoryControl;
+        
+        public HistoryController HistoryControl => history;
         public GoalController GoalControl { get => goal; }
         public WorkoutController WorkoutControl { get => workout; }
         public FoodController FoodControl { get; }
