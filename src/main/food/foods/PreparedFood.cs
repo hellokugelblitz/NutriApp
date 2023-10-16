@@ -72,10 +72,7 @@ public abstract class PreparedFood<T> : Food where T : Food
         }
     }
 
-    public PreparedFood(string name)
-    {
-        this.name = name;
-    }
+    public PreparedFood(string name) => this.name = name;
 
     public void AddChild(T child, double quantity) => children.Add(child, quantity);
 
