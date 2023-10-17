@@ -3,7 +3,7 @@ namespace NutriApp.Goal;
 using System.Collections.Generic;
 using NutriApp.Workout;
 
-public class GainWeightGoal : IGoal
+public class GainWeightGoal : Goal
 {
     private readonly GoalController controller;
     public double WeightGoal { get; }

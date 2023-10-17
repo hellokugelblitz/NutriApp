@@ -5,9 +5,9 @@ using System;
 public class GoalController
 {
     private readonly App app;
-    private IGoal goal;
+    private Goal goal;
 
-    public IGoal Goal { get; set; }
+    public Goal Goal { get; set; }
     public void SetGoalByIndex(int index, int weight) {
         switch (index)
         {
