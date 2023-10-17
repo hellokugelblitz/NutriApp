@@ -1,19 +1,13 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp;
+
+class PTSetDayLengthInvoker : CommandInvoker
 {
-    class PTSetDayLengthInvoker : CommandInvoker
+    public PTSetDayLengthInvoker(Command command) : base(command) { }
+
+    public override void Invoke()
     {
-        protected Command command;
-
-        public PTSetDayLengthInvoker(Command command)
-        {
-            this.command = command;
-        }
-
-        public void Invoke()
-        {
-
-        }
+        
     }
 }
