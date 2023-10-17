@@ -8,6 +8,6 @@ class PTCreateRecipeInvoker : CommandInvoker
 
     public override void Invoke()
     {
-        
+        command.Execute();   
     }
 }

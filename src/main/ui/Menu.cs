@@ -16,11 +16,19 @@ namespace NutriApp
         public Fitness(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, CommandInvoker>
+            {
+                { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app)) },
+                { "Set Fitness Goal", new PTAddWorkoutInvoker(new SetFitnessGoalCommand(uIController.app)) },
+                { "Set Weight Goal", new PTSetWeightGoalInvoker(new SetWeightGoalCommand(uIController.app)) },
+                { "View Target Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app)) }
+            };
         }
 
         public void PromptWeight(DateTime datetime)
         {
             // uses dependency arrow to PTSetWeightInvoker
+            actions["Set Weight Goal"].Invoke();
         }
 
         public void Handle()
@@ -37,6 +45,14 @@ namespace NutriApp
         public FoodMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, CommandInvoker>
+            {
+                { "Consume Meal", new PTConsumeMealInvoker(new ConsumeMealCommand(uIController.app)) },
+                { "Create Recipe", new PTCreateRecipeInvoker(new CreateRecipeCommand(uIController.app)) },
+                { "Get Shopping List", new PTGetShoppingListInvoker(new GetShoppingListCommand(uIController.app)) },
+                { "Purchase Food", new PTPurchaseFoodInvoker(new PurchaseFoodCommand(uIController.app)) },
+                { "Search Ingredients", new PTSearchingIngredientsInvoker(new SearchingIngredientsCommand(uIController.app)) }
+            };
         }
 
         public void Handle()
@@ -53,6 +69,13 @@ namespace NutriApp
         public HistoryMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, CommandInvoker>
+            {
+                { "View Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app)) },
+                { "View Meals", new PTViewMealsInvoker(new ViewMealsCommand(uIController.app)) },
+                { "View Weight", new PTViewWeightInvoker(new ViewWeightCommand(uIController.app)) },
+                { "View Workouts", new PTViewWorkoutsInvoker(new ViewWorkoutsCommand(uIController.app)) }
+            };
         }
 
         public void Handle()
@@ -69,6 +92,11 @@ namespace NutriApp
         public ProfileMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, CommandInvoker>
+            {
+                { "Clear History", new PTClearHistoryInvoker(new ClearHistoryCommand(uIController.app)) },
+                { "Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app)) }
+            };
         }
 
         public void Handle()
@@ -79,7 +107,6 @@ namespace NutriApp
 
     class MainMenu : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
         private UIController uIController;
 
         public MainMenu(UIController uIController)
