@@ -8,7 +8,7 @@ namespace NutriApp.UI
         void Handle();
     }
 
-    class Fitness<T> : Menu
+    class FitnessMenu<T> : Menu
     {
         private Dictionary<string, CommandInvoker<T>> actions;
         private UIController uIController;
@@ -32,23 +32,31 @@ namespace NutriApp.UI
 
         public void Handle()
         {
-            uIController.menu = new Fitness<T>(uIController);
+            uIController.menu = new FitnessMenu<T>(uIController);
         }
     }
 
-    class FoodMenu : Menu
+    class FoodMenu<T> : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
+        private Dictionary<string, CommandInvoker<T>> actions;
         private UIController uIController;
 
         public FoodMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, CommandInvoker<T>>
+            {
+                { "Consume Meal", new PTConsumeMealInvoker(new ConsumeMealCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "Create Recipe", new PTCreateRecipesInvoker(new CreateRecipesCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "Get Shopping List", new PTGetShoppingListInvoker(new GetShoppingListCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "Purchase Food", new PTPurchaseFoodInvoker(new PurchaseFoodCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "Search Ingredients", new PTSearchIngredientsInvoker(new SearchingIngredientsCommand(uIController.app), uIController.app) as CommandInvoker<T> }
+            };
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new FoodMenu(uIController));
+            uIController.menu = new FoodMenu<T>(uIController);
         }
     }
 

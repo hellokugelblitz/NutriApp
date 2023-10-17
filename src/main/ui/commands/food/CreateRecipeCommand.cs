@@ -1,8 +1,9 @@
 using System;
+using NutriApp.Food;
 
 namespace NutriApp;
 
-class CreateRecipeCommand<T> : Command<T>
+class CreateRecipeCommand : Command<Recipe>
 {
     private App app;
 
@@ -11,7 +12,7 @@ class CreateRecipeCommand<T> : Command<T>
         this.app = app;
     }
 
-    public override void Execute(T userinput)
+    public override void Execute(Recipe userinput)
     {
         
     }

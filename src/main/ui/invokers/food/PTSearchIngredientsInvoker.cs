@@ -1,14 +1,14 @@
 using System;
+using NutriApp.Food;
 
-namespace NutriApp.UI
+namespace NutriApp.UI;
+
+class PTSearchIngredientsInvoker : CommandInvoker<Ingredient>
 {
-	class PTSearchIngredientsInvoker : CommandInvoker
+	public PTSearchIngredientsInvoker(Command<Ingredient> command) : base(command) { }
+
+	public override void Invoke()
 	{
-		public PTSearchIngredientsInvoker(Command command): base(command) { }
 
-		public override void Invoke()
-		{
-
-		}
 	}
 }

@@ -1,19 +1,19 @@
 using System;
+using NutriApp.Food;
 
-namespace NutriApp
+namespace NutriApp.UI;
+
+class PurchaseFoodCommand : Command<Food.Food>
 {
-    class PurchaseFoodCommand<T> : Command<T>
+    private App app;
+
+    public PurchaseFoodCommand(App app)
     {
-        private App app;
+        this.app = app;
+    }
 
-        public PurchaseFoodCommand(App app)
-        {
-            this.app = app;
-        }
+    public override void Execute(Food.Food userinput)
+    {
 
-        public override void Execute(T userinput)
-        {
-            
-        }
     }
 }

@@ -1,19 +1,19 @@
 using System;
+using NutriApp.Food;
 
-namespace NutriApp
+namespace NutriApp.UI;
+
+class SearchingIngredientsCommand : Command<Ingredient>
 {
-    class SearchingIngredientsCommand<T> : Command<T>
+    private App app;
+
+    public SearchingIngredientsCommand(App app)
     {
-        private App app;
+        this.app = app;
+    }
 
-        public SearchingIngredientsCommand(App app)
-        {
-            this.app = app;
-        }
+    public override void Execute(Ingredient userinput)
+    {
 
-        public override void Execute(T userinput)
-        {
-            
-        }
     }
 }
