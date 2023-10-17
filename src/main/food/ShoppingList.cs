@@ -19,18 +19,18 @@ namespace NutriApp.Food
         //Other methods
         public void Update(Recipe recipe)
         {
-            this.criteria.Update(recipe);
+            criteria.Update(recipe);
         }
         public void SetCriteria(ShoppingListCriteria newCriteria)
         { 
-            this.criteria = newCriteria; 
+            criteria = newCriteria; 
         }
         public void AddItem(Ingredient ingredient, double amt)
         {
             //If we cant find it in our list we add it with the amount
             if(!list.ContainsKey(ingredient))
             {
-                this.list.Add(ingredient, amt);
+                list.Add(ingredient, amt);
                 return;
             }
 
@@ -61,10 +61,17 @@ namespace NutriApp.Food
     public class SpecificRecipeCriteria : ShoppingListCriteria {
         public void Update(Recipe recipe) 
         { 
-            //TODO: CONCRETE IMPLEMENTATION
+            foreach (var item in recipe.Children)
+            {
+                //if the item.key exists inside of our shopping list dict
+                    //If the current value of  isnt larger 
+                        //we update it to the minimum
+                //else
+                    //Enter that item into the list under new key
+                    //Set that to the min
+            }
         }
     }
 
     //Here we define any future criteria we want to.
-
 }
