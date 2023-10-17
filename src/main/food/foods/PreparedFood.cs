@@ -10,7 +10,7 @@ public abstract class PreparedFood<T> : Food where T : Food
     public Dictionary<T, double> Children => children;
     public string Name => name;
 
-    public Dictionary<Ingredient, double> Ingredients { get; }
+    public abstract Dictionary<Ingredient, double> Ingredients { get; }
     
     public double Calories
     {
