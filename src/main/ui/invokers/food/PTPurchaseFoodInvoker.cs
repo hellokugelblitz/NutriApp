@@ -1,13 +1,14 @@
 using System;
 
-namespace NutriApp;
-
-class PTPurchaseFoodInvoker : CommandInvoker
+namespace NutriApp.UI
 {
-    public PTPurchaseFoodInvoker(Command command) : base(command) { }
-
-    public override void Invoke()
+    class PTPurchaseFoodInvoker : CommandInvoker
     {
-        command.Execute();
+        public PTPurchaseFoodInvoker(Command command): base(command) { }
+
+        public override void Invoke()
+        {
+
+        }
     }
 }

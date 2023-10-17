@@ -1,13 +1,15 @@
 using System;
 
-namespace NutriApp;
-
-class PTViewCaloriesInvoker : CommandInvoker
+namespace NutriApp.UI
 {
-    public PTViewCaloriesInvoker(Command command) : base(command) { }
-
-    public override void Invoke()
+    class PTViewCaloriesInvoker : CommandInvoker
     {
-        command.Execute();
+
+        public PTViewCaloriesInvoker(Command command): base(command) { }
+
+        public override void Invoke()
+        {
+
+        }
     }
 }

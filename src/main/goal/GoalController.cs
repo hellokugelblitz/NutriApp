@@ -1,7 +1,5 @@
 namespace NutriApp.Goal;
 
-using NutriApp.Workout;
-
 public class GoalController {
     private readonly App app;
     private IGoal goal;
@@ -13,7 +11,7 @@ public class GoalController {
         this.app = app;
     }
 
-    public void IncorporateFitness(List<Workout> recommendedWorkouts) {}
+    public void IncorporateFitness() {}
     public void CompareUserWeightToGoal() {}
     public void CompareTodaysCaloriesToGoal() {}
 

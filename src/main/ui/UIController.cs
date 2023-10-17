@@ -1,27 +1,19 @@
 using System;
 using System.ComponentModel.Design;
 
-namespace NutriApp;
+namespace NutriApp.UI;
 
 class UIController
 {
-    private Menu _menu;
-    private App _app;
+    private Menu menu;
 
-    public Menu menu
+    public UIController(Menu menu)
     {
-        get => _menu;
-        set => _menu = value;
-    }
-    public App app
-    {
-        get => _app;
-        set => _app = value;
+        this.menu = menu;
     }
 
-    public UIController(App app)
+    public void SetMenu(Menu menu)
     {
-        _menu = new MainMenu(this);
-        this.app = app;
+        this.menu = menu;
     }
 }

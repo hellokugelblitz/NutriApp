@@ -1,13 +1,14 @@
 using System;
 
-namespace NutriApp;
-
-class PTSetDayLengthInvoker : CommandInvoker
+namespace NutriApp.UI
 {
-    public PTSetDayLengthInvoker(Command command) : base(command) { }
-
-    public override void Invoke()
+    class PTSetDayLengthInvoker : CommandInvoker
     {
-        command.Execute();
+        public PTSetDayLengthInvoker(Command command) : base(command) { }
+
+        public override void Invoke()
+        {
+
+        }
     }
 }

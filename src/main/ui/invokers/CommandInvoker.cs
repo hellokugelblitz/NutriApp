@@ -1,6 +1,6 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp.UI
 {
     abstract class CommandInvoker<T>
     {

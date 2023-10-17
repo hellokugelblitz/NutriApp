@@ -1,13 +1,14 @@
 using System;
 
-namespace NutriApp;
-
-class PTSetFitnessGoalInvoker : CommandInvoker
+namespace NutriApp.UI
 {
-    public PTSetFitnessGoalInvoker(Command command) : base(command) { }
-
-    public override void Invoke()
+    class PTSetFitnessGoalInvoker : CommandInvoker
     {
-        command.Execute();
+        public PTSetFitnessGoalInvoker(Command command) : base(command) { }
+
+        public override void Invoke()
+        {
+
+        }
     }
 }
