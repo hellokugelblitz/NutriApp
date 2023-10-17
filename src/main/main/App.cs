@@ -40,6 +40,7 @@ namespace NutriApp
             return food;}
 
         public List<Workout.Workout> GetRecommendedWorkouts() => workout.GenerateRecommendedWorkouts();
+        public double GetTodaysCalories() { return -1d; }
 
         public delegate void DayEventHandler(DateTime date);
         public event DayEventHandler DayEndEvent;

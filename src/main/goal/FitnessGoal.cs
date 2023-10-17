@@ -12,7 +12,7 @@ public class FitnessGoal : GoalDecorator
         this.RecommendedWorkouts = recommendedWorkouts;
     }
 
-    public int GetAdditionalCalories()
+    public double GetAdditionalCalories()
     {
         return -1;
     }

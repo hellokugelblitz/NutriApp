@@ -7,7 +7,7 @@ public abstract class GoalDecorator : Goal
 {
     protected Goal goal;
     public double WeightGoal { get; }
-    public int DailyCalorieGoal { get; }
+    public double DailyCalorieGoal { get; }
 
     public GoalDecorator(Goal goal)
     {

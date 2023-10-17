@@ -1,6 +1,7 @@
 namespace NutriApp.Goal;
 
 using System;
+using NutriApp;
 
 public class GoalController
 {
@@ -9,20 +10,13 @@ public class GoalController
 
     public Goal Goal { get; set; }
     public void SetGoalByIndex(int index, int weight) {
-        switch (index)
+        Goal = index switch
         {
-            case 0:
-                Goal = new LoseWeightGoal(this, weight);
-                break;
-            case 1:
-                Goal = new MaintainWeightGoal(this, weight);
-                break;
-            case 2:
-                Goal = new GainWeightGoal(this, weight);
-                break;
-            default:
-                throw new Exception("Invalid goal index");
-        }
+            0 =>  new LoseWeightGoal(this, weight),
+            1 => new MaintainWeightGoal(this, weight),
+            2 => new GainWeightGoal(this, weight),
+            _ => throw new Exception("Invalid goal index")
+        };
     }
 
     public GoalController(App app)
@@ -34,10 +28,20 @@ public class GoalController
         var workouts = app.GetRecommendedWorkouts();
         goal.IncorporateFitness(workouts);
     }
+    
     public void CompareUserWeightToGoal() { 
         goal.CheckWeight(app.User.GetWeight);
     }
-    public void CompareTodaysCaloriesToGoal() { }
+
+    public bool CheckUserPassedCalorieGoal() {
+        double todaysCalories = app.GetTodaysCalories();
+        double calorieGoal = goal.DailyCalorieGoal;
+
+        // can adjust as needed
+        double marginOfError = 100;
+
+        return todaysCalories > calorieGoal + marginOfError;
+    }
 
     private void Save() { }
     private void Load() { }

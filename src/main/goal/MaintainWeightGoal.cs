@@ -7,7 +7,7 @@ public class MaintainWeightGoal : Goal
 {
     private readonly GoalController controller;
     public double WeightGoal { get; }
-    public int DailyCalorieGoal { get; }
+    public double DailyCalorieGoal { get; }
 
     public MaintainWeightGoal(GoalController controller, double weightGoal)
     {
