@@ -14,6 +14,6 @@ class AddWorkoutCommand : Command<Workout.Workout>
     public override void Execute(Workout.Workout userinput)
     {
         app.HistoryControl.AddWorkout(userinput);
-        onFinished += new PTAddWorkoutUpdater(this).Update;
+        onFinished?.Invoke();
     }
 }

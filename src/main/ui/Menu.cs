@@ -18,22 +18,21 @@ namespace NutriApp
             this.uIController = uIController;
             actions = new Dictionary<string, CommandInvoker<T>>
             {
-                { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app), uIController.app) },
-                { "Set Fitness Goal", new PTSetFitnessGoalInvoker(new SetFitnessGoalCommand(uIController.app)) },
-                { "Set Weight Goal", new PTSetWeightGoalInvoker(new SetWeightGoalCommand(uIController.app)) },
-                { "View Target Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app)) }
+                { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "Set Fitness Goal", new PTSetFitnessGoalInvoker(new SetFitnessGoalCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "Set Weight Goal", new PTSetWeightInvoker(new SetWeightCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "View Target Calories", new PTViewTargetCaloriesInvoker(new ViewTargetCaloriesCommand(uIController.app), uIController.app) as CommandInvoker<T> }
             };
         }
 
         public void PromptWeight(DateTime datetime)
         {
-            // uses dependency arrow to PTSetWeightInvoker
             actions["Set Weight Goal"].Invoke();
         }
 
         public void Handle()
         {
-            uIController.menu = new Fitness(uIController);
+            uIController.menu = new Fitness<T>(uIController);
         }
     }
 

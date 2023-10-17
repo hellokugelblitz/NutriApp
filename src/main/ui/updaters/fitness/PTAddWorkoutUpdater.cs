@@ -6,7 +6,7 @@ class PTAddWorkoutUpdater : Updater
 {
     public PTAddWorkoutUpdater(AddWorkoutCommand addWorkoutCommand)
     {
-        addWorkoutCommand.Subscribe(this.Update);
+        addWorkoutCommand.Subscribe(Update);
     }
 
     public void Update()

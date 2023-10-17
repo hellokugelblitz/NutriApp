@@ -9,7 +9,8 @@ class PTAddWorkoutInvoker : CommandInvoker<Workout.Workout>
     private WorkoutIntensity workoutIntensity;
     private App app;
 
-    public PTAddWorkoutInvoker(Command<Workout.Workout> command, App app) : base(command) {
+    public PTAddWorkoutInvoker(Command<Workout.Workout> command, App app) : base(command)
+    {
         this.app = app;
     }
 
