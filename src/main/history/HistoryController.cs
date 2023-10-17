@@ -5,19 +5,25 @@ using NutriApp.Food;
 namespace NutriApp.History;
 public class HistoryController {
     private App app;
-    //private List<Entry<Workout>
+    private List<Entry<Workout.Workout>> workouts = new();
     private List<Entry<double>> weights = new ();
     private List<Entry<Food.Meal>> meals = new ();
-    private List<Entry<(double, double)>> calories = new();
+    private List<Entry<CalorieTracker>> calories = new();
+
+    public List<Entry<Workout.Workout>> Workouts => workouts;
+    public List<Entry<double>> Weights => weights; 
+    public List<Entry<Food.Meal>> Meals => meals; 
+    public List<Entry<CalorieTracker>> Calories => calories; 
     
-    public List<Entry<double>> Weights { get => weights; }
-    public List<Entry<Food.Meal>> Meals { get => meals; }
-    public List<Entry<(double, double)>> Calories { get => calories; }
     public HistoryController(App app) {
         this.app = app;
     }
+
+    public void AddWorkout(Workout.Workout workout)
+    {
+        workouts.Add(new Entry<Workout.Workout>(app.TimeStamp, workout));
+    }
     
-//    public AddWorkout(Workout workout)
     public void SetWeight(double weight) {
         weights.Add(new Entry<double>(app.TimeStamp, weight));
     }
@@ -27,10 +33,10 @@ public class HistoryController {
     }
 
     public void AddCalories(DateTime date) {
-        
+        calories.Add(new Entry<CalorieTracker>(app.TimeStamp, new CalorieTracker(-1d, -1d)));
     }
 
-    public double GetCaloreCount(DateTime date) {
+    public double GetCalorieCount(DateTime date) {
         double calorieCount = 0;
         DateTime timeStamp = app.TimeStamp;
         foreach (var meal in meals) {
@@ -45,5 +51,6 @@ public class HistoryController {
 
     private void Save() { }
     private void Load() { }
-
 }
+
+public record CalorieTracker(double ActualCalories, double TargetCalories);
