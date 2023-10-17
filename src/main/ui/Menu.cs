@@ -104,9 +104,8 @@ namespace NutriApp.UI
         }
     }
 
-    class MainMenu : Menu
+    class MainMenu<T> : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
         private UIController uIController;
 
         public MainMenu(UIController uIController)
@@ -116,7 +115,7 @@ namespace NutriApp.UI
 
         public void Handle()
         {
-            uIController.SetMenu(new MainMenu(uIController));
+            uIController.menu = new MainMenu<T>(uIController);
         }
     }
 }

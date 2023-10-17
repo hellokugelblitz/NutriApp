@@ -14,6 +14,6 @@ class PurchaseFoodCommand : Command<Food.Food>
 
     public override void Execute(Food.Food userinput)
     {
-
+        app.FoodControl.AddIngredientStock(userinput.Name, userinput.Quantity);
     }
 }
