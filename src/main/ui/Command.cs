@@ -5,10 +5,13 @@ namespace NutriApp
     abstract class Command<T>
     {
 
-        protected CommandFinished onFinished;
+        protected event Action onFinished;
+
+        public void Subscribe(Action handler)
+        {
+            this.onFinished += handler;
+        }
 
         public abstract void Execute(T userinput);
     }
-
-    delegate void CommandFinished();
 }

@@ -8,18 +8,18 @@ namespace NutriApp
         void Handle();
     }
 
-    class Fitness : Menu
+    class Fitness<T> : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
+        private Dictionary<string, CommandInvoker<T>> actions;
         private UIController uIController;
 
         public Fitness(UIController uIController)
         {
             this.uIController = uIController;
-            actions = new Dictionary<string, CommandInvoker>
+            actions = new Dictionary<string, CommandInvoker<T>>
             {
-                { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app)) },
-                { "Set Fitness Goal", new PTAddWorkoutInvoker(new SetFitnessGoalCommand(uIController.app)) },
+                { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app), uIController.app) },
+                { "Set Fitness Goal", new PTSetFitnessGoalInvoker(new SetFitnessGoalCommand(uIController.app)) },
                 { "Set Weight Goal", new PTSetWeightGoalInvoker(new SetWeightGoalCommand(uIController.app)) },
                 { "View Target Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app)) }
             };

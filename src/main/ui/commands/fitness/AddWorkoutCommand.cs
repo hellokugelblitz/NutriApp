@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp;
 
-class AddWorkoutCommand<T> : Command<T>
+class AddWorkoutCommand : Command<Workout.Workout>
 {
     private App app;
 
@@ -11,8 +11,9 @@ class AddWorkoutCommand<T> : Command<T>
         this.app = app;
     }
 
-    public override void Execute(T userinput)
+    public override void Execute(Workout.Workout userinput)
     {
-        
+        app.HistoryControl.AddWorkout(userinput);
+        onFinished += new PTAddWorkoutUpdater(this).Update;
     }
 }
