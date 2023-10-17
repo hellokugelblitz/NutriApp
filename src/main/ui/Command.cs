@@ -5,8 +5,10 @@ namespace NutriApp
     abstract class Command
     {
 
-        // protected CommandFinished onFinished;
+        protected CommandFinished onFinished;
 
         public abstract void Execute();
     }
+
+    delegate void CommandFinished();
 }
