@@ -8,6 +8,6 @@ class PTConsumeMealInvoker : CommandInvoker
 
     public override void Invoke()
     {
-        
+        command.Execute();
     }
 }

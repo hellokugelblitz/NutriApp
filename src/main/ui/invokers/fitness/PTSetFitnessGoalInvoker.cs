@@ -8,6 +8,6 @@ class PTSetFitnessGoalInvoker : CommandInvoker
 
     public override void Invoke()
     {
-
+        command.Execute();
     }
 }

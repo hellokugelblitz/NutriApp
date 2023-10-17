@@ -8,6 +8,6 @@ class PTSetDayLengthInvoker : CommandInvoker
 
     public override void Invoke()
     {
-        
+        command.Execute();
     }
 }

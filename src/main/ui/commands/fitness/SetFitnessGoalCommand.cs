@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp;
 
-class SetFitnessGoalCommand : Command
+class SetFitnessGoalCommand<T> : Command<T>
 {
     private App app;
 
@@ -11,7 +11,7 @@ class SetFitnessGoalCommand : Command
         this.app = app;
     }
 
-    public override void Execute()
+    public override void Execute(T userinput)
     {
         
     }

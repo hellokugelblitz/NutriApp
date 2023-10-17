@@ -19,8 +19,9 @@ class UIController
         set => _app = value;
     }
 
-    public UIController(Menu menu)
+    public UIController(App app)
     {
-        this.menu = menu;
+        _menu = new MainMenu(this);
+        this.app = app;
     }
 }

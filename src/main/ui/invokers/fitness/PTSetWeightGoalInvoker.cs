@@ -8,6 +8,8 @@ class PTSetWeightGoalInvoker : CommandInvoker
 
     public override void Invoke()
     {
-        
+        Console.WriteLine("Enter your weight: ");
+        double weight = Convert.ToDouble(Console.ReadLine());
+        command.Execute(weight);
     }
 }

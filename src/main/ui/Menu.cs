@@ -28,6 +28,7 @@ namespace NutriApp
         public void PromptWeight(DateTime datetime)
         {
             // uses dependency arrow to PTSetWeightInvoker
+            actions["Set Weight Goal"].Invoke();
         }
 
         public void Handle()
