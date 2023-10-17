@@ -8,7 +8,22 @@ public class GoalController
     private IGoal goal;
 
     public IGoal Goal { get; set; }
-    public int GoalIdx { get; set; }
+    public void SetGoalByIndex(int index, int weight) {
+        switch (index)
+        {
+            case 0:
+                Goal = new LoseWeightGoal(this, weight);
+                break;
+            case 1:
+                Goal = new MaintainWeightGoal(this, weight);
+                break;
+            case 2:
+                Goal = new GainWeightGoal(this, weight);
+                break;
+            default:
+                throw new Exception("Invalid goal index");
+        }
+    }
 
     public GoalController(App app)
     {
