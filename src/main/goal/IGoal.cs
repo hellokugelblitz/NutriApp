@@ -3,9 +3,10 @@
 using System.Collections.Generic;
 using NutriApp.Workout;
 
-public interface IGoal {
+public interface IGoal
+{
     double WeightGoal { get; }
     int DailyCalorieGoal { get; }
-    void CheckWeight(double userWeight);
-	void IncorporateFitness(List<Workout> recommendedWorkouts);
+    bool CheckWeight(double userWeight);
+    void IncorporateFitness(List<Workout> recommendedWorkouts);
 }
