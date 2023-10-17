@@ -22,7 +22,7 @@ public class InMemoryIngredientDatabase : IngredientDatabase
 
         // Read from ingredients CSV and load each entry into memory as a
         // new Ingredient instance.
-        TextFieldParser parser = new TextFieldParser("ingredients.csv")
+        TextFieldParser parser = new TextFieldParser(INGREDIENTS_CSV_PATH)
         {
             Delimiters = new string[] { "," },
             HasFieldsEnclosedInQuotes = true,
