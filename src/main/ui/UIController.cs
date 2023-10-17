@@ -5,15 +5,23 @@ namespace NutriApp.UI;
 
 class UIController
 {
-    private Menu menu;
+    private Menu _menu;
+    private App _app;
 
-    public UIController(Menu menu)
+    public Menu menu
     {
-        this.menu = menu;
+        get => _menu;
+        set => _menu = value;
+    }
+    public App app
+    {
+        get => _app;
+        set => _app = value;
     }
 
-    public void SetMenu(Menu menu)
+    public UIController(App app)
     {
-        this.menu = menu;
+        _menu = new MainMenu(this);
+        this.app = app;
     }
 }

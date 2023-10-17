@@ -1,15 +1,19 @@
 using System;
-using NutriApp.UI;
+using NutriApp.Workout;
 
-namespace NutriApp
+namespace NutriApp.UI;
+
+class PTViewTargetCaloriesInvoker : CommandInvoker<Workout.Goal>
 {
-	class PTViewTargetCaloriesInvoker : CommandInvoker
+	private App app;
+
+	public PTViewTargetCaloriesInvoker(Command<Workout.Goal> command, App app) : base(command) 
+	{ 
+		this.app = app;
+	}
+
+	public override void Invoke()
 	{
-		public PTViewTargetCaloriesInvoker(Command command) : base(command) { }
 
-		public override void Invoke()
-		{
-
-		}
 	}
 }

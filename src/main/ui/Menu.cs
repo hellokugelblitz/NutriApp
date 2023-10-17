@@ -8,11 +8,7 @@ namespace NutriApp.UI
         void Handle();
     }
 
-<<<<<<< HEAD
     class Fitness<T> : Menu
-=======
-    class FitnessMenu : Menu
->>>>>>> main
     {
         private Dictionary<string, CommandInvoker<T>> actions;
         private UIController uIController;
@@ -20,34 +16,23 @@ namespace NutriApp.UI
         public FitnessMenu(UIController uIController)
         {
             this.uIController = uIController;
-<<<<<<< HEAD
             actions = new Dictionary<string, CommandInvoker<T>>
             {
                 { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app), uIController.app) as CommandInvoker<T> },
                 { "Set Fitness Goal", new PTSetFitnessGoalInvoker(new SetFitnessGoalCommand(uIController.app), uIController.app) as CommandInvoker<T> },
-                { "Set Weight Goal", new PTSetWeightInvoker(new SetWeightCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "Set Weight Goal", new PTSetWeightGoalInvoker(new SetWeightGoalCommand(uIController.app), uIController.app) as CommandInvoker<T> },
                 { "View Target Calories", new PTViewTargetCaloriesInvoker(new ViewTargetCaloriesCommand(uIController.app), uIController.app) as CommandInvoker<T> }
             };
-=======
->>>>>>> main
         }
 
         public void PromptWeight(DateTime datetime)
         {
-<<<<<<< HEAD
             actions["Set Weight Goal"].Invoke();
-=======
-            // uses dependency arrow to PTSetWeightInvoker
->>>>>>> main
         }
 
         public void Handle()
         {
-<<<<<<< HEAD
             uIController.menu = new Fitness<T>(uIController);
-=======
-            uIController.SetMenu(new FitnessMenu(uIController));
->>>>>>> main
         }
     }
 

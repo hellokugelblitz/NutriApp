@@ -1,8 +1,9 @@
 using System;
+using NutriApp.Workout;
 
-namespace NutriApp;
+namespace NutriApp.UI;
 
-class ViewTargetCaloriesCommand<T> : Command<T>
+class ViewTargetCaloriesCommand : Command<Workout.Goal>
 {
     private App app;
 
@@ -11,7 +12,7 @@ class ViewTargetCaloriesCommand<T> : Command<T>
         this.app = app;
     }
 
-    public override void Execute(T userinput)
+    public override void Execute(Workout.Goal userinput)
     {
         
     }

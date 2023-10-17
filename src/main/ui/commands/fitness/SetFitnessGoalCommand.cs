@@ -3,11 +3,11 @@ using NutriApp.Workout;
 
 namespace NutriApp.UI;
 
-class SetWeightGoalCommand : Command<Workout.Goal>
+class SetFitnessGoalCommand : Command<Workout.Goal>
 {
     private App app;
 
-    public SetWeightGoalCommand(App app)
+    public SetFitnessGoalCommand(App app)
     {
         this.app = app;
     }

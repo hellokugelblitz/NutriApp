@@ -1,8 +1,7 @@
 using System;
-using NUnit.Framework.Constraints;
 using NutriApp.Workout;
 
-namespace NutriApp;
+namespace NutriApp.UI;
 
 class PTAddWorkoutInvoker : CommandInvoker<Workout.Workout>
 {

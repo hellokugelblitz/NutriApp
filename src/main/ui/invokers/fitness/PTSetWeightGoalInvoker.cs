@@ -3,12 +3,12 @@ using NutriApp.Workout;
 
 namespace NutriApp.UI;
 
-class PTSetFitnessGoalInvoker : CommandInvoker<Workout.Goal>
+class PTSetWeightGoalInvoker : CommandInvoker<Workout.Goal>
 {
     private App app;
 
-    public PTSetFitnessGoalInvoker(Command<Workout.Goal> command, App app) : base(command) 
-    {
+    public PTSetWeightGoalInvoker(Command<Workout.Goal> command, App app) : base(command) 
+    { 
         this.app = app;
     }
 
