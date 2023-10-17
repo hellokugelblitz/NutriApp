@@ -26,6 +26,7 @@ namespace NutriApp
 
         public FoodController GetFoodController() {
             return food;}
+        public List<Workout.Workout> GetRecommendedWorkouts() => workout.GenerateRecommendedWorkouts();
         public delegate void DayEventHandler(DateTime date);
         public event DayEventHandler DayEndEvent;
 

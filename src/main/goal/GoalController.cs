@@ -30,7 +30,10 @@ public class GoalController
         this.app = app;
     }
 
-    public void IncorporateFitness(List<Workout> recommendedWorkouts) { }
+    public void IncorporateFitness(List<Workout> recommendedWorkouts) { 
+        var workouts = app.GetRecommendedWorkouts();
+        goal.IncorporateFitness(workouts);
+    }
     public void CompareUserWeightToGoal() { 
         goal.CheckWeight(app.User.GetWeight);
     }
