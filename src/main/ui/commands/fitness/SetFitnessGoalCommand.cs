@@ -1,9 +1,9 @@
 using System;
-using NutriApp.Workout;
+using NutriApp.Goal;
 
 namespace NutriApp.UI;
 
-class SetFitnessGoalCommand : Command<Workout.Goal>
+class SetFitnessGoalCommand : Command<string>
 {
     private App app;
 
@@ -12,8 +12,11 @@ class SetFitnessGoalCommand : Command<Workout.Goal>
         this.app = app;
     }
 
-    public override void Execute(Workout.Goal userinput)
+    public override void Execute(string userinput)
     {
-        
+        if (userinput.Equals("yes"))
+        {
+            app.GoalControl.IncorporateFitness();
+        }
     }
 }

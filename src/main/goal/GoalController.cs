@@ -2,9 +2,9 @@ namespace NutriApp.Goal;
 
 public class GoalController {
     private readonly App app;
-    private IGoal goal;
+    private Goal goal;
 
-    public IGoal Goal { get; set; }
+    public Goal Goal { get; set; }
     public int GoalIdx { get; set; }
 
     public GoalController(App app) {

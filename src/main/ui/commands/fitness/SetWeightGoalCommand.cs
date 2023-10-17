@@ -3,7 +3,7 @@ using NutriApp.Workout;
 
 namespace NutriApp.UI;
 
-class SetWeightGoalCommand : Command<Workout.Goal>
+class SetWeightGoalCommand : Command<Goal.Goal>
 {
     private App app;
 
@@ -12,8 +12,9 @@ class SetWeightGoalCommand : Command<Workout.Goal>
         this.app = app;
     }
 
-    public override void Execute(Workout.Goal userinput)
+    public override void Execute(Goal.Goal userinput)
     {
-        
+        app.GoalControl.Goal = userinput;
+        onFinished?.Invoke();
     }
 }
