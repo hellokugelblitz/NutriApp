@@ -1,14 +1,18 @@
 using System;
 
-namespace NutriApp.UI
+namespace NutriApp.UI;
+
+class PTViewWorkoutsInvoker : CommandInvoker<string>
 {
-    class PTViewWorkoutsInvoker : CommandInvoker
+    private App app;
+
+    public PTViewWorkoutsInvoker(Command<string> command, App app) : base(command) 
+    { 
+        this.app = app;
+    }
+
+    public override void Invoke()
     {
-        public PTViewWorkoutsInvoker(Command command):base(command) { }
 
-        public override void Invoke()
-        {
-
-        }
     }
 }

@@ -1,19 +1,18 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp.UI;
+
+class ClearHistoryCommand : Command<string>
 {
-    class ClearHistoryCommand<T> : Command<T>
+    private App app;
+
+    public ClearHistoryCommand(App app)
     {
-        private App app;
+        this.app = app;
+    }
 
-        public ClearHistoryCommand(App app)
-        {
-            this.app = app;
-        }
+    public override void Execute(string userinput)
+    {
 
-        public override void Execute(T userinput)
-        {
-            
-        }
     }
 }

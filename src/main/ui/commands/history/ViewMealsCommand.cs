@@ -1,19 +1,18 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp;
+
+class ViewMealsCommand : Command<string>
 {
-    class ViewMealsCommand<T> : Command<T>
+    private App app;
+
+    public ViewMealsCommand(App app)
     {
-        private App app;
+        this.app = app;
+    }
 
-        public ViewMealsCommand(App app)
-        {
-            this.app = app;
-        }
+    public override void Execute(string userinput)
+    {
 
-        public override void Execute(T userinput)
-        {
-            
-        }
     }
 }

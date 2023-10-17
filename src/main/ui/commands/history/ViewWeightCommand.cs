@@ -1,8 +1,8 @@
 using System;
 
-namespace NutriApp;
+namespace NutriApp.UI;
 
-class ViewWeightCommand<T> : Command<T>
+class ViewWeightCommand : Command<string>
 {
     private App app;
 
@@ -11,7 +11,7 @@ class ViewWeightCommand<T> : Command<T>
         this.app = app;
     }
 
-    public override void Execute(T userinput)
+    public override void Execute(string userinput)
     {
         
     }

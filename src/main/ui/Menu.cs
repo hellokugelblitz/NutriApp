@@ -60,35 +60,47 @@ namespace NutriApp.UI
         }
     }
 
-    class HistoryMenu : Menu
+    class HistoryMenu<T> : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
+        private Dictionary<string, CommandInvoker<T>> actions;
         private UIController uIController;
 
         public HistoryMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, CommandInvoker<T>>
+            {
+                { "View Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "View Meals", new PTViewMealsInvoker(new ViewMealsCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "View Weight", new PTViewWeightInvoker(new ViewWeightCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "View Workouts", new PTViewWorkoutsInvoker(new ViewWorkoutsCommand(uIController.app), uIController.app) as CommandInvoker<T> }
+            };
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new HistoryMenu(uIController));
+            uIController.menu = new HistoryMenu<T>(uIController);
         }
     }
 
-    class ProfileMenu : Menu
+    class ProfileMenu<T> : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
+        private Dictionary<string, CommandInvoker<T>> actions;
         private UIController uIController;
 
         public ProfileMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, CommandInvoker<T>>
+            {
+                { "Clear History", new PTClearHistoryInvoker(new ClearHistoryCommand(uIController.app), uIController.app) as CommandInvoker<T> },
+                { "Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app), uIController.app) as CommandInvoker<T> }
+            };
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new ProfileMenu(uIController));
+            uIController.menu = new ProfileMenu<T>(uIController);
         }
     }
 

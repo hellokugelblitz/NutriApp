@@ -1,19 +1,18 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp.UI;
+
+class SetDayLengthCommand : Command<string>
 {
-    class SetDayLengthCommand<T> : Command<T>
+    private App app;
+
+    public SetDayLengthCommand(App app)
     {
-        private App app;
+        this.app = app;
+    }
 
-        public SetDayLengthCommand(App app)
-        {
-            this.app = app;
-        }
+    public override void Execute(string userinput)
+    {
 
-        public override void Execute(T userinput)
-        {
-            
-        }
     }
 }
