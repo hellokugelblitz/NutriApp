@@ -7,7 +7,7 @@ public class FoodController
     private List<Recipe> recipes;
     private List<Meal> meals;
 
-    // private ShoppingList shoppingList;
+    private ShoppingList shoppingList;
     private App app;
     private IngredientDatabase ingredientDatabase;
 
