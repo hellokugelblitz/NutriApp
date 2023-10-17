@@ -30,6 +30,7 @@ namespace NutriApp
         {
             this.dayLength = dayLength;
             date = DateTime.Now;
+            Console.WriteLine("day length " + this.dayLength);
             Thread timer = new Thread(DayLoop);
             timer.Start();
         }
@@ -39,7 +40,10 @@ namespace NutriApp
         public delegate void DayEventHandler(DateTime date);
         public event DayEventHandler DayEndEvent;
 
-        public void SubscribeDayEndEvent(DayEventHandler dayEndEvent) {}
+        public void SubscribeDayEndEvent(DayEventHandler dayEndEvent)
+        {
+            DayEndEvent += dayEndEvent;
+        }
 
         public static void Main(string[] args)
         {
@@ -50,9 +54,9 @@ namespace NutriApp
         {
             while (true)
             {
-                Thread.Sleep((int) (1000 * 60 * dayLength));
+                Thread.Sleep((int)(1000 * 60 * dayLength));
                 DayEndEvent?.Invoke(TimeStamp);
-                date = date.AddDays(1);
+                date = date.AddDays(1d);
             }
         }
     }
