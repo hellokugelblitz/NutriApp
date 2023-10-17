@@ -95,7 +95,9 @@ public class FoodController
             ingredient.Stock -= requiredStock;
         }
 
-        shoppingList.Update();
+        foreach (Recipe recipe in mealConsumed.Children.Keys)
+            shoppingList.Update(recipe);
+
         return ConsumeMealResult.Success;
     }
 
@@ -108,7 +110,7 @@ public class FoodController
         Ingredient ingredient = ingredientDatabase.Get(name);
         ingredient.Stock += quantity;
 
-        shoppingList.Update();
+        shoppingList.AddItem(ingredient, quantity);
     }
 
     public delegate void MealEventHandler(Meal meal);

@@ -59,7 +59,7 @@ public class InMemoryIngredientDatabase : IngredientDatabase
     public Ingredient Get(string name)
     {
         foreach (Ingredient ingredient in ingredients)
-            if (ingredient.Name == name)
+            if (ingredient.Name.ToLower() == name.ToLower().Trim())
                 return ingredient;
 
         return null;
@@ -77,7 +77,7 @@ public class InMemoryIngredientDatabase : IngredientDatabase
         List<Ingredient> matches = new List<Ingredient>();
 
         foreach (Ingredient ingredient in ingredients)
-            if (ingredient.Name.Contains(term))
+            if (ingredient.Name.ToLower().Contains(term.ToLower().Trim()))
                 matches.Add(ingredient);
 
         return matches.ToArray();
