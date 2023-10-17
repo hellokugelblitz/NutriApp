@@ -20,12 +20,11 @@ target/**
 
 # Ignore tool files
 .vscode
-
+.vs
 .idea
 
 # C# automatic directories
 obj
 
-designproject-02-nutribunch.sln
-.vs
-*.sln
+# Test bin (will be rebuilt on everyone's local machine anyway)
+test/bin
