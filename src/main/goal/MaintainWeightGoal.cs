@@ -16,7 +16,20 @@ public class MaintainWeightGoal : IGoal
         this.DailyCalorieGoal = 2500;
     }
 
-    public void CheckWeight(double userWeight) { }
+    public bool CheckWeight(double userWeight) {
+        int thresh = 5;
+        if (userWeight <= WeightGoal - thresh)
+        {
+            controller.Goal = new LoseWeightGoal(controller, WeightGoal);
+            return true;
+        }
+        else if (userWeight >= WeightGoal + thresh)
+        {
+            controller.Goal = new GainWeightGoal(controller, WeightGoal);
+            return true;
+        }
+        return false;
+     }
 
     public void IncorporateFitness(List<Workout> recommendedWorkouts) { }
 }

@@ -5,7 +5,7 @@ using NutriApp.Workout;
 
 public abstract class GoalDecorator : IGoal
 {
-    private IGoal goal;
+    protected IGoal goal;
     public double WeightGoal { get; }
     public int DailyCalorieGoal { get; }
 
@@ -14,9 +14,9 @@ public abstract class GoalDecorator : IGoal
         this.goal = goal;
     }
 
-    public void CheckWeight(double userWeight)
+    public bool CheckWeight(double userWeight)
     {
-        goal.CheckWeight(userWeight);
+        return goal.CheckWeight(userWeight);
     }
 
     public void IncorporateFitness(List<Workout> recommendedWorkouts)

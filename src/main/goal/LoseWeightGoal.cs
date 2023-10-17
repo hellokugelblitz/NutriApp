@@ -13,10 +13,17 @@ public class LoseWeightGoal : IGoal
     {
         this.controller = controller;
         this.WeightGoal = weightGoal;
-        this.DailyCalorieGoal = 500;
+        this.DailyCalorieGoal = 1500;
     }
 
-    public void CheckWeight(double userWeight) { }
+    public bool CheckWeight(double userWeight) { 
+        if (userWeight <= WeightGoal)
+        {
+            controller.Goal = new MaintainWeightGoal(controller, WeightGoal);
+            return true;
+        }
+        return false;
+    }
 
     public void IncorporateFitness(List<Workout> recommendedWorkouts) { }
 }
