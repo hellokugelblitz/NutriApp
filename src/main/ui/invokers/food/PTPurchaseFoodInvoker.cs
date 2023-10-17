@@ -8,6 +8,6 @@ class PTPurchaseFoodInvoker : CommandInvoker
 
     public override void Invoke()
     {
-        
+        command.Execute();
     }
 }

@@ -8,6 +8,6 @@ class PTAddWorkoutInvoker : CommandInvoker
 
     public override void Invoke()
     {
-        
+        command.Execute();
     }
 }

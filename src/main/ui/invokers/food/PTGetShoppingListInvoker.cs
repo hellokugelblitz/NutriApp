@@ -8,6 +8,6 @@ class PTGetShoppingListInvoker : CommandInvoker
 
     public override void Invoke()
     {
-        
+        command.Execute();
     }
 }

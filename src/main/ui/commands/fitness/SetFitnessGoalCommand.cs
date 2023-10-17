@@ -2,11 +2,11 @@ using System;
 
 namespace NutriApp;
 
-class AddWorkoutCommand<T> : Command<T>
+class SetFitnessGoalCommand<T> : Command<T>
 {
     private App app;
 
-    public AddWorkoutCommand(App app)
+    public SetFitnessGoalCommand(App app)
     {
         this.app = app;
     }

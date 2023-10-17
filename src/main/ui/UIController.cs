@@ -6,15 +6,22 @@ namespace NutriApp;
 class UIController
 {
     private Menu _menu;
+    private App _app;
 
     public Menu menu
     {
         get => _menu;
         set => _menu = value;
     }
-
-    public UIController(Menu menu)
+    public App app
     {
-        this.menu = menu;
+        get => _app;
+        set => _app = value;
+    }
+
+    public UIController(App app)
+    {
+        _menu = new MainMenu(this);
+        this.app = app;
     }
 }

@@ -8,6 +8,6 @@ class PTViewWeightInvoker : CommandInvoker
 
     public override void Invoke()
     {
-        
+        command.Execute();
     }
 }
