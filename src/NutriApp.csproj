@@ -7,4 +7,9 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="main\ui\invokers" />
+    <Folder Include="main\ui\updaters" />
+  </ItemGroup>
+
 </Project>
