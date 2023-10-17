@@ -46,7 +46,36 @@ public class FoodController
         return null;
     }
 
-    public void ConsumeMeal(string name) {}
+    public ConsumeMealResult ConsumeMeal(string name)
+    {
+        Meal mealConsumed = GetMeal(name);
+
+        // Check ingredient stock
+        foreach (Ingredient ingredient in mealConsumed.Ingredients.Keys)
+        {
+            double requiredStock = mealConsumed.Ingredients[ingredient];
+
+            if (ingredient.Stock < requiredStock)
+                return ConsumeMealResult.NotEnoughStock;
+        }
+
+        // Check calorie goal
+        if (mealConsumed.Calories > app.GoalControl.Goal.DailyCalorieGoal)
+            return ConsumeMealResult.ExceedCalorieGoal;
+
+        // Meal consumed successfully
+        MealConsumeEvent?.Invoke(mealConsumed);
+
+        // Remove ingredient stock
+        foreach (Ingredient ingredient in mealConsumed.Ingredients.Keys)
+        {
+            double requiredStock = mealConsumed.Ingredients[ingredient];
+            ingredient.Stock -= requiredStock;
+        }
+
+        // TODO: update shopping list
+        return ConsumeMealResult.Success;
+    }
 
     public void AddIngredientStock(string name, double quantity)
     {
@@ -59,3 +88,5 @@ public class FoodController
     public delegate void MealEventHandler(Meal meal);
     public event MealEventHandler MealConsumeEvent;
 }
+
+public enum ConsumeMealResult { Success, NotEnoughStock, ExceedCalorieGoal }
