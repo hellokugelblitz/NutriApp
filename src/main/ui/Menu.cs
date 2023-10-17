@@ -25,7 +25,7 @@ namespace NutriApp
 
         public void Handle()
         {
-            uIController.SetMenu(new Fitness(uIController));
+            uIController.menu = new Fitness(uIController);
         }
     }
 
@@ -41,7 +41,7 @@ namespace NutriApp
 
         public void Handle()
         {
-            uIController.SetMenu(new FoodMenu(uIController));
+            uIController.menu = new FoodMenu(uIController);
         }
     }
 
@@ -57,23 +57,23 @@ namespace NutriApp
 
         public void Handle()
         {
-            uIController.SetMenu(new HistoryMenu(uIController));
+            uIController.menu = new HistoryMenu(uIController);
         }
     }
 
-    class Profile : Menu
+    class ProfileMenu : Menu
     {
         private Dictionary<string, CommandInvoker> actions;
         private UIController uIController;
 
-        public Profile(UIController uIController)
+        public ProfileMenu(UIController uIController)
         {
             this.uIController = uIController;
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new Profile(uIController));
+            uIController.menu = new ProfileMenu(uIController);
         }
     }
 
@@ -89,7 +89,7 @@ namespace NutriApp
 
         public void Handle()
         {
-            uIController.SetMenu(new MainMenu(uIController));
+            uIController.menu = new MainMenu(uIController);
         }
     }
 }
