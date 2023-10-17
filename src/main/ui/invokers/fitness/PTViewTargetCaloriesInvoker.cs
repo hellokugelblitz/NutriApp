@@ -1,15 +1,11 @@
 using System;
+using NutriApp.UI;
 
 namespace NutriApp
 {
 	class PTViewTargetCaloriesInvoker : CommandInvoker
 	{
-		protected Command command;
-
-		public PTViewTargetCaloriesInvoker(Command command)
-		{
-			this.command = command;
-		}
+		public PTViewTargetCaloriesInvoker(Command command) : base(command) { }
 
 		public override void Invoke()
 		{

@@ -1,15 +1,10 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp.UI
 {
     class PTCreateRecipesInvoker : CommandInvoker
     {
-        protected Command command;
-
-        public PTCreateRecipesInvoker(Command command)
-        {
-            this.command = command;
-        }
+        public PTCreateRecipesInvoker(Command command): base(command) { }
 
         public override void Invoke()
         {

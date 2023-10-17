@@ -1,15 +1,11 @@
 using System;
+using NutriApp.UI;
 
 namespace NutriApp
 {
     class PTSetWeightInvoker : CommandInvoker
     {
-        protected Command command;
-
-        public PTSetWeightInvoker(Command command)
-        {
-            this.command = command;
-        }
+        public PTSetWeightInvoker(Command command) : base(command) { }
 
         public override void Invoke()
         {
