@@ -31,7 +31,9 @@ public class GoalController
     }
 
     public void IncorporateFitness(List<Workout> recommendedWorkouts) { }
-    public void CompareUserWeightToGoal() { }
+    public void CompareUserWeightToGoal() { 
+        goal.CheckWeight(app.User.GetWeight);
+    }
     public void CompareTodaysCaloriesToGoal() { }
 
     private void Save() { }
