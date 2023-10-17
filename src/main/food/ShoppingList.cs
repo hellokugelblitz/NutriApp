@@ -10,8 +10,8 @@ namespace NutriApp.Food
         private ShoppingListCriteria criteria;
 
         //Constructors
-        public ShoppingCart(){}
-        public ShoppingCart(Dictionary<Ingredient, double> list)
+        public ShoppingList(){}
+        public ShoppingList(Dictionary<Ingredient, double> list)
         {
             this.list = list;
         }
@@ -19,7 +19,7 @@ namespace NutriApp.Food
         //Other methods
         public void Update(Recipe recipe)
         {
-            return this.criteria.Update(recipe);
+            this.criteria.Update(recipe);
         }
         public void SetCriteria(ShoppingListCriteria newCriteria)
         { 
@@ -29,8 +29,10 @@ namespace NutriApp.Food
         {
             //If we cant find it in our list we add it with the amount
             if(!list.ContainsKey(ingredient))
+            {
                 this.list.Add(ingredient, amt);
                 return;
+            }
 
             //Else we are access what we already have and adding that amount
             list[ingredient] = list[ingredient] + amt;     
@@ -47,7 +49,7 @@ namespace NutriApp.Food
 
             //If we have zero remove it from the list entirely
             if(list[ingredient] <= 0)
-                list.Remove(ingredient)
+                list.Remove(ingredient);
         }
     }
 
