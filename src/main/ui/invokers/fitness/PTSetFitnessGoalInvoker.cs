@@ -1,19 +1,13 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp;
+
+class PTSetFitnessGoalInvoker : CommandInvoker
 {
-    class PTSetFitnessGoalInvoker : CommandInvoker
+    public PTSetFitnessGoalInvoker(Command command) : base(command) { }
+
+    public override void Invoke()
     {
-        protected Command command;
 
-        public PTSetFitnessGoalInvoker(Command command)
-        {
-            this.command = command;
-        }
-
-        public override void Invoke()
-        {
-
-        }
     }
 }
