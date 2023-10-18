@@ -2,6 +2,7 @@ namespace NutriApp.Goal;
 
 using System;
 using NutriApp;
+using NutriApp.Food;
 
 public class GoalController
 {
@@ -31,6 +32,15 @@ public class GoalController
     
     public void CompareUserWeightToGoal() { 
         goal.CheckWeight(app.User.GetWeight);
+    }
+
+    public delegate void PassedCalorieGoalHandler();
+    public event PassedCalorieGoalHandler PassedCalorieGoalEvent;
+
+    public void ConsumeMealHandler(Meal _)
+    {
+        if (CheckUserPassedCalorieGoal())
+            PassedCalorieGoalEvent?.Invoke();
     }
 
     public bool CheckUserPassedCalorieGoal() {
