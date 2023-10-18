@@ -1,5 +1,8 @@
 namespace NutriApp.Food;
 
+/// <summary>
+/// A generic type of food.
+/// </summary>
 public interface Food
 {
     public string Name { get; }

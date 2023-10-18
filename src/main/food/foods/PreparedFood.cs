@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace NutriApp.Food;
 
+/// <summary>
+/// A food type that consists of another type of food (specified by T).
+/// </summary>
 public abstract class PreparedFood<T> : Food where T : Food
 {
     private string name;
@@ -10,6 +13,10 @@ public abstract class PreparedFood<T> : Food where T : Food
     public Dictionary<T, double> Children => children;
     public string Name => name;
 
+    /// <summary>
+    /// Returns a dictionary where the key is an ingredient, and the value is
+    /// the amount of that ingredient required to prepare this food.
+    /// </summary>
     public Dictionary<Ingredient, double> Ingredients { get; }
     
     public double Calories
