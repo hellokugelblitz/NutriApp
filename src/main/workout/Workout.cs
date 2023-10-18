@@ -11,6 +11,21 @@ public class Workout {
         Intensity = intensity;
     }
 
+    /// <summary>
+    /// Bases equality on just the name of the workouts and intensity
+    /// </summary>
+    /// <param name="obj">The obj to test equality for</param>
+    /// <returns></returns>
+    public override bool Equals(object obj)
+    {
+        return obj is Workout workout && workout.Name == Name && workout.Intensity == Intensity;
+    }
+
+    public override int GetHashCode()
+    {
+        return Name.GetHashCode() + Intensity.GetHashCode();
+    }
+
     public int GetCaloriesBurned() {
         return (int) (Minutes * Intensity.Value());
     }
