@@ -16,15 +16,26 @@ namespace NutriApp.Food
             this.list = list;
         }
 
-        //Other methods
+        /// <summary>
+        /// Update function is utilized by the food controller to initiate an update on the shopping list
+        /// based on a specific criteria (criteria is defined inside of the ShoppingList class)
+        /// </summary>
         public void Update(Recipe recipe)
         {
             criteria.Update(recipe);
         }
+
+        /// <summary>
+        /// Set the current update criteria for the shopping list.
+        /// </summary>
         public void SetCriteria(ShoppingListCriteria newCriteria)
         { 
             criteria = newCriteria; 
         }
+
+        /// <summary>
+        /// Add a specific amount of a specified ingredient to the shopping list
+        /// </summary>
         public void AddItem(Ingredient ingredient, double amt)
         {
             //If we cant find it in our list we add it with the amount
@@ -37,6 +48,11 @@ namespace NutriApp.Food
             //Else we are access what we already have and adding that amount
             list[ingredient] = list[ingredient] + amt;     
         }
+        
+        /// <summary>
+        /// Remove a specific amount of a specified ingredient from the shopping list
+        /// This method will not reduce the amount of an ingredient below 0
+        /// </summary>
         public void RemoveItem(Ingredient ingredient, double amt)
         {
             //There is nothing to remove to we exit
@@ -52,7 +68,6 @@ namespace NutriApp.Food
                 list.Remove(ingredient);
         }
 
-        //Getters and setters
         public Dictionary<Ingredient, double> getList()
         {
             return list;
