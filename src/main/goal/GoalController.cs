@@ -7,9 +7,18 @@ using NutriApp.Food;
 public class GoalController
 {
     private readonly App app;
-    private Goal goal;
 
     public Goal Goal { get; set; }
+
+    /// <summary>
+    /// Sets the goal based on an integer (the index), and the desired weight of the user.
+    /// <para>1 = Lose Weight</para>
+    /// <para>2 = Maintain Weight</para>
+    /// <para>3 = Gain Weight</para>
+    /// </summary>
+    /// <param name="index">The index of the goal</param>
+    /// <param name="weight">The desired weight of the user</param>
+    /// <exception cref="Exception">If the index is out of bounds</exception>
     public void SetGoalByIndex(int index, int weight) {
         Goal = index switch
         {
@@ -25,27 +34,46 @@ public class GoalController
         this.app = app;
     }
 
+    /// <summary>
+    /// Incorporates fitness into the user's goal.
+    /// </summary>
     public void IncorporateFitness() { 
         var workouts = app.GetRecommendedWorkouts();
-        goal.IncorporateFitness(workouts);
+        Goal.IncorporateFitness(workouts);
     }
     
+    /// <summary>
+    /// Checks the user's weight against their weight goal.
+    /// May switch the goal if the user has reached certain conditions, like
+    /// completing a goal or deviating from the goal.
+    /// </summary>
     public void CompareUserWeightToGoal() { 
-        goal.CheckWeight(app.User.GetWeight);
+        Goal.CheckWeight(app.User.GetWeight);
     }
 
+    /// <summary>
+    /// Event for when the user has exceeded their daily calorie goal.
+    /// </summary>
     public delegate void PassedCalorieGoalHandler();
     public event PassedCalorieGoalHandler PassedCalorieGoalEvent;
 
+    /// <summary>
+    /// Handles the event of the user consuming a meal.
+    /// </summary>
+    /// <param name="_">Required param to fulfill <c>MealEventHandler</c> signature</param>
     public void ConsumeMealHandler(Meal _)
     {
-        if (CheckUserPassedCalorieGoal())
+        if (CheckUserExceededCalorieGoal())
             PassedCalorieGoalEvent?.Invoke();
     }
 
-    public bool CheckUserPassedCalorieGoal() {
+    /// <summary>
+    /// Checks if the user has exceeeded their daily calorie goal.
+    /// </summary>
+    /// <returns>Whether the user exceeded their daily calorie goal.</returns>
+    public bool CheckUserExceededCalorieGoal() {
         double todaysCalories = app.GetTodaysCalories();
-        double calorieGoal = goal.DailyCalorieGoal;
+        double calorieGoal = Goal.DailyCalorieGoal;
 
         // can adjust as needed
         double marginOfError = 100;

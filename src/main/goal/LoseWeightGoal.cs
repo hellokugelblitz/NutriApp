@@ -16,6 +16,12 @@ public class LoseWeightGoal : Goal
         this.DailyCalorieGoal = 1500;
     }
 
+    /// <summary>
+    /// Checks if the user's weight is less than or equal to the goal weight.
+    /// If true, switches the user's goal to maintaining weight.
+    /// </summary>
+    /// <param name="userWeight">The user's current weight.</param>
+    /// <returns>Whether the goal was switched.</returns>
     public bool CheckWeight(double userWeight) { 
         if (userWeight <= WeightGoal)
         {
