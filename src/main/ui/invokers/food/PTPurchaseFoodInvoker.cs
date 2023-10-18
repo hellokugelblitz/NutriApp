@@ -4,11 +4,11 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class PTPurchaseFoodInvoker : CommandInvoker<>
+class PTPurchaseFoodInvoker : CommandInvoker<Array>
 {
     private App app;
 
-    public PTPurchaseFoodInvoker(Command<Food.Food> command, App app) : base(command) 
+    public PTPurchaseFoodInvoker(Command<Array> command, App app) : base(command) 
     { 
         this.app = app;
     }
@@ -20,6 +20,6 @@ class PTPurchaseFoodInvoker : CommandInvoker<>
         Console.WriteLine("Enter quantity of the food you are going to purchase: ");
         int quantity = int.Parse(Console.ReadLine());
 
-        command.Execute();
+        command.Execute(new object[] { name, quantity });
     }
 }

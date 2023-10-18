@@ -3,17 +3,20 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class PTSearchIngredientsInvoker : CommandInvoker<Ingredient>
+class PTSearchIngredientsInvoker : CommandInvoker<string>
 {
 	private App app;
 
-	public PTSearchIngredientsInvoker(Command<Ingredient> command, App app) : base(command) 
+	public PTSearchIngredientsInvoker(Command<string> command, App app) : base(command) 
 	{ 
 		this.app = app;
 	}
 
 	public override void Invoke()
 	{
+		Console.WriteLine("Enter name of food to search: ");
+		string name = Console.ReadLine();
 
+		command.Execute(name);
 	}
 }

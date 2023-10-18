@@ -14,6 +14,7 @@ class SearchingIngredientsCommand : Command<Ingredient>
 
     public override void Execute(Ingredient userinput)
     {
-
+        app.FoodControl.IngredientDatabase.Search(userinput);
+        onFinished?.Invoke();
     }
 }

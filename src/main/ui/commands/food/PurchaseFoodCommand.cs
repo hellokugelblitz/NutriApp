@@ -3,7 +3,7 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class PurchaseFoodCommand : Command<Food.Food>
+class PurchaseFoodCommand : Command<Array>
 {
     private App app;
 
@@ -12,8 +12,12 @@ class PurchaseFoodCommand : Command<Food.Food>
         this.app = app;
     }
 
-    public override void Execute(Food.Food userinput)
+    public override void Execute(Array userinput)
     {
-        app.FoodControl.AddIngredientStock(userinput.Name, userinput.Quantity);
+        string name = userinput.GetValue(0).ToString();
+        int quantity = int.Parse(userinput.GetValue(1).ToString());
+
+        app.FoodControl.AddIngredientStock(name, quantity);
+        onFinished?.Invoke();
     }
 }
