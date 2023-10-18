@@ -86,10 +86,7 @@ namespace NutriApp.Food
                 //Else we need to to bring it up to the minimum for each ingredient at least. 
                 //If its over already we don't care.
                 if(shoppingList.getList()[item.Key] <= item.Value)
-                {
                     shoppingList.getList()[item.Key] = item.Value;
-                }
-   
             }
         }
     }
