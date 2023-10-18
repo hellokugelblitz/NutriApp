@@ -28,9 +28,14 @@ public class FoodController
     private void Load() {}
 
     /// <summary>
-    /// Adds a recipe with the given name to the user's saved recipes.
+    /// Adds a blank recipe with the given name to the user's saved recipes.
     /// </summary>
     public void AddRecipe(string name) => recipes.Add(new Recipe(name));
+    
+    /// <summary>
+    /// Adds a recipe with some pre-configured attributes to the user's saved recipes.
+    /// </summary>
+    public void AddRecipe(Recipe recipe) => recipes.Add(recipe);
 
     /// <summary>
     /// Retrieves a recipe given its unique name. Returns null if there is no
@@ -46,9 +51,14 @@ public class FoodController
     }
 
     /// <summary>
-    /// Adds a meal with the given name to the user's saved meals.
+    /// Adds a blank meal with the given name to the user's saved meals.
     /// </summary>
     public void AddMeal(string name) => meals.Add(new Meal(name));
+    
+    /// <summary>
+    /// Adds a meal with some pre-configured attributes to the user's saved meals.
+    /// </summary>
+    public void AddMeal(Meal meal) => meals.Add(meal);
 
     /// <summary>
     /// Retrieves a meal given its unique name. Returns null if there is no
