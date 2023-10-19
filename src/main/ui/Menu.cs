@@ -49,8 +49,8 @@ namespace NutriApp.UI
                 { "Consume Meal", new PTConsumeMealInvoker(new ConsumeMealCommand(uIController.app))},
                 { "Create Recipe", new PTCreateRecipesInvoker(new CreateRecipesCommand(uIController.app))},
                 { "Get Shopping List", new PTGetShoppingListInvoker(new GetShoppingListCommand(uIController.app))},
-                { "Purchase Food", new PTPurchaseFoodInvoker(new PurchaseFoodCommand(uIController.app))}//,
-               // { "Search Ingredients", new PTSearchIngredientsInvoker(new SearchingIngredientsCommand(uIController.app), uIController.app)}
+                { "Purchase Food", new PTPurchaseFoodInvoker(new PurchaseFoodCommand(uIController.app))},
+                { "Search Ingredients", new PTSearchIngredientsInvoker(new SearchingIngredientsCommand(uIController.app))}
             };
         }
 

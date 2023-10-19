@@ -3,7 +3,7 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class SearchingIngredientsCommand : Command<Ingredient>
+class SearchingIngredientsCommand : Command<string>
 {
     private App app;
 
@@ -12,9 +12,9 @@ class SearchingIngredientsCommand : Command<Ingredient>
         this.app = app;
     }
 
-    public override void Execute(Ingredient userinput)
+    public override void Execute(string userinput)
     {
-        app.FoodControl.IngredientDatabase.Search(userinput);
+        app.FoodControl.SearchIngredients(userinput);
         onFinished?.Invoke();
     }
 }

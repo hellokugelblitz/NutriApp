@@ -14,7 +14,7 @@ class GetShoppingListCommand : Command<None>
 
     public override void Execute(None userinput)
     {
-        app.FoodControl.ShoppingList.list;
+        app.FoodControl.GetShoppingList();
         onFinished?.Invoke();
     }
 }
