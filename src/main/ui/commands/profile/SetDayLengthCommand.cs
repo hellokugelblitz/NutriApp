@@ -13,6 +13,7 @@ class SetDayLengthCommand : Command<double>
 
     public override void Execute(double userinput)
     {
-
+        app.DayLength = userinput;
+        onFinished?.Invoke();
     }
 }

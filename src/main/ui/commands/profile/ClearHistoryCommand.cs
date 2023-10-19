@@ -13,6 +13,7 @@ class ClearHistoryCommand : Command<None>
 
     public override void Execute(None userinput)
     {
-
+        app.HistoryControl.ClearHistory();
+        onFinished?.Invoke();
     }
 }

@@ -8,6 +8,9 @@ class PTSetDayLengthInvoker : CommandInvoker<double>
 
     public override void Invoke()
     {
+        Console.WriteLine("Enter the new day length (minutes): ");
+        double dayLength = double.Parse(Console.ReadLine());
 
+        command.Execute(dayLength);
     }
 }
