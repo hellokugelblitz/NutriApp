@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp.UI
 {
-    abstract class Updater
+    public abstract class Updater
     {
         protected App _app;
         public Updater(App app)

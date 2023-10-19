@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Collections.Generic;
 using NutriApp.Food;
 using NutriApp.History;
 using NutriApp.Goal;
@@ -37,6 +38,10 @@ namespace NutriApp
 
         public FoodController GetFoodController() {
             return food;}
+
+        public List<Workout.Workout> GetRecommendedWorkouts() => workout.GenerateRecommendedWorkouts(history.Workouts);
+        public double GetTodaysCalories() { return -1d; }
+
         public delegate void DayEventHandler(DateTime date);
         public event DayEventHandler DayEndEvent;
 

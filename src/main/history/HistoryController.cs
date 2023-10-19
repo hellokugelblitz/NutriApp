@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using NutriApp.Food;
+using NutriApp.Workout;
 
 namespace NutriApp.History;
 public class HistoryController {
     private App app;
+
     private List<Entry<Workout.Workout>> workouts = new();
     private List<Entry<double>> weights = new ();
     private List<Entry<Food.Meal>> meals = new ();
@@ -21,6 +23,7 @@ public class HistoryController {
         get => weights;
         set => weights = value;
     }
+
 
     public HistoryController(App app) {
         this.app = app;
