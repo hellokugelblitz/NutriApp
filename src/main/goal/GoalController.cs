@@ -7,8 +7,10 @@ using NutriApp.Food;
 public class GoalController
 {
     private readonly App app;
+    private Goal goal;
 
     public Goal Goal { get; set; }
+    public int GoalIndex { get; set; }
 
     public enum GoalIndicies
     {

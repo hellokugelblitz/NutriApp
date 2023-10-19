@@ -5,6 +5,7 @@ using NutriApp.Workout;
 
 public class GainWeightGoal : Goal
 {
+
     private readonly GoalController controller;
     public double WeightGoal { get; }
     public double DailyCalorieGoal { get; }

@@ -20,4 +20,8 @@
     <ProjectReference Include="..\src\NutriApp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ui" />
+  </ItemGroup>
+
 </Project>

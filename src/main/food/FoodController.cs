@@ -24,6 +24,12 @@ public class FoodController
     /// </summary>
     public Meal[] Meals => meals.ToArray();
 
+    /// <summary>
+    /// The shopping list representing which ingredients the user
+    /// should purchase soon.
+    /// </summary>
+    public ShoppingList ShoppingList => shoppingList;
+
     public FoodController(App app)
     {
         this.app = app;
@@ -137,7 +143,6 @@ public class FoodController
 
         shoppingList.AddItem(ingredient, quantity);
     }
-
     public delegate void MealEventHandler(Meal meal);
     public event MealEventHandler MealConsumeEvent;
 }

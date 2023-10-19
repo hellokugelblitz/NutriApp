@@ -87,4 +87,6 @@ public abstract class PreparedFood<T> : Food where T : Food
     public void AddChild(T child, double quantity) => children.Add(child, quantity);
 
     public void RemoveChild(T child) => children.Remove(child);
+
+    public override string ToString() => name;
 }
