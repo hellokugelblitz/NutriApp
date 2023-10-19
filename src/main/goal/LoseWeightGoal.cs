@@ -3,8 +3,10 @@
 using System.Collections.Generic;
 using NutriApp.Workout;
 
+
 public class LoseWeightGoal : Goal
 {
+
     private readonly GoalController controller;
     public double WeightGoal { get; }
     public double DailyCalorieGoal { get; }

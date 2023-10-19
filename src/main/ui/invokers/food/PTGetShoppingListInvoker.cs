@@ -1,14 +1,15 @@
 using System;
+using NutriApp.Food;
 
-namespace NutriApp.UI
+namespace NutriApp.UI;
+
+class PTGetShoppingListInvoker : CommandInvoker<None>
 {
-    class PTGetShoppingListInvoker : CommandInvoker
+    public PTGetShoppingListInvoker(Command<None> command) : base(command) { }
+
+    public override void Invoke()
     {
-        public PTGetShoppingListInvoker(Command command): base(command) { }
-
-        public override void Invoke()
-        {
-
-        }
+        Console.WriteLine("Getting the Shopping List...");
+        command.Execute(null);
     }
 }

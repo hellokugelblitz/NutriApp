@@ -10,76 +10,102 @@ namespace NutriApp.UI
 
     class FitnessMenu : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
+        private Dictionary<string, Invoker> actions;
         private UIController uIController;
 
         public FitnessMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, Invoker>
+            {
+                { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app))},
+                { "Set Fitness Goal", new PTSetFitnessGoalInvoker(new SetFitnessGoalCommand(uIController.app))},
+                { "Set Weight Goal", new PTSetWeightGoalInvoker(new SetWeightGoalCommand(uIController.app), uIController.app)},
+                { "View Target Calories", new PTViewTargetCaloriesInvoker(new ViewTargetCaloriesCommand(uIController.app))}
+            };
         }
 
         public void PromptWeight(DateTime datetime)
         {
-            // uses dependency arrow to PTSetWeightInvoker
+            actions["Set Weight Goal"].Invoke();
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new FitnessMenu(uIController));
+            uIController.menu = new FitnessMenu(uIController);
         }
     }
 
-    class FoodMenu : Menu
+    class FoodMenu<T> : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
+        private Dictionary<string, Invoker> actions;
         private UIController uIController;
 
         public FoodMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, Invoker>
+            {
+                { "Consume Meal", new PTConsumeMealInvoker(new ConsumeMealCommand(uIController.app))},
+                { "Create Recipe", new PTCreateRecipesInvoker(new CreateRecipesCommand(uIController.app))},
+                { "Get Shopping List", new PTGetShoppingListInvoker(new GetShoppingListCommand(uIController.app))},
+                { "Purchase Food", new PTPurchaseFoodInvoker(new PurchaseFoodCommand(uIController.app))},
+                { "Search Ingredients", new PTSearchIngredientsInvoker(new SearchingIngredientsCommand(uIController.app))}
+            };
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new FoodMenu(uIController));
+            uIController.menu = new FoodMenu<T>(uIController);
         }
     }
 
-    class HistoryMenu : Menu
+    class HistoryMenu<T> : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
+        private Dictionary<string, Invoker> actions;
         private UIController uIController;
 
         public HistoryMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, Invoker>
+            {
+                { "View Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app))},
+                { "View Meals", new PTViewMealsInvoker(new ViewMealsCommand(uIController.app))},
+                { "View Weight", new PTViewWeightInvoker(new ViewWeightCommand(uIController.app))},
+                { "View Workouts", new PTViewWorkoutsInvoker(new ViewWorkoutsCommand(uIController.app))}
+            };
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new HistoryMenu(uIController));
+            uIController.menu = new HistoryMenu<T>(uIController);
         }
     }
 
-    class ProfileMenu : Menu
+    class ProfileMenu<T> : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
+        private Dictionary<string, Invoker> actions;
         private UIController uIController;
 
         public ProfileMenu(UIController uIController)
         {
             this.uIController = uIController;
+            actions = new Dictionary<string, Invoker>
+            {
+                { "Clear History", new PTClearHistoryInvoker(new ClearHistoryCommand(uIController.app))},
+                { "Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app))}
+            };
         }
 
         public void Handle()
         {
-            uIController.SetMenu(new ProfileMenu(uIController));
+            uIController.menu = new ProfileMenu<T>(uIController);
         }
     }
 
     class MainMenu : Menu
     {
-        private Dictionary<string, CommandInvoker> actions;
         private UIController uIController;
 
         public MainMenu(UIController uIController)
@@ -89,7 +115,7 @@ namespace NutriApp.UI
 
         public void Handle()
         {
-            uIController.SetMenu(new MainMenu(uIController));
+            uIController.menu = new MainMenu(uIController);
         }
     }
 }

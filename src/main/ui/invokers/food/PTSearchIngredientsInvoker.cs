@@ -1,14 +1,18 @@
 using System;
+using NutriApp.Food;
 
-namespace NutriApp.UI
+namespace NutriApp.UI;
+
+class PTSearchIngredientsInvoker : CommandInvoker<string>
 {
-	class PTSearchIngredientsInvoker : CommandInvoker
+
+	public PTSearchIngredientsInvoker(Command<string> command) : base(command) { }
+
+	public override void Invoke()
 	{
-		public PTSearchIngredientsInvoker(Command command): base(command) { }
+		Console.WriteLine("Enter name of food to search: ");
+		string name = Console.ReadLine();
 
-		public override void Invoke()
-		{
-
-		}
+		command.Execute(name);
 	}
 }
