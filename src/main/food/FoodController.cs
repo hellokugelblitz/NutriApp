@@ -94,11 +94,10 @@ public class FoodController
     public Ingredient[] SearchIngredients(string term) => ingredientDatabase.Search(term);
 
     /// <summary>
-    /// Consumes a meal if there is enough ingredient stock AND if it won't exceed the daily
-    /// calorie goal; depletes ingredients and updates shopping list. Returns if meal consumption
-    /// was successful.
+    /// Consumes a meal if there is enough ingredient stock. Returns true if meal consumption
+    /// was successful, false otherwise.
     /// </summary>
-    public ConsumeMealResult ConsumeMeal(string name)
+    public bool ConsumeMeal(string name)
     {
         Meal mealConsumed = GetMeal(name);
 
@@ -108,12 +107,8 @@ public class FoodController
             double requiredStock = mealConsumed.Ingredients[ingredient];
 
             if (ingredient.Stock < requiredStock)
-                return ConsumeMealResult.NotEnoughStock;
+                return false;
         }
-
-        // Check calorie goal
-        if (mealConsumed.Calories > app.GoalControl.Goal.DailyCalorieGoal)
-            return ConsumeMealResult.ExceedCalorieGoal;
 
         // Meal consumed successfully
         MealConsumeEvent?.Invoke(mealConsumed);
@@ -128,7 +123,7 @@ public class FoodController
         foreach (Recipe recipe in mealConsumed.Children.Keys)
             shoppingList.Update(recipe);
 
-        return ConsumeMealResult.Success;
+        return true;
     }
 
     /// <summary>
@@ -146,9 +141,3 @@ public class FoodController
     public delegate void MealEventHandler(Meal meal);
     public event MealEventHandler MealConsumeEvent;
 }
-
-/// <summary>
-/// The result of meal consumption. Success is meal was consumed successfully, and a
-/// different value otherwise.
-/// </summary>
-public enum ConsumeMealResult { Success, NotEnoughStock, ExceedCalorieGoal }
