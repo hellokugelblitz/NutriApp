@@ -14,6 +14,16 @@ public class FoodController
     private App app;
     private IngredientDatabase ingredientDatabase;
 
+    /// <summary>
+    /// Retrieves all recipes the user has created.
+    /// </summary>
+    public Recipe[] Recipes => recipes.ToArray();
+
+    /// <summary>
+    /// Retrieves all meals the user has created.
+    /// </summary>
+    public Meal[] Meals => meals.ToArray();
+
     public FoodController(App app)
     {
         this.app = app;
@@ -72,6 +82,16 @@ public class FoodController
 
         return null;
     }
+
+    /// <summary>
+    /// Gets a single ingredient by its unique name.
+    /// </summary>
+    public Ingredient GetIngredient(string name) => ingredientDatabase.Get(name);
+
+    /// <summary>
+    /// Gets all ingredients whose names contain the given search term.
+    /// </summary>
+    public Ingredient[] SearchIngredients(string term) => ingredientDatabase.Search(term);
 
     /// <summary>
     /// Consumes a meal if there is enough ingredient stock AND if it won't exceed the daily
