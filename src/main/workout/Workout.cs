@@ -15,7 +15,7 @@ public class Workout {
     /// Bases equality on just the name of the workouts and intensity
     /// </summary>
     /// <param name="obj">The obj to test equality for</param>
-    /// <returns></returns>
+    /// <returns>Whether the two objects are equal</returns>
     public override bool Equals(object obj)
     {
         return obj is Workout workout && workout.Name == Name && workout.Intensity == Intensity;
