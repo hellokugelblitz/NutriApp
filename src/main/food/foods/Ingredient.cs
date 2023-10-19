@@ -1,5 +1,8 @@
 namespace NutriApp.Food;
 
+/// <summary>
+/// The most basic type of food.
+/// </summary>
 public class Ingredient : Food
 {
     private string name;
