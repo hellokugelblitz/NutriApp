@@ -35,4 +35,6 @@ public class Ingredient : Food
         this.fiber = fiber;
         this.carbohydrates = carbohydrates;
     }
+
+    public override string ToString() => name;
 }
