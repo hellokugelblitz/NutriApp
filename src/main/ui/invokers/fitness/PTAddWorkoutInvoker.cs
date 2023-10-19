@@ -11,6 +11,8 @@ class PTAddWorkoutInvoker : CommandInvoker<Workout.Workout>
 
     public override void Invoke()
     {
+        Console.WriteLine("Enter the name of the workout");
+        string name = Console.ReadLine();
         Console.WriteLine("Enter duration of workout: ");
         int duration = Convert.ToInt32(Console.ReadLine());
         Console.WriteLine("Enter the intensity of the workout (low, medium, high): ");
@@ -31,6 +33,6 @@ class PTAddWorkoutInvoker : CommandInvoker<Workout.Workout>
                 throw new ArgumentException("Invalid intensity");
         }
 
-        command.Execute(new Workout.Workout(duration, workoutIntensity));
+        command.Execute(new Workout.Workout(name, duration, workoutIntensity));
     }
 }
