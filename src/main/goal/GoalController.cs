@@ -10,6 +10,13 @@ public class GoalController
 
     public Goal Goal { get; set; }
 
+    public enum GoalIndicies
+    {
+        LOSE = 1,
+        MAINTAIN = 2,
+        GAIN = 3
+    }
+
     /// <summary>
     /// Sets the goal based on an integer (the index), and the desired weight of the user.
     /// <para>1 = Lose Weight</para>
@@ -20,11 +27,11 @@ public class GoalController
     /// <param name="weight">The desired weight of the user</param>
     /// <exception cref="Exception">If the index is out of bounds</exception>
     public void SetGoalByIndex(int index, int weight) {
-        Goal = index switch
+        Goal = (GoalIndicies)index switch
         {
-            0 =>  new LoseWeightGoal(this, weight),
-            1 => new MaintainWeightGoal(this, weight),
-            2 => new GainWeightGoal(this, weight),
+            GoalIndicies.LOSE =>  new LoseWeightGoal(this, weight),
+            GoalIndicies.MAINTAIN => new MaintainWeightGoal(this, weight),
+            GoalIndicies.GAIN => new GainWeightGoal(this, weight),
             _ => throw new Exception("Invalid goal index")
         };
     }
