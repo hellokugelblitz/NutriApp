@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp
 {
-    abstract class Command
+    public abstract class Command
     {
         public delegate void CommandFinished();
         protected CommandFinished onFinished;
