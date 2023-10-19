@@ -1,8 +1,8 @@
 using System;
 
-namespace NutriApp;
+namespace NutriApp.UI;
 
-class ViewMealsCommand : Command<string>
+class ViewMealsCommand : Command<None>
 {
     private App app;
 
@@ -11,8 +11,8 @@ class ViewMealsCommand : Command<string>
         this.app = app;
     }
 
-    public override void Execute(string userinput)
+    public override void Execute(None userinput)
     {
-
+        onFinished?.Invoke();
     }
 }

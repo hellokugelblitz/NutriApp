@@ -3,13 +3,13 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class PTGetShoppingListInvoker : CommandInvoker<string>
+class PTGetShoppingListInvoker : CommandInvoker<None>
 {
-    public PTGetShoppingListInvoker(Command<string> command) : base(command) { }
+    public PTGetShoppingListInvoker(Command<None> command) : base(command) { }
 
     public override void Invoke()
     {
         Console.WriteLine("Getting the Shopping List...");
-        command.Execute("");
+        command.Execute(null);
     }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp.UI;
 
-class ClearHistoryCommand : Command<string>
+class ClearHistoryCommand : Command<None>
 {
     private App app;
 
@@ -11,7 +11,7 @@ class ClearHistoryCommand : Command<string>
         this.app = app;
     }
 
-    public override void Execute(string userinput)
+    public override void Execute(None userinput)
     {
 
     }

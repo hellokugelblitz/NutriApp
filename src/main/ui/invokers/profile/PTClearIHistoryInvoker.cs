@@ -2,9 +2,9 @@ using System;
 
 namespace NutriApp.UI;
 
-class PTClearHistoryInvoker : CommandInvoker<string>
+class PTClearHistoryInvoker : CommandInvoker<None>
 {
-    public PTClearHistoryInvoker(Command<string> command) : base(command) { }
+    public PTClearHistoryInvoker(Command<None> command) : base(command) { }
 
     public override void Invoke()
     {

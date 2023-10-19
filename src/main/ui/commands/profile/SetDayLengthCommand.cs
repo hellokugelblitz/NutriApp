@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp.UI;
 
-class SetDayLengthCommand : Command<string>
+class SetDayLengthCommand : Command<double>
 {
     private App app;
 
@@ -11,7 +11,7 @@ class SetDayLengthCommand : Command<string>
         this.app = app;
     }
 
-    public override void Execute(string userinput)
+    public override void Execute(double userinput)
     {
 
     }

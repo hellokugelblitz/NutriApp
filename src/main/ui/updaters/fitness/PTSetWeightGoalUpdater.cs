@@ -11,6 +11,6 @@ class PTSetWeightGoalUpdater : Updater
 
     public override void Update()
     {
-        Console.WriteLine("Workout added successfully!");
+        Console.WriteLine("Weight goal added successfully!");
     }
 }

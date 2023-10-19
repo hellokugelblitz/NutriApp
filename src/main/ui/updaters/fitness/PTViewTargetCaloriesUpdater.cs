@@ -11,6 +11,6 @@ class PTViewTargetCaloriesUpdater : Updater
 
     public override void Update()
     {
-        
+        Console.WriteLine($"You should consume {_app.GoalControl.Goal.DailyCalorieGoal} calories today");
     }
 }

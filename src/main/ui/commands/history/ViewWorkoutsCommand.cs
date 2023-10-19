@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp.UI;
 
-class ViewWorkoutsCommand : Command<string>
+class ViewWorkoutsCommand : Command<None>
 {
     private App app;
 
@@ -11,8 +11,8 @@ class ViewWorkoutsCommand : Command<string>
         this.app = app;
     }
 
-    public override void Execute(string userinput)
+    public override void Execute(None userinput)
     {
-        
+        onFinished?.Invoke();
     }
 }

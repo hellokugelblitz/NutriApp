@@ -3,7 +3,7 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class GetShoppingListCommand : Command<string>
+class GetShoppingListCommand : Command<None>
 {
     private App app;
 
@@ -12,7 +12,7 @@ class GetShoppingListCommand : Command<string>
         this.app = app;
     }
 
-    public override void Execute(string userinput)
+    public override void Execute(None userinput)
     {
         app.FoodControl.ShoppingList.list;
         onFinished?.Invoke();
