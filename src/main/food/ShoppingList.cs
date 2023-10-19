@@ -91,17 +91,18 @@ namespace NutriApp.Food
         { 
             foreach (var item in recipe.Children)
             {
-                //If the shopping list doesnt contain this item already add it to the list and exit
-                if(!shoppingList.getList().ContainsKey(item.Key))
-                {
-                    shoppingList.getList().Add(item.Key, item.Value);
-                    return;
-                }
+                //(If we already don't have the amount needed in our pantry)
+                    //If the shopping list doesnt contain this item already add it to the list and exit
+                    if(!shoppingList.getList().ContainsKey(item.Key))
+                    {
+                        shoppingList.getList().Add(item.Key, item.Value);
+                        return;
+                    }
 
-                //Else we need to to bring it up to the minimum for each ingredient at least. 
-                //If its over already we don't care.
-                if(shoppingList.getList()[item.Key] <= item.Value)
-                    shoppingList.getList()[item.Key] = item.Value;
+                    //Else we need to to bring it up to the minimum for each ingredient at least. 
+                    //If its over already we don't care.
+                    if(shoppingList.getList()[item.Key] <= item.Value)
+                        shoppingList.getList()[item.Key] = item.Value;
             }
         }
     }
