@@ -13,7 +13,7 @@ class PTSetFitnessGoalInvoker : CommandInvoker<string>
     public override void Invoke()
     {
        Console.WriteLine("Do you want to incorporate fitness into your plan(yes, no)");
-       string input = Console.ReadLine();
+       string input = Console.ReadLine().ToLower().Trim();
        command.Execute(input);
     }
 }

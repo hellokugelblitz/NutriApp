@@ -13,12 +13,11 @@ public class HistoryController {
     private List<Entry<CalorieTracker>> calories = new();
 
     public List<Entry<Workout.Workout>> Workouts => workouts;
-    public List<Entry<double>> Weights => weights; 
     public List<Entry<Food.Meal>> Meals => meals; 
     public List<Entry<CalorieTracker>> Calories => calories;
     public double CurrentWeight => weights[-1].Value; 
 
-    public List<Entry<double>> Weights1
+    public List<Entry<double>> Weights
     {
         get => weights;
         set => weights = value;
@@ -43,7 +42,7 @@ public class HistoryController {
     }
 
     public void AddCalories(DateTime date) {
-        calories.Add(new Entry<CalorieTracker>(app.TimeStamp, new CalorieTracker(GetCalorieCount(date), -1d)));
+        calories.Add(new Entry<CalorieTracker>(app.TimeStamp, new CalorieTracker(GetCalorieCount(date), app.GoalControl.Goal.DailyCalorieGoal)));
     }
 
     public double GetCalorieCount(DateTime date) {

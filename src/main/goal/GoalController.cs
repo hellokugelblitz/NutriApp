@@ -10,7 +10,7 @@ public class GoalController
     private Goal goal;
 
     public Goal Goal { get; set; }
-    public int GoalIdx { get; set; }
+    public int GoalIndex { get; set; }
 
     public enum GoalIndicies
     {
