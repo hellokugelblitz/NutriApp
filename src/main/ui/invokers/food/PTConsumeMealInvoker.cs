@@ -3,20 +3,16 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class PTConsumeMealInvoker : CommandInvoker<Meal>
+class PTConsumeMealInvoker : CommandInvoker<string>
 {
-    private App app;
 
-    public PTConsumeMealInvoker(Command<Meal> command, App app) : base(command) 
-    { 
-        this.app = app;
-    }
-
+    public PTConsumeMealInvoker(Command<string> command) : base(command) { }
+    
     public override void Invoke()
     {
         Console.WriteLine("Enter name of meal consumed: ");
         string name = Console.ReadLine();
 
-        command.Execute(new Meal(name));
+        command.Execute(name);
     }
 }

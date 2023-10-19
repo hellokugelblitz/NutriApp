@@ -1,8 +1,9 @@
 using System;
+using System.Collections.ObjectModel;
 
 namespace NutriApp.UI
 {
-    abstract class CommandInvoker<T>
+    abstract class CommandInvoker<T> : Invoker
     {
         protected Command<T> command;
 

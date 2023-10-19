@@ -5,12 +5,7 @@ namespace NutriApp.UI;
 
 class PTGetShoppingListInvoker : CommandInvoker<string>
 {
-    private App app;
-
-    public PTGetShoppingListInvoker(Command<string> command, App app) : base(command) 
-    { 
-        this.app = app;
-    }
+    public PTGetShoppingListInvoker(Command<string> command) : base(command) { }
 
     public override void Invoke()
     {

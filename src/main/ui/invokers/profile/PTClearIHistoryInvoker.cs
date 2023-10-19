@@ -4,13 +4,7 @@ namespace NutriApp.UI;
 
 class PTClearHistoryInvoker : CommandInvoker<string>
 {
-
-    private App app;
-
-    public PTClearHistoryInvoker(Command<string> command, App app) : base(command) 
-    { 
-        this.app = app;
-    }
+    public PTClearHistoryInvoker(Command<string> command) : base(command) { }
 
     public override void Invoke()
     {

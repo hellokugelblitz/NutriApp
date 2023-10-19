@@ -6,12 +6,7 @@ namespace NutriApp.UI;
 
 class PTPurchaseFoodInvoker : CommandInvoker<Array>
 {
-    private App app;
-
-    public PTPurchaseFoodInvoker(Command<Array> command, App app) : base(command) 
-    { 
-        this.app = app;
-    }
+    public PTPurchaseFoodInvoker(Command<Array> command) : base(command) { }
 
     public override void Invoke()
     {

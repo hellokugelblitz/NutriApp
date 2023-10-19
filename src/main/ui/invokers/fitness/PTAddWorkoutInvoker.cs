@@ -6,12 +6,8 @@ namespace NutriApp.UI;
 class PTAddWorkoutInvoker : CommandInvoker<Workout.Workout>
 {
     private WorkoutIntensity workoutIntensity;
-    private App app;
 
-    public PTAddWorkoutInvoker(Command<Workout.Workout> command, App app) : base(command)
-    {
-        this.app = app;
-    }
+    public PTAddWorkoutInvoker(Command<Workout.Workout> command) : base(command) { }
 
     public override void Invoke()
     {
@@ -35,7 +31,6 @@ class PTAddWorkoutInvoker : CommandInvoker<Workout.Workout>
                 throw new ArgumentException("Invalid intensity");
         }
 
-        command = new AddWorkoutCommand(app);
         command.Execute(new Workout.Workout(duration, workoutIntensity));
     }
 }

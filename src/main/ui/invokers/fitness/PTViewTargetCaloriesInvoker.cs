@@ -5,12 +5,8 @@ namespace NutriApp.UI;
 
 class PTViewTargetCaloriesInvoker : CommandInvoker<string>
 {
-	private App app;
 
-	public PTViewTargetCaloriesInvoker(Command<string> command, App app) : base(command) 
-	{ 
-		this.app = app;
-	}
+	public PTViewTargetCaloriesInvoker(Command<string> command) : base(command) { }
 
 	public override void Invoke()
 	{

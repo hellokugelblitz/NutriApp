@@ -122,7 +122,6 @@ public class FoodController
 
         shoppingList.AddItem(ingredient, quantity);
     }
-
     public delegate void MealEventHandler(Meal meal);
     public event MealEventHandler MealConsumeEvent;
 }

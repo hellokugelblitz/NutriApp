@@ -5,12 +5,8 @@ namespace NutriApp.UI;
 
 class PTSearchIngredientsInvoker : CommandInvoker<string>
 {
-	private App app;
 
-	public PTSearchIngredientsInvoker(Command<string> command, App app) : base(command) 
-	{ 
-		this.app = app;
-	}
+	public PTSearchIngredientsInvoker(Command<string> command) : base(command) { }
 
 	public override void Invoke()
 	{

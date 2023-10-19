@@ -2,9 +2,9 @@ using System;
 
 namespace NutriApp.UI;
 
-class PTAddWorkoutUpdater : Updater
+class PTSetWeightGoalUpdater : Updater
 {
-    public PTAddWorkoutUpdater(AddWorkoutCommand addWorkoutCommand, App app) : base(app)
+    public PTSetWeightGoalUpdater(AddWorkoutCommand addWorkoutCommand, App app): base(app)
     {
         addWorkoutCommand.Subscribe(Update);
     }

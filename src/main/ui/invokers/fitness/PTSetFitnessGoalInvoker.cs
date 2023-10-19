@@ -6,11 +6,8 @@ namespace NutriApp.UI;
 
 class PTSetFitnessGoalInvoker : CommandInvoker<string>
 {
-    private App app;
-
-    public PTSetFitnessGoalInvoker(Command<string> command, App app) : base(command) 
+    public PTSetFitnessGoalInvoker(Command<string> command) : base(command) 
     {
-        this.app = app;
     }
 
     public override void Invoke()

@@ -4,12 +4,7 @@ namespace NutriApp.UI;
 
 class PTSetDayLengthInvoker : CommandInvoker<string>
 {
-    private App app;
-
-    public PTSetDayLengthInvoker(Command<string> command, App app) : base(command) 
-    { 
-        this.app = app;
-    }
+    public PTSetDayLengthInvoker(Command<string> command) : base(command) { }
 
     public override void Invoke()
     {

@@ -5,12 +5,8 @@ namespace NutriApp.UI;
 
 class PTCreateRecipesInvoker : CommandInvoker<Recipe>
 {
-    private App app;
 
-    public PTCreateRecipesInvoker(Command<Recipe> command, App app) : base(command)
-    {
-        this.app = app;
-    }
+    public PTCreateRecipesInvoker(Command<Recipe> command) : base(command) { }
 
     public override void Invoke()
     {

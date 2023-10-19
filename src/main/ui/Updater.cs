@@ -1,9 +1,15 @@
 using System;
 
-namespace NutriApp
+namespace NutriApp.UI
 {
-    interface Updater
+    abstract class Updater
     {
-        void Update();
+        protected App _app;
+        public Updater(App app)
+        {
+            _app = app;
+        }
+        
+        public abstract void Update();
     }
 }

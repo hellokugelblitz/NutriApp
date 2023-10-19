@@ -4,12 +4,12 @@ namespace NutriApp.UI;
 
 class PTConsumeMealUpdater : Updater
 {
-    public PTConsumeMealUpdater(ConsumeMealCommand consumeMealCommand)
+    public PTConsumeMealUpdater(ConsumeMealCommand consumeMealCommand, App app): base(app)
     {
         consumeMealCommand.Subscribe(Update);
     }
 
-    public void Update()
+    public override void Update()
     {
         Console.WriteLine("Meal was consumed!");
     }

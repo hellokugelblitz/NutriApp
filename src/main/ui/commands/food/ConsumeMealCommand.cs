@@ -3,7 +3,7 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class ConsumeMealCommand : Command<Meal>
+class ConsumeMealCommand : Command<string>
 {
     private App app;
 
@@ -12,7 +12,7 @@ class ConsumeMealCommand : Command<Meal>
         this.app = app;
     }
 
-    public override void Execute(Meal userinput)
+    public override void Execute(string userinput)
     {
         app.FoodControl.ConsumeMeal(userinput);
         onFinished?.Invoke();
