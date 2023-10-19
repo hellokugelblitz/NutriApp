@@ -3,17 +3,17 @@ using NutriApp.Workout;
 
 namespace NutriApp.UI;
 
-class PTViewTargetCaloriesInvoker : CommandInvoker<Goal.Goal>
+class PTViewTargetCaloriesInvoker : CommandInvoker<string>
 {
 	private App app;
 
-	public PTViewTargetCaloriesInvoker(Command<Goal.Goal> command, App app) : base(command) 
+	public PTViewTargetCaloriesInvoker(Command<string> command, App app) : base(command) 
 	{ 
 		this.app = app;
 	}
 
 	public override void Invoke()
 	{
-
+		command.Execute("");
 	}
 }

@@ -3,7 +3,7 @@ using NutriApp.Workout;
 
 namespace NutriApp.UI;
 
-class ViewTargetCaloriesCommand : Command<Goal.Goal>
+class ViewTargetCaloriesCommand : Command<string>
 {
     private App app;
 
@@ -12,8 +12,8 @@ class ViewTargetCaloriesCommand : Command<Goal.Goal>
         this.app = app;
     }
 
-    public override void Execute(Goal.Goal userinput)
+    public override void Execute(string input)
     {
-        
+        onFinished?.Invoke();
     }
 }

@@ -18,5 +18,6 @@ class SetFitnessGoalCommand : Command<string>
         {
             app.GoalControl.IncorporateFitness();
         }
+        onFinished?.Invoke();
     }
 }
