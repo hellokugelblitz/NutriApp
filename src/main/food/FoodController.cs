@@ -14,6 +14,16 @@ public class FoodController
     private App app;
     private IngredientDatabase ingredientDatabase;
 
+    /// <summary>
+    /// Retrieves all recipes the user has created.
+    /// </summary>
+    public Recipe[] Recipes => recipes.ToArray();
+
+    /// <summary>
+    /// Retrieves all meals the user has created.
+    /// </summary>
+    public Meal[] Meals => meals.ToArray();
+
     public FoodController(App app)
     {
         this.app = app;
@@ -74,11 +84,20 @@ public class FoodController
     }
 
     /// <summary>
-    /// Consumes a meal if there is enough ingredient stock AND if it won't exceed the daily
-    /// calorie goal; depletes ingredients and updates shopping list. Returns if meal consumption
-    /// was successful.
+    /// Gets a single ingredient by its unique name.
     /// </summary>
-    public ConsumeMealResult ConsumeMeal(string name)
+    public Ingredient GetIngredient(string name) => ingredientDatabase.Get(name);
+
+    /// <summary>
+    /// Gets all ingredients whose names contain the given search term.
+    /// </summary>
+    public Ingredient[] SearchIngredients(string term) => ingredientDatabase.Search(term);
+
+    /// <summary>
+    /// Consumes a meal if there is enough ingredient stock. Returns true if meal consumption
+    /// was successful, false otherwise.
+    /// </summary>
+    public bool ConsumeMeal(string name)
     {
         Meal mealConsumed = GetMeal(name);
 
@@ -88,12 +107,8 @@ public class FoodController
             double requiredStock = mealConsumed.Ingredients[ingredient];
 
             if (ingredient.Stock < requiredStock)
-                return ConsumeMealResult.NotEnoughStock;
+                return false;
         }
-
-        // Check calorie goal
-        if (mealConsumed.Calories > app.GoalControl.Goal.DailyCalorieGoal)
-            return ConsumeMealResult.ExceedCalorieGoal;
 
         // Meal consumed successfully
         MealConsumeEvent?.Invoke(mealConsumed);
@@ -108,7 +123,7 @@ public class FoodController
         foreach (Recipe recipe in mealConsumed.Children.Keys)
             shoppingList.Update(recipe);
 
-        return ConsumeMealResult.Success;
+        return true;
     }
 
     /// <summary>
@@ -125,9 +140,3 @@ public class FoodController
     public delegate void MealEventHandler(Meal meal);
     public event MealEventHandler MealConsumeEvent;
 }
-
-/// <summary>
-/// The result of meal consumption. Success is meal was consumed successfully, and a
-/// different value otherwise.
-/// </summary>
-public enum ConsumeMealResult { Success, NotEnoughStock, ExceedCalorieGoal }
