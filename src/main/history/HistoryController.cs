@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using NutriApp.Food;
 using NutriApp.Workout;
 
@@ -70,12 +71,18 @@ public class HistoryController {
     /// <summary>
     /// saves each of the histories
     /// </summary>
-    private void Save() { }
-    
+    public string Save()
+    {
+        return JsonSerializer.Serialize(this);
+    }
+
     /// <summary>
     /// loads each of the histories in the constructor
     /// </summary>
-    private void Load() { }
+    public void Load(string json)
+    {
+        HistoryController controller = JsonSerializer.Deserialize<HistoryController>(json);
+    }
 }
 
 /// <summary>
