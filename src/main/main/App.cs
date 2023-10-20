@@ -1,9 +1,11 @@
 using System;
 using System.Threading;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NutriApp.Food;
 using NutriApp.History;
 using NutriApp.Goal;
+using NutriApp.UI;
 using NutriApp.Workout;
 
 namespace NutriApp
@@ -14,16 +16,18 @@ namespace NutriApp
         private GoalController goal;
         private WorkoutController workout;
         private FoodController food;
+        private UIController ui;
         private DateTime date;
         private User user;
         private double dayLength;
+        private Task<None> timerThread;
+        public HistoryController HistoryControl => history;
+        public GoalController GoalControl => goal; 
+        public WorkoutController WorkoutControl => workout;
+        public FoodController FoodControl => food;
+        public UIController UIControl => ui;
+        public DateTime TimeStamp => date;
         
-        public HistoryController HistoryControl;
-        public GoalController GoalControl { get => goal; }
-        public WorkoutController WorkoutControl { get => workout; }
-        public FoodController FoodControl { get; }
-        public DateTime TimeStamp { get => DateTime.Now; }
-        public int DailyCalories { get; }
         public User User { get => user; set => user = value; }
         public double DayLength { set => dayLength = value; }
 
@@ -32,12 +36,20 @@ namespace NutriApp
             this.dayLength = dayLength;
             date = DateTime.Now;
             Console.WriteLine("day length " + this.dayLength);
-            Thread timer = new Thread(DayLoop);
-            timer.Start();
+            timerThread = new Task<None>(DayLoop);
+            timerThread.Start();
+
+            history = new HistoryController(this);
+            goal = new GoalController(this);
+            workout = new WorkoutController();
+            food = new FoodController(this);
+            ui = new UIController(this);
         }
 
-        public FoodController GetFoodController() {
-            return food;}
+        public void KillTimer()
+        {
+            timerThread.Dispose();
+        }
 
         public List<Workout.Workout> GetRecommendedWorkouts() => workout.GenerateRecommendedWorkouts(history.Workouts);
         public double GetTodaysCalories() { return -1d; }
@@ -55,7 +67,7 @@ namespace NutriApp
             App app = new App(2);
         }
 
-        private void DayLoop()
+        private None DayLoop()
         {
             while (true)
             {

@@ -3,7 +3,7 @@ using System.ComponentModel.Design;
 
 namespace NutriApp.UI;
 
-class UIController
+public class UIController
 {
     private Menu _menu;
     private App _app;

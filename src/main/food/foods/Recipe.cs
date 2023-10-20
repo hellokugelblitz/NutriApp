@@ -7,7 +7,7 @@ namespace NutriApp.Food;
 /// </summary>
 public class Recipe : PreparedFood<Ingredient>
 {
-    private List<string> instructions;
+    private List<string> instructions = new ();
 
     public string[] Instructions { get; }
 

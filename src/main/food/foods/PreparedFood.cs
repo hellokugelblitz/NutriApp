@@ -8,7 +8,7 @@ namespace NutriApp.Food;
 public abstract class PreparedFood<T> : Food where T : Food
 {
     private string name;
-    private Dictionary<T, double> children;
+    private Dictionary<T, double> children = new();
 
     public Dictionary<T, double> Children => children;
     public string Name => name;

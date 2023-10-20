@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace NutriApp.UI
 {
-    interface Menu
+    public interface Menu
     {
         void Handle();
     }
 
-    class FitnessMenu : Menu
+    public class FitnessMenu : Menu
     {
         private Dictionary<string, Invoker> actions;
         private UIController uIController;
@@ -36,7 +36,7 @@ namespace NutriApp.UI
         }
     }
 
-    class FoodMenu<T> : Menu
+    public class FoodMenu : Menu
     {
         private Dictionary<string, Invoker> actions;
         private UIController uIController;
@@ -56,11 +56,11 @@ namespace NutriApp.UI
 
         public void Handle()
         {
-            uIController.menu = new FoodMenu<T>(uIController);
+            uIController.menu = new FoodMenu(uIController);
         }
     }
 
-    class HistoryMenu<T> : Menu
+    public class HistoryMenu : Menu
     {
         private Dictionary<string, Invoker> actions;
         private UIController uIController;
@@ -79,11 +79,11 @@ namespace NutriApp.UI
 
         public void Handle()
         {
-            uIController.menu = new HistoryMenu<T>(uIController);
+            uIController.menu = new HistoryMenu(uIController);
         }
     }
 
-    class ProfileMenu<T> : Menu
+    public class ProfileMenu : Menu
     {
         private Dictionary<string, Invoker> actions;
         private UIController uIController;
@@ -100,11 +100,11 @@ namespace NutriApp.UI
 
         public void Handle()
         {
-            uIController.menu = new ProfileMenu<T>(uIController);
+            uIController.menu = new ProfileMenu(uIController);
         }
     }
 
-    class MainMenu : Menu
+    public class MainMenu : Menu
     {
         private UIController uIController;
 
