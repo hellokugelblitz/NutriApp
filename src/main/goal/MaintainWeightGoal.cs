@@ -3,6 +3,7 @@ namespace NutriApp.Goal;
 using System.Collections.Generic;
 using NutriApp.Workout;
 
+
 public class MaintainWeightGoal : Goal
 {
     private readonly GoalController controller;
@@ -37,5 +38,7 @@ public class MaintainWeightGoal : Goal
         return false;
      }
 
-    public void IncorporateFitness(List<Workout> recommendedWorkouts) { }
+    public void IncorporateFitness(List<Workout> recommendedWorkouts) {
+        controller.Goal = new FitnessGoal(this, recommendedWorkouts);
+    }
 }

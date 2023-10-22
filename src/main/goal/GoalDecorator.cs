@@ -6,11 +6,14 @@ using NutriApp.Workout;
 public abstract class GoalDecorator : Goal
 {
     protected Goal goal;
+
     public double WeightGoal { get; }
     public double DailyCalorieGoal { get; }
 
+
     public GoalDecorator(Goal goal)
     {
+
         this.goal = goal;
     }
 

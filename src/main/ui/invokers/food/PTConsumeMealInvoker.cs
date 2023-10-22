@@ -1,14 +1,18 @@
 using System;
+using NutriApp.Food;
 
-namespace NutriApp.UI
+namespace NutriApp.UI;
+
+class PTConsumeMealInvoker : CommandInvoker<string>
 {
-    class PTConsumeMealInvoker : CommandInvoker
+
+    public PTConsumeMealInvoker(Command<string> command) : base(command) { }
+    
+    public override void Invoke()
     {
-        public PTConsumeMealInvoker(Command command) : base(command) { }
+        Console.WriteLine("Enter name of meal consumed: ");
+        string name = Console.ReadLine();
 
-        public override void Invoke()
-        {
-
-        }
+        command.Execute(name);
     }
 }

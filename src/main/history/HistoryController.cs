@@ -1,25 +1,39 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using NutriApp.Food;
 using NutriApp.Workout;
 
 namespace NutriApp.History;
 public class HistoryController {
     private App app;
-    private List<Entry<Workout.Workout>> workouts = new ();
+
+    private List<Entry<Workout.Workout>> workouts = new();
     private List<Entry<double>> weights = new ();
     private List<Entry<Food.Meal>> meals = new ();
-    private List<Entry<(double, double)>> calories = new();
-    
-    public List<Entry<Workout.Workout>> Workouts { get => workouts; }
-    public List<Entry<double>> Weights { get => weights; }
-    public List<Entry<Food.Meal>> Meals { get => meals; }
-    public List<Entry<(double, double)>> Calories { get => calories; }
+    private List<Entry<CalorieTracker>> calories = new();
+
+    public List<Entry<Workout.Workout>> Workouts => workouts;
+    public List<Entry<Food.Meal>> Meals => meals; 
+    public List<Entry<CalorieTracker>> Calories => calories;
+    public double CurrentWeight => weights[-1].Value; 
+
+    public List<Entry<double>> Weights
+    {
+        get => weights;
+        set => weights = value;
+    }
+
+
     public HistoryController(App app) {
         this.app = app;
     }
+
+    public void AddWorkout(Workout.Workout workout)
+    {
+        workouts.Add(new Entry<Workout.Workout>(app.TimeStamp, workout));
+    }
     
-//    public AddWorkout(Workout workout)
     public void SetWeight(double weight) {
         weights.Add(new Entry<double>(app.TimeStamp, weight));
     }
@@ -29,10 +43,15 @@ public class HistoryController {
     }
 
     public void AddCalories(DateTime date) {
-        
+        calories.Add(new Entry<CalorieTracker>(app.TimeStamp, new CalorieTracker(GetCalorieCount(date), app.GoalControl.Goal.DailyCalorieGoal)));
     }
 
-    public double GetCaloreCount(DateTime date) {
+    /// <summary>
+    /// calculates the calories eaten that day
+    /// </summary>
+    /// <param name="date">the date you are checking</param>
+    /// <returns>number of calories eaten</returns>
+    public double GetCalorieCount(DateTime date) {
         double calorieCount = 0;
         DateTime timeStamp = app.TimeStamp;
         foreach (var meal in meals) {
@@ -43,9 +62,32 @@ public class HistoryController {
 
         return calorieCount;
     }
+    
+    /// <summary>
+    /// clears the history of everything. This is used for developer purposes
+    /// </summary>
     public void ClearHistory() { }
 
-    private void Save() { }
-    private void Load() { }
+    /// <summary>
+    /// saves each of the histories
+    /// </summary>
+    public string Save()
+    {
+        return JsonSerializer.Serialize(this);
+    }
 
+    /// <summary>
+    /// loads each of the histories in the constructor
+    /// </summary>
+    public void Load(string json)
+    {
+        HistoryController controller = JsonSerializer.Deserialize<HistoryController>(json);
+    }
 }
+
+/// <summary>
+/// data class used for the calories history
+/// </summary>
+/// <param name="ActualCalories">number of calories the user ate that day</param>
+/// <param name="TargetCalories">number of calories the user was recommended to eat that day</param>
+public record CalorieTracker(double ActualCalories, double TargetCalories);
