@@ -101,8 +101,8 @@ public class SerializablePreparedFood
     [JsonProperty] private string name;
     [JsonProperty] private Dictionary<string, double> children;  // string key because serializer doesn't like Food key
 
-    public string Name => name;
-    public Dictionary<string, double> Children => children;
+    [JsonIgnore] public string Name => name;
+    [JsonIgnore] public Dictionary<string, double> Children => children;
 
     public SerializablePreparedFood(string name)
     {
