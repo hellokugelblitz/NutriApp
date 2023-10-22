@@ -36,4 +36,16 @@ public interface Goal
     /// </summary>
     /// <param name="recommendedWorkouts"></param>
     void IncorporateFitness(List<Workout> recommendedWorkouts);
+
+    /// <summary>
+    /// Returns a dictionary of the goal's properties, for serialization.
+    /// </summary>
+    /// <returns></returns>
+    Dictionary<string, object> ToDictionary => new()
+    {
+        {"weightGoal", WeightGoal},
+        {"dailyCalorieGoal", DailyCalorieGoal},
+        {"type", Type}
+    };
+
 }
