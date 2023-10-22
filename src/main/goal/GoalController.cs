@@ -1,13 +1,16 @@
 namespace NutriApp.Goal;
+using Newtonsoft.Json;
 
-using System;
+using System.Collections.Generic;
+using System.IO;
 using NutriApp;
 using NutriApp.Food;
 
 public class GoalController
 {
+    private readonly string goalsPath = $"{Persistence.GoalsDataPath}\\goals.json";
+
     private readonly App app;
-    private Goal goal;
 
     public Goal Goal { get; set; }
     public int GoalIndex { get; set; }
@@ -64,6 +67,52 @@ public class GoalController
         return todaysCalories > calorieGoal + marginOfError;
     }
 
-    private void Save() { }
-    private void Load() { }
+    public void Save() {
+        // Write the goal to a JSON file for persistence
+        File.WriteAllText(goalsPath, JsonConvert.SerializeObject(Goal.ToDictionary));
+    }
+    public void Load() {
+        // Don't do anything if data files don't exist yet (e.g. first startup)
+        if (!File.Exists(goalsPath))
+            return;
+
+        // Read the goal from a JSON file for persistence
+        var goalDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(goalsPath));
+        var type = (string) goalDict["type"];
+        var weightGoal = (double) goalDict["weightGoal"];
+        var dailyCalorieGoal = (double) goalDict["dailyCalorieGoal"];
+
+        // Function to create a goal based on the type
+        Goal GoalFromString(string type)
+        {
+            Goal goal = null;
+            
+            // Base goal types
+            if (!type.Contains(';')) goal = type switch
+            {
+                "gain" => new GainWeightGoal(this, dailyCalorieGoal),
+                "lose" => new LoseWeightGoal(this, dailyCalorieGoal),
+                "maintain" => new MaintainWeightGoal(this, dailyCalorieGoal),
+                _ => throw new System.Exception($"Invalid goal type: {type}")
+            };
+
+            // Decorated types
+            else
+            {
+                var types = type.Split(new char[] {';'}, 2);
+                type = types[0];
+                var decoratedTypes = types[1];
+                goal = type switch
+                {
+                    "fitness" => new FitnessGoal(GoalFromString(decoratedTypes), app.GetRecommendedWorkouts()),
+                    _ => throw new System.Exception($"Invalid goal type: {type}")
+                };
+            }
+            
+            return goal;
+        }
+
+        // Create the goal based on the type
+        Goal = GoalFromString(type);
+    }
 }
