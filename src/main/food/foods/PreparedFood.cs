@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace NutriApp.Food;
 
@@ -17,7 +18,7 @@ public abstract class PreparedFood<T> : Food where T : Food
     /// Returns a dictionary where the key is an ingredient, and the value is
     /// the amount of that ingredient required to prepare this food.
     /// </summary>
-    public Dictionary<Ingredient, double> Ingredients { get; }
+    public abstract Dictionary<Ingredient, double> Ingredients { get; }
     
     public double Calories
     {
@@ -82,6 +83,7 @@ public abstract class PreparedFood<T> : Food where T : Food
     public PreparedFood(string name)
     {
         this.name = name;
+        children = new Dictionary<T, double>();
     }
 
     public void AddChild(T child, double quantity) => children.Add(child, quantity);
@@ -89,4 +91,24 @@ public abstract class PreparedFood<T> : Food where T : Food
     public void RemoveChild(T child) => children.Remove(child);
 
     public override string ToString() => name;
+}
+
+/// <summary>
+/// Utility class to make JSON serialization of PreparedFood cleaner.
+/// </summary>
+public class SerializablePreparedFood
+{
+    [JsonProperty] private string name;
+    [JsonProperty] private Dictionary<string, double> children;  // string key because serializer doesn't like Food key
+
+    public string Name => name;
+    public Dictionary<string, double> Children => children;
+
+    public SerializablePreparedFood(string name)
+    {
+        this.name = name;
+        this.children = new Dictionary<string, double>();
+    }
+
+    public void AddChild(string name, double quantity) => children.Add(name, quantity);
 }

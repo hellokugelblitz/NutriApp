@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace NutriApp.Food;
 
 /// <summary>
@@ -5,5 +8,19 @@ namespace NutriApp.Food;
 /// </summary>
 public class Meal : PreparedFood<Recipe>
 {
+    public override Dictionary<Ingredient, double> Ingredients
+    {
+        get
+        {
+            Dictionary<Ingredient, double> result = new Dictionary<Ingredient, double>();
+
+            foreach (Recipe recipe in Children.Keys)
+                // Concatenate recipe ingredient dictionary to result dictionary
+                result = recipe.Children.Concat(result).ToDictionary(x => x.Key, x => x.Value);
+
+            return result;
+        }
+    }
+
     public Meal(string name) : base(name) {}
 }
