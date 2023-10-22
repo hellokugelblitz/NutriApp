@@ -17,6 +17,8 @@ public abstract class GoalDecorator : Goal
         this.goal = goal;
     }
 
+    public abstract string Type { get; }
+
     public bool CheckWeight(double userWeight)
     {
         return goal.CheckWeight(userWeight);

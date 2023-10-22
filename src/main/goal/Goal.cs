@@ -1,6 +1,7 @@
 ﻿namespace NutriApp.Goal;
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using NutriApp.Workout;
 
 
@@ -15,6 +16,11 @@ public interface Goal
     /// The number of calories the user should consume per day
     /// </summary>
     double DailyCalorieGoal { get; }
+
+    /// <summary>
+    /// The type of goal the user has
+    /// </summary>
+    string Type { get; }
 
     /// <summary>
     /// Compares the user's weight with the goal weight. If the correct

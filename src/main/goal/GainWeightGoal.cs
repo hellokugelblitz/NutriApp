@@ -1,6 +1,7 @@
 namespace NutriApp.Goal;
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using NutriApp.Workout;
 
 public class GainWeightGoal : Goal
@@ -9,6 +10,7 @@ public class GainWeightGoal : Goal
     private readonly GoalController controller;
     public double WeightGoal { get; }
     public double DailyCalorieGoal { get; }
+    public string Type => "gain";
 
     public GainWeightGoal(GoalController controller, double weightGoal)
     {
@@ -35,4 +37,13 @@ public class GainWeightGoal : Goal
     public void IncorporateFitness(List<Workout> recommendedWorkouts) {
         controller.Goal = new FitnessGoal(this, recommendedWorkouts);
     }
+
+    public SerializableGoal Serialize() {
+        return new SerializableGoal(this);
+    }
+}
+
+public class SerializableGainWeightGoal: SerializableGoal {
+
+    public SerializableGainWeightGoal(GainWeightGoal goal) : base(goal) {}
 }
