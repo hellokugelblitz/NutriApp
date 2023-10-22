@@ -29,8 +29,10 @@ public class SerializableRecipe : SerializablePreparedFood
 {
     [JsonProperty] private string[] preparationInstructions;
 
-    public SerializableRecipe(string name, string[] preparationInstructions) : base(name)
+    public string[] Instructions => preparationInstructions;
+
+    public SerializableRecipe(string name, string[] instructions) : base(name)
     {
-        this.preparationInstructions = preparationInstructions;
+        this.preparationInstructions = instructions;
     }
 }

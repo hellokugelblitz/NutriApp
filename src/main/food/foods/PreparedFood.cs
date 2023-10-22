@@ -101,10 +101,13 @@ public class SerializablePreparedFood
     [JsonProperty] private string name;
     [JsonProperty] private Dictionary<string, double> children;  // string key because serializer doesn't like Food key
 
+    public string Name => name;
+    public Dictionary<string, double> Children => children;
+
     public SerializablePreparedFood(string name)
     {
         this.name = name;
-        children = new Dictionary<string, double>();
+        this.children = new Dictionary<string, double>();
     }
 
     public void AddChild(string name, double quantity) => children.Add(name, quantity);
