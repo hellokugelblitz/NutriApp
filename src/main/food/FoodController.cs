@@ -1,4 +1,7 @@
+using Newtonsoft.Json;
+using System.IO;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace NutriApp.Food;
 
@@ -34,14 +37,68 @@ public class FoodController
     {
         this.app = app;
         ingredientDatabase = new InMemoryIngredientDatabase();
+        shoppingList = new ShoppingList();
 
         recipes = new List<Recipe>();
         meals = new List<Meal>();
+
+        Load();
     }
 
-    private void Save() {}
+    public void Save()
+    {
+        // Write each ingredient stock to a JSON file for persistence, since it isn't stored with
+        // the other ingredient info. Also just store the ingredient name because it serializes better.
+        Dictionary<string, double> ingredientStocks = new Dictionary<string, double>();
+
+        foreach (Recipe recipe in recipes)
+            foreach (Ingredient ingredient in recipe.Ingredients.Keys)
+                ingredientStocks.Add(ingredient.Name, ingredient.Stock);
+
+        string ingredientJson = JsonConvert.SerializeObject(ingredientStocks);
+        File.WriteAllText($"{Persistence.FoodDataPath}\\ingredient_stock.json", ingredientJson);
+
+        // Serialize each recipe
+        List<SerializableRecipe> recipesToWrite = new List<SerializableRecipe>();
+
+        foreach (Recipe recipe in recipes)
+        {
+            SerializableRecipe recipeToWrite = new SerializableRecipe(recipe.Name, recipe.Instructions);
+
+            Dictionary<Ingredient, double>.KeyCollection ingredients = recipe.Children.Keys;
+
+            foreach (Ingredient ingredient in ingredients)
+                recipeToWrite.AddChild(ingredient.Name, recipe.Children[ingredient]);
+
+            recipesToWrite.Add(recipeToWrite);
+        }
+
+        string recipeJson = JsonConvert.SerializeObject(recipesToWrite);
+        File.WriteAllText($"{Persistence.FoodDataPath}\\recipes.json", recipeJson);
+
+        // Serialize each meal
+        List<SerializablePreparedFood> mealsToWrite = new List<SerializablePreparedFood>();
+
+        foreach (Meal meal in meals)
+        {
+            SerializablePreparedFood mealToWrite = new SerializablePreparedFood(meal.Name);
+
+            Dictionary<Recipe, double>.KeyCollection ingredients = meal.Children.Keys;
+
+            foreach (Recipe recipe in ingredients)
+                mealToWrite.AddChild(recipe.Name, meal.Children[recipe]);
+
+            mealsToWrite.Add(mealToWrite);
+        }
+
+        string mealJson = JsonConvert.SerializeObject(mealsToWrite);
+        File.WriteAllText($"{Persistence.FoodDataPath}\\meals.json", mealJson);
+    }
     
-    private void Load() {}
+    private void Load()
+    {
+
+    }
 
     /// <summary>
     /// Adds a blank recipe with the given name to the user's saved recipes.
