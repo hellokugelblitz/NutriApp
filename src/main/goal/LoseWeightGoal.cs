@@ -33,5 +33,7 @@ public class LoseWeightGoal : Goal
         return false;
     }
 
-    public void IncorporateFitness(List<Workout> recommendedWorkouts) { }
+    public void IncorporateFitness(List<Workout> recommendedWorkouts) {
+        controller.Goal = new FitnessGoal(this, recommendedWorkouts);
+    }
 }
