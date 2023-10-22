@@ -37,13 +37,4 @@ public class GainWeightGoal : Goal
     public void IncorporateFitness(List<Workout> recommendedWorkouts) {
         controller.Goal = new FitnessGoal(this, recommendedWorkouts);
     }
-
-    public SerializableGoal Serialize() {
-        return new SerializableGoal(this);
-    }
-}
-
-public class SerializableGainWeightGoal: SerializableGoal {
-
-    public SerializableGainWeightGoal(GainWeightGoal goal) : base(goal) {}
 }
