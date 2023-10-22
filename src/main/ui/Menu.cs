@@ -94,7 +94,8 @@ namespace NutriApp.UI
             actions = new Dictionary<string, Invoker>
             {
                 { "Clear History", new PTClearHistoryInvoker(new ClearHistoryCommand(uIController.app))},
-                { "Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app))}
+                { "Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app))},
+                {"Quit", new PTQuitInvoker(new QuitCommand(uIController.app))}
             };
         }
 
