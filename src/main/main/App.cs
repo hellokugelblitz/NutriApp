@@ -21,6 +21,7 @@ namespace NutriApp
         private User user;
         private double dayLength;
         private Task<None> timerThread;
+        
         public HistoryController HistoryControl => history;
         public GoalController GoalControl => goal; 
         public WorkoutController WorkoutControl => workout;
@@ -35,15 +36,14 @@ namespace NutriApp
         {
             this.dayLength = dayLength;
             date = DateTime.Now;
-            Console.WriteLine("day length " + this.dayLength);
             timerThread = new Task<None>(DayLoop);
             timerThread.Start();
 
-            history = new HistoryController(this);
             goal = new GoalController(this);
             workout = new WorkoutController();
             food = new FoodController(this);
             ui = new UIController(this);
+            history = new HistoryController(this);
         }
 
         public void KillTimer()
