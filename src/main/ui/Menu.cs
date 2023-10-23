@@ -123,14 +123,18 @@ class FoodMenu : Menu, Help
         var getShoppingList = new GetShoppingListCommand(uiController.app);
         var purchaseFood = new PurchaseFoodCommand(uiController.app);
         var searchIngredients = new SearchingIngredientsCommand(uiController.app);
+        var viewMeals = new ViewMealsCommand();
+        var viewRecipes = new ViewRecipesCommand();
         
         actions = new Dictionary<string, Invoker>
             {
-                { "Consume Meal", new PTConsumeMealInvoker(consumeMeal)},
-                { "Create Recipe", new PTCreateRecipesInvoker(createRecipe)},
-                { "Get Shopping List", new PTGetShoppingListInvoker(getShoppingList)},
-                { "Purchase Food", new PTPurchaseFoodInvoker(purchaseFood)},
-                { "Search Ingredients", new PTSearchIngredientsInvoker(searchIngredients)},
+                {"Consume Meal", new PTConsumeMealInvoker(consumeMeal)},
+                {"Create Recipe", new PTCreateRecipesInvoker(createRecipe)},
+                {"Get Shopping List", new PTGetShoppingListInvoker(getShoppingList)},
+                {"Purchase Food", new PTPurchaseFoodInvoker(purchaseFood)},
+                {"Search Ingredients", new PTSearchIngredientsInvoker(searchIngredients)},
+                {"View Meals", new PTViewMealsInvoker(viewMeals)},
+                {"View Recipes", new PTViewRecipesInvoker(viewRecipes)},
                 {"Main Menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
                 {"Help", new PTHelpInvoker(this)}
             };
@@ -140,6 +144,8 @@ class FoodMenu : Menu, Help
         new PTGetShoppingListUpdater(getShoppingList, uiController.app);
         new PTPurchaseFoodUpdater(purchaseFood, uiController.app);
         new PTSearchIngredientsUpdater(searchIngredients, uiController.app);
+        new PTViewMealsUpdater(viewMeals, uiController.app);
+        new PTViewRecipesUpdater(viewRecipes, uiController.app);
 
     }
 
@@ -182,14 +188,14 @@ class HistoryMenu : Menu, Help
     {
         this.uIController = uiController;
         var viewCalories = new ViewCaloriesCommand(uiController.app);
-        var viewMeals = new ViewMealsCommand(uiController.app);
+        var viewMeals = new ViewMealsEatenCommand(uiController.app);
         var viewWeight = new ViewWeightCommand(uiController.app);
         var viewWorkouts = new ViewWorkoutsCommand(uiController.app);
 
             actions = new Dictionary<string, Invoker>
             {
                 {"View Calories", new PTViewCaloriesInvoker(viewCalories)},
-                {"View Meals", new PTViewMealsInvoker(viewMeals)},
+                {"View Meals", new PTViewMealsEatenInvoker(viewMeals)},
                 {"View Weight", new PTViewWeightInvoker(viewWeight)},
                 {"View Workouts", new PTViewWorkoutsInvoker(viewWorkouts)},
                 {"Main Menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
@@ -197,7 +203,7 @@ class HistoryMenu : Menu, Help
             };
         
         new PTViewCaloriesUpdater(viewCalories, uiController.app);
-        new PTViewMealsUpdater(viewMeals, uiController.app);
+        new PTViewMealsEatenUpdater(viewMeals, uiController.app);
         new PTViewWeightUpdater(viewWeight, uiController.app);
         new PTViewWorkoutsUpdater(viewWorkouts, uiController.app);
 

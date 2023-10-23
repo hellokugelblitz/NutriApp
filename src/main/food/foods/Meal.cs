@@ -23,4 +23,17 @@ public class Meal : PreparedFood<Recipe>
     }
 
     public Meal(string name) : base(name) {}
+
+    public override string ToString()
+    {
+        string output = Name + "(";
+
+        foreach (var recipie in Children.Keys)
+        {
+            output += recipie.Name + ", ";
+        }
+
+        output += ")";
+        return output;
+    }
 }

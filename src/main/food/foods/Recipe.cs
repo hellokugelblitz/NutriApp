@@ -23,6 +23,25 @@ public class Recipe : PreparedFood<Ingredient>
     /// Adds a new preparation instruction for this recipe.
     /// </summary>
     public void AddInstruction(string step) => instructions.Add(step);
+
+    public override string ToString()
+    {
+        string output = Name + "(";
+
+        foreach (var ingredient in Children.Keys)
+        {
+            output += ingredient.Name + ", ";
+        }
+
+        output += ") \n Instructions:\n";
+
+        foreach (var instruction in instructions)
+        {
+            output += instruction + "\n";
+        }
+
+        return output;
+    }
 }
 
 public class SerializableRecipe : SerializablePreparedFood

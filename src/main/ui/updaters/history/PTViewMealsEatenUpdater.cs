@@ -4,9 +4,9 @@ using NutriApp.History;
 
 namespace NutriApp.UI;
 
-class PTViewMealsUpdater : Updater
+class PTViewMealsEatenUpdater : Updater
 {
-    public PTViewMealsUpdater(ViewMealsCommand viewMealsCommand, App app): base(app)
+    public PTViewMealsEatenUpdater(ViewMealsEatenCommand viewMealsCommand, App app): base(app)
     {
         viewMealsCommand.Subscribe(Update);
     }
