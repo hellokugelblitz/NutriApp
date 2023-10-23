@@ -26,5 +26,5 @@ target/**
 # C# automatic directories
 obj
 
-# Test bin (will be rebuilt on everyone's local machine anyway)
-test/bin
+# Binaries (will be rebuilt on everyone's local machine anyway)
+bin

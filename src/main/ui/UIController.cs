@@ -2,10 +2,12 @@ using System;
 
 namespace NutriApp.UI;
 
+
 /// <summary>
 /// UIController class manages the UI and the menu navigation.
 /// </summary>
-class UIController
+public class UIController
+
 {
     private Menu _menu;
     private App _app;

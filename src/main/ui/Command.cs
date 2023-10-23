@@ -1,5 +1,6 @@
 using System;
 
+
 namespace NutriApp.UI;
 
 /// <summary>
@@ -7,6 +8,7 @@ namespace NutriApp.UI;
 /// </summary>
 /// <typeparam name="T">The type of input this command handles.</typeparam>
 abstract class Command<T>
+
 {
     protected CommandFinished onFinished;
 
