@@ -13,9 +13,3 @@ searching ingredients
 history
 view calories
 view meals
-view weight
-
-profile
-clear history
-quit
-set day length
