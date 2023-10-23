@@ -19,6 +19,7 @@ public class FoodController
     private List<Meal> meals;
 
     private ShoppingList shoppingList;
+    private ShoppingListCriteria recipeCriteria;
     private App app;
     private IngredientDatabase ingredientDatabase;
 
@@ -43,11 +44,16 @@ public class FoodController
         this.app = app;
         ingredientDatabase = new InMemoryIngredientDatabase();
         shoppingList = new ShoppingList();
+        recipeCriteria = new SpecificRecipeCriteria(shoppingList);
 
         recipes = new List<Recipe>();
         meals = new List<Meal>();
 
         Load();
+        shoppingList.SetCriteria(recipeCriteria);
+
+        foreach (Recipe recipe in recipes)
+            shoppingList.Update(recipe);
     }
 
     /// <summary>

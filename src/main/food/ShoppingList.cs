@@ -105,7 +105,7 @@ namespace NutriApp.Food
                 if(!newList.ContainsKey(item.Key))
                 {
                     newList.Add(item.Key, item.Value);
-                    return;
+                    continue;
                 }
 
                 //Else we need to to bring it up to the minimum for each ingredient at least. 

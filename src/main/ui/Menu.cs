@@ -133,7 +133,7 @@ class FoodMenu : Menu, Help
         
         actions = new Dictionary<string, Invoker>
             {
-                {"Consume Meal", new PTConsumeMealInvoker(consumeMeal)},
+                {"Consume Meal", new PTConsumeMealInvoker(consumeMeal, uiController.app)},
                 {"Create Recipe", new PTCreateRecipesInvoker(createRecipe, uiController.app)},
                 {"Create Meal", new PTCreateMealInvoker(createMeal, uiController.app)},
                 {"Get Shopping List", new PTGetShoppingListInvoker(getShoppingList)},
