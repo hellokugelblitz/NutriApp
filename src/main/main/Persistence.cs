@@ -7,6 +7,7 @@ public static class Persistence
     private static string HISTORY_PATH = "data\\history\\";
     private static string GOALS_PATH = "data\\goals\\";
     private static string USER_PATH = "data\\user\\";
+    private static string DATE_PATH = "data\\date\\";
     
     public static string FoodDataPath
     {
@@ -41,6 +42,15 @@ public static class Persistence
         {
             Directory.CreateDirectory(USER_PATH);
             return USER_PATH;
+        }
+    }
+    
+    public static string DateDataPath
+    {
+        get
+        {
+            Directory.CreateDirectory(DATE_PATH);
+            return DATE_PATH;
         }
     }
 }

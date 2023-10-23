@@ -15,6 +15,7 @@ namespace NutriApp;
 public class App
 {
     private readonly string userPath = $"{Persistence.UserDataPath}\\user.json";
+    private readonly string datePath = $"{Persistence.DateDataPath}\\date.json";
 
     private HistoryController history;
     private GoalController goal;
@@ -84,19 +85,27 @@ public class App
 
     public void Save()
     {
-        // Write the goal to a JSON file for persistence
-        var json = JsonConvert.SerializeObject(user);
-        File.WriteAllText(userPath, json);
+        // Write the user to a JSON file for persistence
+        var userJson = JsonConvert.SerializeObject(user);
+        File.WriteAllText(userPath, userJson);
+        
+        // Write the current date to a JSON file for persistence
+        var timeJson = JsonConvert.SerializeObject(new { date });
+        File.WriteAllText(datePath, timeJson);
     }
 
     public void Load()
     {
         // Don't do anything if data files don't exist yet (e.g. first startup)
-        if (!File.Exists(userPath))
+        if (!File.Exists(userPath) || !File.Exists(datePath))
             return;
 
-        // Read the goal from a JSON file
+        // Read the user from a JSON file
         var json = File.ReadAllText(userPath);
         user = JsonConvert.DeserializeObject<User>(json);
+        
+        // Read the date from a JSON file
+        json = File.ReadAllText(datePath);
+        date = JsonConvert.DeserializeObject<DateTime>(json);
     }
 }
