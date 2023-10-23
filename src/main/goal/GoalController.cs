@@ -13,7 +13,6 @@ public class GoalController
     private readonly App app;
 
     public Goal Goal { get; set; }
-    public int GoalIndex { get; set; }
 
     public GoalController(App app)
     {

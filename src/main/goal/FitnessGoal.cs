@@ -11,7 +11,6 @@ public class FitnessGoal : GoalDecorator
 
     public FitnessGoal(Goal goal, List<Workout> recommendedWorkouts) : base(goal)
     {
-
         this.RecommendedWorkouts = recommendedWorkouts;
     }
 

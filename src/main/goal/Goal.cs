@@ -46,5 +46,4 @@ public interface Goal
         {"dailyCalorieGoal", DailyCalorieGoal},
         {"type", Type}
     };
-
 }
