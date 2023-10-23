@@ -1,7 +1,6 @@
 ﻿namespace NutriApp.Goal;
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using NutriApp.Workout;
 
 

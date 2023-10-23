@@ -23,17 +23,19 @@ public class GoalController
     /// <summary>
     /// Incorporates fitness into the user's goal.
     /// </summary>
-    public void IncorporateFitness() { 
+    public void IncorporateFitness()
+    {
         var workouts = app.GetRecommendedWorkouts();
         Goal.IncorporateFitness(workouts);
     }
-    
+
     /// <summary>
     /// Checks the user's weight against their weight goal.
     /// May switch the goal if the user has reached certain conditions, like
     /// completing a goal or deviating from the goal.
     /// </summary>
-    public void CompareUserWeightToGoal() { 
+    public void CompareUserWeightToGoal()
+    {
         Goal.CheckWeight(app.User.GetWeight);
     }
 
@@ -57,7 +59,8 @@ public class GoalController
     /// Checks if the user has exceeeded their daily calorie goal.
     /// </summary>
     /// <returns>Whether the user exceeded their daily calorie goal.</returns>
-    public bool CheckUserExceededCalorieGoal() {
+    public bool CheckUserExceededCalorieGoal()
+    {
         double todaysCalories = app.GetTodaysCalories();
         double calorieGoal = Goal.DailyCalorieGoal;
 
@@ -67,26 +70,28 @@ public class GoalController
         return todaysCalories > calorieGoal + marginOfError;
     }
 
-    public void Save() {
+    public void Save()
+    {
         // Write the goal to a JSON file for persistence
         File.WriteAllText(goalsPath, JsonConvert.SerializeObject(Goal.ToDictionary));
     }
-    public void Load() {
+    public void Load()
+    {
         // Don't do anything if data files don't exist yet (e.g. first startup)
         if (!File.Exists(goalsPath))
             return;
 
         // Read the goal from a JSON file for persistence
         var goalDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(goalsPath));
-        var type = (string) goalDict["type"];
-        var weightGoal = (double) goalDict["weightGoal"];
-        var dailyCalorieGoal = (double) goalDict["dailyCalorieGoal"];
+        var type = (string)goalDict["type"];
+        var weightGoal = (double)goalDict["weightGoal"];
+        var dailyCalorieGoal = (double)goalDict["dailyCalorieGoal"];
 
         // Function to create a goal based on the type
         Goal GoalFromString(string type)
         {
             Goal goal = null;
-            
+
             // Base goal types
             if (!type.Contains(';')) goal = type switch
             {
@@ -99,7 +104,7 @@ public class GoalController
             // Decorated types
             else
             {
-                var types = type.Split(new char[] {';'}, 2);
+                var types = type.Split(new char[] { ';' }, 2);
                 type = types[0];
                 var decoratedTypes = types[1];
                 goal = type switch
@@ -108,7 +113,7 @@ public class GoalController
                     _ => throw new System.Exception($"Invalid goal type: {type}")
                 };
             }
-            
+
             return goal;
         }
 

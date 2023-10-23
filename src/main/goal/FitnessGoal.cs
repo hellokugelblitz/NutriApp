@@ -20,6 +20,6 @@ public class FitnessGoal : GoalDecorator
     /// in order to compensate for the recommended workouts
     /// </summary>
     /// <returns>The number of additional calories.</returns>
-    public double GetAdditionalCalories() => 
+    public double GetAdditionalCalories() =>
         RecommendedWorkouts.Aggregate(0, (acc, w) => acc + w.GetCaloriesBurned());
 }
