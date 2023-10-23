@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace NutriApp.History; 
 
@@ -10,7 +11,7 @@ public class Entry<T> {
         this.value = value;
     }
 
-    public DateTime TimeStamp{get => timeStamp;}
+    [JsonProperty] public DateTime TimeStamp{get => timeStamp;}
 
-    public T Value{get => value;}
+    [JsonProperty] public T Value{get => value;}
 }

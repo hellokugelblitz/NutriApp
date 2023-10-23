@@ -6,10 +6,10 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="main\ui\invokers"/>
-    <Folder Include="main\ui\updaters"/>
+    <Folder Include="main\ui\invokers" />
+    <Folder Include="main\ui\updaters" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
 </Project>

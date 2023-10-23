@@ -47,11 +47,13 @@ public class FoodController
         recipes = new List<Recipe>();
         meals = new List<Meal>();
 
-        app.DayEndEvent += (DateTime date) => Save();
         Load();
     }
 
-    private void Save()
+    /// <summary>
+    /// Write ingredient stock, recipes, and meals to a persistent JSON file.
+    /// </summary>
+    public void Save()
     {
         // Write each ingredient stock to a JSON file for persistence, since it isn't stored with
         // the other ingredient info. Also just store the ingredient name because it serializes better.

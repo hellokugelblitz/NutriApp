@@ -1,7 +1,7 @@
 using System;
 using NutriApp.Food;
 
-namespace NutriApp;
+namespace NutriApp.UI;
 
 class CreateRecipesCommand : Command<Recipe>
 {

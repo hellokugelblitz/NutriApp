@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using NutriApp.Food;
@@ -53,16 +54,9 @@ public class TestHistoryController
     [TestMethod]
     public void TestSaveLoad()
     {
-        _app = new App(1/150f);//1/90
-
-        Recipe recipe = new Recipe("mac and cheese");
-        recipe.AddInstruction("bake them kids");
-        recipe.AddChild(new Ingredient("cheese", 150, 1.5d, 1.5d, 1.5d, 1.5d), 3);
-        recipe.AddChild(new Ingredient("noodles", 75, 1, 1, 1, 1), 1);
-        _app.FoodControl.AddRecipe(recipe);
-
-        string re = JsonSerializer.Serialize(recipe);
+        Setup();
         
+       history.Save();
         // Setup();
         // string str = history.Save();
         // history.Load(str);
