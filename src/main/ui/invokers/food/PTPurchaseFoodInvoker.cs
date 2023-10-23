@@ -11,7 +11,7 @@ class PTPurchaseFoodInvoker : CommandInvoker<Array>
     public override void Invoke()
     {
         Console.WriteLine("Enter name of food to purchase: ");
-        string name = Console.ReadLine();
+        string name = Console.ReadLine().ToLower();
         Console.WriteLine("Enter quantity of the food you are going to purchase: ");
         int quantity = int.Parse(Console.ReadLine());
 

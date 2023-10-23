@@ -15,7 +15,7 @@ class PTCreateRecipesInvoker : CommandInvoker<Recipe>
     public override void Invoke()
     {
         Console.WriteLine("Enter the name of the recipe you want to create: ");
-        string name = Console.ReadLine();
+        string name = Console.ReadLine().ToLower();
 
         Recipe recipe = new Recipe(name);
 
@@ -23,7 +23,7 @@ class PTCreateRecipesInvoker : CommandInvoker<Recipe>
         while (true)
         {
             Console.Write("Instruction: ");
-            string instruction = Console.ReadLine();
+            string instruction = Console.ReadLine().ToLower();
 
             if (instruction.ToLower() == "done") break;
 
@@ -35,7 +35,7 @@ class PTCreateRecipesInvoker : CommandInvoker<Recipe>
         {
             try { 
                 Console.Write("Food: ");
-                string food = Console.ReadLine();
+                string food = Console.ReadLine().ToLower();
 
                 if (food.ToLower() == "done") break;
             
