@@ -26,6 +26,11 @@ public class Workout {
         return Name.GetHashCode() + Intensity.GetHashCode();
     }
 
+    public override string ToString()
+    {
+        return $"name:{Name} minutes:{Minutes} intensity:{Intensity}";
+    }
+
     /// <returns>Minutes * Intensity</returns>
     public int GetCaloriesBurned() {
         return (int) (Minutes * Intensity.Value());
