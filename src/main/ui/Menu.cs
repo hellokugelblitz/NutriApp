@@ -334,7 +334,7 @@ class MainMenu : Menu
         {
             Console.WriteLine("please enter a menu to navigate to(fitness, food, history, profile)");
             string input = Console.ReadLine().ToLower();
-            if (!_menus.ContainsKey(input))
+            if (_menus.ContainsKey(input))
             {
                 Console.WriteLine(input + " is not a valid input");
             }
