@@ -17,6 +17,7 @@ public class GoalController
     public GoalController(App app)
     {
         this.app = app;
+        Load();
     }
 
     /// <summary>
