@@ -4,17 +4,42 @@ using NutriApp.Food;
 
 namespace NutriApp.UI;
 
-class PTPurchaseFoodInvoker : CommandInvoker<Array>
+class PTPurchaseFoodInvoker : CommandInvoker<(string, double)>
 {
-    public PTPurchaseFoodInvoker(Command<Array> command) : base(command) { }
+    private App _app;
+    
+    public PTPurchaseFoodInvoker(Command<(string, double)> command) : base(command) { }
 
     public override void Invoke()
     {
         Console.WriteLine("Enter name of food to purchase: ");
         string name = Console.ReadLine();
-        Console.WriteLine("Enter quantity of the food you are going to purchase: ");
-        int quantity = int.Parse(Console.ReadLine());
+        double quantity = -1;
 
-        command.Execute(new object[] { name, quantity });
+        while (quantity == -1)
+        {
+            try
+            {
+                Console.WriteLine("Enter quantity of the food you are going to purchase: ");
+                quantity = double.Parse(Console.ReadLine());
+                if(quantity < 0) 
+                {
+                    quantity = -1;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("not a valid input");
+            }
+
+        }
+
+        if (!_app.FoodControl.EnoughIngredients(name))
+        {
+            Console.WriteLine("not enough ingredients");
+            return;
+        }
+        
+        command.Execute((name, quantity));
     }
 }
