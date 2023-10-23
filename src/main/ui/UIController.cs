@@ -1,8 +1,10 @@
 using System;
-using System.ComponentModel.Design;
 
 namespace NutriApp.UI;
 
+/// <summary>
+/// UIController class manages the UI and the menu navigation.
+/// </summary>
 class UIController
 {
     private Menu _menu;
@@ -19,9 +21,13 @@ class UIController
         set => _app = value;
     }
 
+    /// <summary>
+    /// Constructor for UIController.
+    /// </summary>
+    /// <param name="app"></param>
     public UIController(App app)
     {
-        _menu = new MainMenu(this);
+        _menu = new MainMenu(this); // Defaults as main menu
         this.app = app;
     }
 }

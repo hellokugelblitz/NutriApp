@@ -1,50 +1,62 @@
 using System;
 using System.Collections.Generic;
 
-namespace NutriApp.UI
+namespace NutriApp.UI;
+
+/// <summary>
+/// Interface which defines a method handle() to handle menu interactions.
+/// The 'actions' dictionary maps user menu options to corresponding invokers. 
+/// Which is used to trigger specific commands.
+/// </summary>
+interface Menu
 {
-    interface Menu
-    {
-        void Handle();
-    }
+    void Handle();
+}
 
-    class FitnessMenu : Menu
-    {
-        private Dictionary<string, Invoker> actions;
-        private UIController uIController;
+class FitnessMenu : Menu
+{
+    private Dictionary<string, Invoker> actions;
+    private UIController uIController;
 
-        public FitnessMenu(UIController uIController)
-        {
-            this.uIController = uIController;
-            actions = new Dictionary<string, Invoker>
+    public FitnessMenu(UIController uIController)
+    {
+        this.uIController = uIController;
+        actions = new Dictionary<string, Invoker>
             {
                 { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app))},
                 { "Set Fitness Goal", new PTSetFitnessGoalInvoker(new SetFitnessGoalCommand(uIController.app))},
                 { "Set Weight Goal", new PTSetWeightGoalInvoker(new SetWeightGoalCommand(uIController.app), uIController.app)},
                 { "View Target Calories", new PTViewTargetCaloriesInvoker(new ViewTargetCaloriesCommand(uIController.app))}
             };
-        }
-
-        public void PromptWeight(DateTime datetime)
-        {
-            actions["Set Weight Goal"].Invoke();
-        }
-
-        public void Handle()
-        {
-            uIController.menu = new FitnessMenu(uIController);
-        }
     }
 
-    class FoodMenu<T> : Menu
+    /// <summary>
+    /// Prompts the weight of user at the end of the day.
+    /// </summary>
+    /// <param name="datetime"></param>
+    public void PromptWeight(DateTime datetime)
     {
-        private Dictionary<string, Invoker> actions;
-        private UIController uIController;
+        actions["Set Weight Goal"].Invoke();
+    }
 
-        public FoodMenu(UIController uIController)
-        {
-            this.uIController = uIController;
-            actions = new Dictionary<string, Invoker>
+    /// <summary>
+    /// Sets the current menu to the fitness menu.
+    /// </summary>
+    public void Handle()
+    {
+        uIController.menu = new FitnessMenu(uIController);
+    }
+}
+
+class FoodMenu<T> : Menu
+{
+    private Dictionary<string, Invoker> actions;
+    private UIController uIController;
+
+    public FoodMenu(UIController uIController)
+    {
+        this.uIController = uIController;
+        actions = new Dictionary<string, Invoker>
             {
                 { "Consume Meal", new PTConsumeMealInvoker(new ConsumeMealCommand(uIController.app))},
                 { "Create Recipe", new PTCreateRecipesInvoker(new CreateRecipesCommand(uIController.app))},
@@ -52,70 +64,81 @@ namespace NutriApp.UI
                 { "Purchase Food", new PTPurchaseFoodInvoker(new PurchaseFoodCommand(uIController.app))},
                 { "Search Ingredients", new PTSearchIngredientsInvoker(new SearchingIngredientsCommand(uIController.app))}
             };
-        }
-
-        public void Handle()
-        {
-            uIController.menu = new FoodMenu<T>(uIController);
-        }
     }
 
-    class HistoryMenu<T> : Menu
+    /// <summary>
+    /// Sets the current menu to the food menu.
+    /// </summary>
+    public void Handle()
     {
-        private Dictionary<string, Invoker> actions;
-        private UIController uIController;
+        uIController.menu = new FoodMenu<T>(uIController);
+    }
+}
 
-        public HistoryMenu(UIController uIController)
-        {
-            this.uIController = uIController;
-            actions = new Dictionary<string, Invoker>
+class HistoryMenu<T> : Menu
+{
+    private Dictionary<string, Invoker> actions;
+    private UIController uIController;
+
+    public HistoryMenu(UIController uIController)
+    {
+        this.uIController = uIController;
+        actions = new Dictionary<string, Invoker>
             {
                 { "View Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app))},
                 { "View Meals", new PTViewMealsInvoker(new ViewMealsCommand(uIController.app))},
                 { "View Weight", new PTViewWeightInvoker(new ViewWeightCommand(uIController.app))},
                 { "View Workouts", new PTViewWorkoutsInvoker(new ViewWorkoutsCommand(uIController.app))}
             };
-        }
-
-        public void Handle()
-        {
-            uIController.menu = new HistoryMenu<T>(uIController);
-        }
     }
 
-    class ProfileMenu<T> : Menu
+    /// <summary>
+    /// Sets the current menu to the history menu.
+    /// </summary>
+    public void Handle()
     {
-        private Dictionary<string, Invoker> actions;
-        private UIController uIController;
+        uIController.menu = new HistoryMenu<T>(uIController);
+    }
+}
 
-        public ProfileMenu(UIController uIController)
-        {
-            this.uIController = uIController;
-            actions = new Dictionary<string, Invoker>
+class ProfileMenu<T> : Menu
+{
+    private Dictionary<string, Invoker> actions;
+    private UIController uIController;
+
+    public ProfileMenu(UIController uIController)
+    {
+        this.uIController = uIController;
+        actions = new Dictionary<string, Invoker>
             {
                 { "Clear History", new PTClearHistoryInvoker(new ClearHistoryCommand(uIController.app))},
                 { "Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app))}
             };
-        }
-
-        public void Handle()
-        {
-            uIController.menu = new ProfileMenu<T>(uIController);
-        }
     }
 
-    class MainMenu : Menu
+    /// <summary>
+    /// Sets the current menu to the profile menu.
+    /// </summary>
+    public void Handle()
     {
-        private UIController uIController;
+        uIController.menu = new ProfileMenu<T>(uIController);
+    }
+}
 
-        public MainMenu(UIController uIController)
-        {
-            this.uIController = uIController;
-        }
+class MainMenu : Menu
+{
+    private UIController uIController;
 
-        public void Handle()
-        {
-            uIController.menu = new MainMenu(uIController);
-        }
+    public MainMenu(UIController uIController)
+    {
+        this.uIController = uIController;
+    }
+
+    /// <summary>
+    /// Sets the current menu to the main menu.
+    /// </summary>
+    public void Handle()
+    {
+        uIController.menu = new MainMenu(uIController);
     }
 }
