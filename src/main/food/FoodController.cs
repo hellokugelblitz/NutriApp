@@ -218,10 +218,11 @@ public class FoodController
     public Ingredient[] SearchIngredients(string term) => ingredientDatabase.Search(term);
 
     /// <summary>
-    /// Consumes a meal if there is enough ingredient stock. Returns true if meal consumption
-    /// was successful, false otherwise.
+    /// checks if there are enough ingredients in stock for a given meal
     /// </summary>
-    public bool ConsumeMeal(string name)
+    /// <param name="name">name of meal you are checking</param>
+    /// <returns>if there are enough ingredients in stock to consume the meal</returns>
+    public bool EnoughIngredients(string name)
     {
         Meal mealConsumed = GetMeal(name);
 
@@ -233,6 +234,20 @@ public class FoodController
             if (ingredient.Stock < requiredStock)
                 return false;
         }
+
+        return true;
+    }
+    
+    /// <summary>
+    /// Consumes a meal if there is enough ingredient stock. Returns true if meal consumption
+    /// was successful, false otherwise.
+    /// </summary>
+    public bool ConsumeMeal(string name)
+    {
+        Meal mealConsumed = GetMeal(name);
+
+        // Check ingredient stock
+        if (!EnoughIngredients(name)) return false;
 
         // Meal consumed successfully
         MealConsumeEvent?.Invoke(mealConsumed);
