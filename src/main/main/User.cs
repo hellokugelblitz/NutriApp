@@ -5,8 +5,6 @@ using Newtonsoft.Json;
 namespace NutriApp;
 
 public class User {
-    private readonly string userPath = $"{Persistence.UserDataPath}\\user.json";
-
     [JsonProperty] private string name;
     [JsonProperty] private int height; //in inches
     [JsonProperty] private double weight;
@@ -19,24 +17,8 @@ public class User {
         this.birthday = birthday;
     }
 
-    public string GetName{get => name;}
-    public int GetHeight{get => height;}
-    public double GetWeight{get => weight;}
-    public DateTime GetBirthday{get => birthday;}
-
-    public void Save()
-    {
-        // Write the goal to a JSON file for persistence
-        File.WriteAllText(userPath, JsonConvert.SerializeObject(this));
-    }
-    public void Load()
-    {
-        // Don't do anything if data files don't exist yet (e.g. first startup)
-        if (!File.Exists(userPath))
-            return;
-
-        // Read the goal from a JSON file for persistence
-        string json = File.ReadAllText(userPath);
-        JsonConvert.PopulateObject(json, this);
-    }
+    public string Name => name;
+    public int Height => height;
+    public double Weight => weight;
+    public DateTime Birthday => birthday;
 }

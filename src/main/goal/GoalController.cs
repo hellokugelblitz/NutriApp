@@ -35,7 +35,7 @@ public class GoalController
     /// </summary>
     public void CompareUserWeightToGoal()
     {
-        Goal.CheckWeight(app.User.GetWeight);
+        Goal.CheckWeight(app.User.Weight);
     }
 
     /// <summary>
