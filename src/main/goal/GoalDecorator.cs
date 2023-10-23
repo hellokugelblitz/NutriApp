@@ -9,7 +9,6 @@ public abstract class GoalDecorator : Goal
 
     public double WeightGoal => goal.WeightGoal;
     public double DailyCalorieGoal => goal.DailyCalorieGoal;
-    public abstract string Type { get; }
 
     public GoalDecorator(Goal goal)
     {

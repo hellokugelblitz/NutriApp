@@ -17,11 +17,6 @@ public interface Goal
     double DailyCalorieGoal { get; }
 
     /// <summary>
-    /// The type of goal the user has
-    /// </summary>
-    string Type { get; }
-
-    /// <summary>
     /// Compares the user's weight with the goal weight. If the correct
     /// condition is met, then perform some action and return true.
     /// Otherwise, return false.
@@ -43,7 +38,6 @@ public interface Goal
     Dictionary<string, object> ToDictionary => new()
     {
         {"weightGoal", WeightGoal},
-        {"dailyCalorieGoal", DailyCalorieGoal},
-        {"type", Type}
+        {"dailyCalorieGoal", DailyCalorieGoal}
     };
 }

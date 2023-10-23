@@ -10,7 +10,6 @@ public class GainWeightGoal : Goal
     private readonly GoalController controller;
     public double WeightGoal { get; }
     public double DailyCalorieGoal { get; }
-    public string Type => "gain";
 
     public GainWeightGoal(GoalController controller, double weightGoal)
     {
