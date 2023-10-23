@@ -78,7 +78,6 @@ public class HistoryController {
     /// </summary>
     public void Save()
     {
-        Console.WriteLine("save history " + historyPath);
         var serialize = new HistorySerialize(this);
         string json =  JsonConvert.SerializeObject(serialize);
         File.WriteAllText(historyPath, json);
@@ -91,7 +90,6 @@ public class HistoryController {
     {
         if(!File.Exists(historyPath)) return;
         
-        Console.WriteLine("load history");
         string json = File.ReadAllText(historyPath);
         HistorySerialize serialize = JsonConvert.DeserializeObject<HistorySerialize>(json);
         serialize.Deserialize(this);
@@ -100,11 +98,6 @@ public class HistoryController {
     [Serializable]
     private class HistorySerialize
     {
-        // private List<Entry<Workout.Workout>> workouts = new();
-        // private List<Entry<double>> weights = new ();
-        // private List<Entry<Food.Meal>> meals = new ();
-        // private List<Entry<CalorieTracker>> calories = new();
-
         [JsonProperty] public List<Entry<Workout.Workout>> workouts;
         [JsonProperty] public List<Entry<double>> weights;
         [JsonProperty] public List<Entry<string>> meals;
