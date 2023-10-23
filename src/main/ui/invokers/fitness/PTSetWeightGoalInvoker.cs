@@ -17,20 +17,8 @@ class PTSetWeightGoalInvoker : CommandInvoker<Goal.Goal>
     {
         Console.WriteLine("please enter a target weight");
         double targetWeight = Double.Parse(Console.ReadLine());
-        double weightChange = targetWeight - app.HistoryControl.CurrentWeight;
-        Goal.Goal goal;
-        if (weightChange < -5)
-        {
-            goal = new LoseWeightGoal(app.GoalControl, targetWeight);
-        }
-        else if(weightChange <= 5)
-        {
-            goal = new MaintainWeightGoal(app.GoalControl, targetWeight);
-        }
-        else
-        {
-            goal = new GainWeightGoal(app.GoalControl, targetWeight);
-        }
+
+        var goal = app.GoalControl.GetGoalBasedOnWeightDifference(targetWeight);
 
         command.Execute(goal);
     }

@@ -37,7 +37,6 @@ public interface Goal
     /// <returns></returns>
     Dictionary<string, object> ToDictionary => new()
     {
-        {"weightGoal", WeightGoal},
-        {"dailyCalorieGoal", DailyCalorieGoal}
+        {"weightGoal", WeightGoal}
     };
 }
