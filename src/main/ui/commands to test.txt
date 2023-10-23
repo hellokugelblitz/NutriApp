@@ -5,8 +5,6 @@ view target calories
 
 food
 consume meal 
-view meals
-create meal
 get shopping list
 purchase food
 

@@ -28,16 +28,16 @@ public class Recipe : PreparedFood<Ingredient>
     {
         string output = Name + "(";
 
-        foreach (var ingredient in Children.Keys)
+        foreach (var ingredient in Children)
         {
-            output += ingredient.Name + ", ";
+            output += $" {{{ingredient.Key.Name} : {ingredient.Value},";
         }
 
         output += ") \n Instructions:\n";
 
         foreach (var instruction in instructions)
         {
-            output += instruction + "\n";
+            output += " " + instruction + "\n";
         }
 
         return output;

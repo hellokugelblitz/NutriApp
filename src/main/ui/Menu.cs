@@ -124,6 +124,7 @@ class FoodMenu : Menu, Help
         
         var consumeMeal = new ConsumeMealCommand(uiController.app);
         var createRecipe = new CreateRecipesCommand(uiController.app);
+        var createMeal = new CreateMealCommand(uiController.app);
         var getShoppingList = new GetShoppingListCommand(uiController.app);
         var purchaseFood = new PurchaseFoodCommand(uiController.app);
         var searchIngredients = new SearchingIngredientsCommand(uiController.app, new PTSearchIngredientsUpdater(uiController.app));
@@ -134,6 +135,7 @@ class FoodMenu : Menu, Help
             {
                 {"Consume Meal", new PTConsumeMealInvoker(consumeMeal)},
                 {"Create Recipe", new PTCreateRecipesInvoker(createRecipe, uiController.app)},
+                {"Create Meal", new PTCreateMealInvoker(createMeal, uiController.app)},
                 {"Get Shopping List", new PTGetShoppingListInvoker(getShoppingList)},
                 {"Purchase Food", new PTPurchaseFoodInvoker(purchaseFood)},
                 {"Search Ingredients", new PTSearchIngredientsInvoker(searchIngredients)},

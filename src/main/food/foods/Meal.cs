@@ -28,9 +28,9 @@ public class Meal : PreparedFood<Recipe>
     {
         string output = Name + "(";
 
-        foreach (var recipie in Children.Keys)
+        foreach (var recipie in Children)
         {
-            output += recipie.Name + ", ";
+            output += $"{{{recipie.Key.Name} : {recipie.Value}}}, ";
         }
 
         output += ")";
