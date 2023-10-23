@@ -4,9 +4,9 @@ namespace NutriApp.UI;
 
 class PTSetFitnessGoalUpdater : Updater
 {
-    public PTSetFitnessGoalUpdater(AddWorkoutCommand addWorkoutCommand, App app) : base(app)
+    public PTSetFitnessGoalUpdater(SetFitnessGoalCommand setFitnessGoalCommand, App app) : base(app)
     {
-        addWorkoutCommand.Subscribe(Update);
+        setFitnessGoalCommand.Subscribe(Update);
     }
 
     public override void Update()

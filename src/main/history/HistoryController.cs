@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Text.Json;
+using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.Workout;
 
@@ -12,7 +15,8 @@ public class HistoryController {
     private List<Entry<double>> weights = new ();
     private List<Entry<Food.Meal>> meals = new ();
     private List<Entry<CalorieTracker>> calories = new();
-
+    private readonly string historyPath = $"{Persistence.HistoryDataPath}history.json";
+    
     public List<Entry<Workout.Workout>> Workouts => workouts;
     public List<Entry<Food.Meal>> Meals => meals; 
     public List<Entry<CalorieTracker>> Calories => calories;
@@ -27,6 +31,7 @@ public class HistoryController {
 
     public HistoryController(App app) {
         this.app = app;
+        Load();
     }
 
     public void AddWorkout(Workout.Workout workout)
@@ -71,17 +76,52 @@ public class HistoryController {
     /// <summary>
     /// saves each of the histories
     /// </summary>
-    public string Save()
+    public void Save()
     {
-        return JsonSerializer.Serialize(this);
+        var serialize = new HistorySerialize(this);
+        string json =  JsonConvert.SerializeObject(serialize);
+        File.WriteAllText(historyPath, json);
     }
 
     /// <summary>
     /// loads each of the histories in the constructor
     /// </summary>
-    public void Load(string json)
+    public void Load()
     {
-        HistoryController controller = JsonSerializer.Deserialize<HistoryController>(json);
+        if(!File.Exists(historyPath)) return;
+        
+        string json = File.ReadAllText(historyPath);
+        HistorySerialize serialize = JsonConvert.DeserializeObject<HistorySerialize>(json);
+        serialize.Deserialize(this);
+    }
+
+    [Serializable]
+    private class HistorySerialize
+    {
+        [JsonProperty] public List<Entry<Workout.Workout>> workouts;
+        [JsonProperty] public List<Entry<double>> weights;
+        [JsonProperty] public List<Entry<string>> meals;
+        [JsonProperty] public List<Entry<CalorieTracker>> calories;
+
+        public HistorySerialize(HistoryController history)
+        {
+            workouts = history.Workouts;
+            weights = history.Weights;
+            meals = new();
+            history.Meals.ForEach((meal) => { meals.Add(new Entry<string>(meal.TimeStamp, meal.Value.Name)); });
+            calories = history.Calories;
+        }
+
+        public HistorySerialize() { }
+
+        public void Deserialize(HistoryController history)
+        {
+            history.workouts = workouts;
+            history.weights = weights;
+            history.meals = new();
+            meals.ForEach((meal) => {history.meals.Add(new Entry<Meal>(meal.TimeStamp, new Meal(meal.Value)));});
+            history.calories = calories;
+        }
     }
 }
 

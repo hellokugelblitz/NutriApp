@@ -12,6 +12,8 @@ class PTViewWeightUpdater : Updater
  
     public override void Update()
     {
+        Console.WriteLine("View Weight");
+
         foreach (var weight in _app.HistoryControl.Weights)
         {
             PrintEntry(weight);

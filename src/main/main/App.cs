@@ -21,6 +21,7 @@ namespace NutriApp
         private User user;
         private double dayLength;
         private Task<None> timerThread;
+        
         public HistoryController HistoryControl => history;
         public GoalController GoalControl => goal; 
         public WorkoutController WorkoutControl => workout;
@@ -35,14 +36,13 @@ namespace NutriApp
         {
             this.dayLength = dayLength;
             date = DateTime.Now;
-            Console.WriteLine("day length " + this.dayLength);
             timerThread = new Task<None>(DayLoop);
             timerThread.Start();
 
-            history = new HistoryController(this);
             goal = new GoalController(this);
             workout = new WorkoutController();
             food = new FoodController(this);
+            history = new HistoryController(this);
             ui = new UIController(this);
         }
 
@@ -64,7 +64,7 @@ namespace NutriApp
 
         public static void Main(string[] args)
         {
-            App app = new App(2);
+            App app = new App(1);
         }
 
         private None DayLoop()
@@ -73,6 +73,7 @@ namespace NutriApp
             {
                 Thread.Sleep((int)(1000 * 60 * dayLength));
                 DayEndEvent?.Invoke(TimeStamp);
+                Console.WriteLine("new day " + TimeStamp);
                 date = date.AddDays(1d);
             }
         }

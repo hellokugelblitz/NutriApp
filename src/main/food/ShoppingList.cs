@@ -7,6 +7,12 @@ namespace NutriApp.Food
     {
         //Keep a dictionary of ingredients
         private Dictionary<Ingredient, double> list = new Dictionary<Ingredient, double>();
+        
+        /// <summary>
+        /// Retrieves the current list.
+        /// </summary>
+        public Dictionary<Ingredient, double> List => list;
+
         private ShoppingListCriteria criteria;
 
         //Constructors
@@ -67,10 +73,11 @@ namespace NutriApp.Food
             if(list[ingredient] <= 0)
                 list.Remove(ingredient);
         }
+        
 
-        public Dictionary<Ingredient, double> getList()
+        public void SetList(Dictionary<Ingredient, double> newList)
         {
-            return list;
+            list = newList;
         }
     }
 
@@ -89,21 +96,26 @@ namespace NutriApp.Food
 
         public void Update(Recipe recipe) 
         { 
+            //Here I am making a copy of the original shoppingList class list so that we can set it later.
+            Dictionary<Ingredient, double> newList = shoppingList.List;
+
             foreach (var item in recipe.Children)
             {
-                //(If we already don't have the amount needed in our pantry)
-                    //If the shopping list doesnt contain this item already add it to the list and exit
-                    if(!shoppingList.getList().ContainsKey(item.Key))
-                    {
-                        shoppingList.getList().Add(item.Key, item.Value);
-                        return;
-                    }
+                //If the shopping list doesn't contain this item already add it to the list and exit
+                if(!newList.ContainsKey(item.Key))
+                {
+                    newList.Add(item.Key, item.Value);
+                    return;
+                }
 
-                    //Else we need to to bring it up to the minimum for each ingredient at least. 
-                    //If its over already we don't care.
-                    if(shoppingList.getList()[item.Key] <= item.Value)
-                        shoppingList.getList()[item.Key] = item.Value;
+                //Else we need to to bring it up to the minimum for each ingredient at least. 
+                //If its over already we don't care.
+                if(newList[item.Key] <= item.Value)
+                    newList[item.Key] = item.Value;
             }
+
+            //After we have made the changes we want we can save it to the shoppingList.
+            shoppingList.SetList(newList);
         }
     }
 
