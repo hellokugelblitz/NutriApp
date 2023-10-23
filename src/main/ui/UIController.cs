@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NutriApp.UI;
 
@@ -23,6 +24,7 @@ public class UIController
         set => _app = value;
     }
 
+    
     /// <summary>
     /// Constructor for UIController.
     /// </summary>
@@ -31,5 +33,6 @@ public class UIController
     {
         _menu = new MainMenu(this); // Defaults as main menu
         this.app = app;
+        menu = new MainMenu(this);
     }
 }

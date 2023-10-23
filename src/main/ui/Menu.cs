@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 
 namespace NutriApp.UI;
 
@@ -13,7 +15,30 @@ public interface Menu
     void Handle();
 }
 
-class FitnessMenu : Menu
+public interface Help
+{
+    public List<String> GetOptions();
+}
+
+/// <summary>
+/// Allows you to pass actions(no return, no param functions) to be invoked like a command.
+/// Used to swap menus
+/// </summary>
+public class ActionInvoker : Invoker
+{
+    private Action action;
+
+    public ActionInvoker(Action action)
+    {
+        this.action = action;
+    }
+    public void Invoke()
+    { 
+        action?.Invoke();   
+    }
+}
+
+class FitnessMenu : Menu, Help
 {
     private Dictionary<string, Invoker> actions;
     private UIController uIController;
@@ -30,7 +55,9 @@ class FitnessMenu : Menu
                 "Set Weight Goal",
                 new PTSetWeightGoalInvoker(new SetWeightGoalCommand(uIController.app), uIController.app)
             },
-            { "View Target Calories", new PTViewTargetCaloriesInvoker(new ViewTargetCaloriesCommand(uIController.app)) }
+            { "View Target Calories", new PTViewTargetCaloriesInvoker(new ViewTargetCaloriesCommand(uIController.app)) },
+            {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
+            {"Help", new PTHelpInvoker(this)}
         };
     }
 
@@ -43,11 +70,19 @@ class FitnessMenu : Menu
     /// Prompts the weight of user at the end of the day.
     /// </summary>
     /// <param name="datetime"></param>
-    public void PromptWeight(DateTime datetime) { }
+    public void PromptWeight(DateTime datetime)
+    {
+        
+    }
+
+    public List<string> GetOptions()
+    {
+        return actions.Keys.ToList();
+    }
 }
 
 
-class FoodMenu : Menu
+class FoodMenu : Menu, Help
 {
     private Dictionary<string, Invoker> actions;
     private UIController uIController;
@@ -61,7 +96,9 @@ class FoodMenu : Menu
                 { "Create Recipe", new PTCreateRecipesInvoker(new CreateRecipesCommand(uIController.app))},
                 { "Get Shopping List", new PTGetShoppingListInvoker(new GetShoppingListCommand(uIController.app))},
                 { "Purchase Food", new PTPurchaseFoodInvoker(new PurchaseFoodCommand(uIController.app))},
-                { "Search Ingredients", new PTSearchIngredientsInvoker(new SearchingIngredientsCommand(uIController.app))}
+                { "Search Ingredients", new PTSearchIngredientsInvoker(new SearchingIngredientsCommand(uIController.app))},
+                {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
+                {"Help", new PTHelpInvoker(this)}
             };
     }
 
@@ -75,9 +112,13 @@ class FoodMenu : Menu
     }
 
 
+    public List<string> GetOptions()
+    {
+        return actions.Keys.ToList();
+    }
 }
 
-class HistoryMenu : Menu
+class HistoryMenu : Menu, Help
 {
     private Dictionary<string, Invoker> actions;
     private UIController uIController;
@@ -87,10 +128,12 @@ class HistoryMenu : Menu
         this.uIController = uIController;
         actions = new Dictionary<string, Invoker>
             {
-                { "View Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app))},
-                { "View Meals", new PTViewMealsInvoker(new ViewMealsCommand(uIController.app))},
-                { "View Weight", new PTViewWeightInvoker(new ViewWeightCommand(uIController.app))},
-                { "View Workouts", new PTViewWorkoutsInvoker(new ViewWorkoutsCommand(uIController.app))}
+                {"View Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app))},
+                {"View Meals", new PTViewMealsInvoker(new ViewMealsCommand(uIController.app))},
+                {"View Weight", new PTViewWeightInvoker(new ViewWeightCommand(uIController.app))},
+                {"View Workouts", new PTViewWorkoutsInvoker(new ViewWorkoutsCommand(uIController.app))},
+                {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
+                {"Help", new PTHelpInvoker(this)}
             };
         
     }
@@ -103,10 +146,15 @@ class HistoryMenu : Menu
     {
         uIController.menu = this;
     }
+
+    public List<string> GetOptions()
+    {
+        return actions.Keys.ToList();
+    }
 }
 
 
-class ProfileMenu : Menu
+class ProfileMenu : Menu, Help
 {
     private Dictionary<string, Invoker> actions;
     private UIController uIController;
@@ -116,9 +164,11 @@ class ProfileMenu : Menu
         this.uIController = uIController;
         actions = new Dictionary<string, Invoker>
             {
-                { "Clear History", new PTClearHistoryInvoker(new ClearHistoryCommand(uIController.app))},
-                { "Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app))},
-                {"Quit", new PTQuitInvoker(new QuitCommand(uIController.app))}
+                {"Clear History", new PTClearHistoryInvoker(new ClearHistoryCommand(uIController.app))},
+                {"Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app))},
+                {"Quit", new PTQuitInvoker(new QuitCommand(uIController.app))},
+                {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
+                {"Help", new PTHelpInvoker(this)}
             };
 
     }
@@ -131,6 +181,11 @@ class ProfileMenu : Menu
     {
         uIController.menu = this;
     }
+
+    public List<string> GetOptions()
+    {
+        return actions.Keys.ToList();
+    }
 }
 
     
@@ -138,10 +193,22 @@ class ProfileMenu : Menu
 class MainMenu : Menu
 {
     private UIController uIController;
+    
+    private Dictionary<string, Menu> _menus;
 
     public MainMenu(UIController uIController)
     {
         this.uIController = uIController;
+        
+        _menus = new Dictionary<string, Menu>()
+        {
+            {"fitness", new FitnessMenu(uIController) },
+            {"food", new FoodMenu(uIController)},
+            {"history", new HistoryMenu(uIController)},
+            {"profile", new ProfileMenu(uIController)},
+        };
+        
+        Handle();
     }
 
     /// <summary>
@@ -149,6 +216,19 @@ class MainMenu : Menu
     /// </summary>
     public void Handle()
     {
-        uIController.menu = this;
+        Console.WriteLine("welcome to the main menu");
+        while (true)
+        {
+            Console.WriteLine("please enter a menu to navigate to(fitness, food, history, profile)");
+            string input = Console.ReadLine();
+            if (!_menus.ContainsKey(input))
+            {
+                Console.WriteLine(input + " is not a valid input");
+            }
+            else
+            {
+                uIController.menu = _menus[input];
+            }
+        }
     }
 }
