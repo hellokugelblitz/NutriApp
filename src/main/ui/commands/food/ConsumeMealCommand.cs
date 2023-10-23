@@ -14,7 +14,7 @@ class ConsumeMealCommand : Command<string>
 
     public override void Execute(string userinput)
     {
-        app.FoodControl.ConsumeMeal(userinput);
+        bool valid = app.FoodControl.ConsumeMeal(userinput);
         onFinished?.Invoke();
     }
 }
