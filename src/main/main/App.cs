@@ -42,8 +42,8 @@ namespace NutriApp
             goal = new GoalController(this);
             workout = new WorkoutController();
             food = new FoodController(this);
-            ui = new UIController(this);
             history = new HistoryController(this);
+            ui = new UIController(this);
         }
 
         public void KillTimer()

@@ -47,23 +47,45 @@ class FitnessMenu : Menu, Help
     public FitnessMenu(UIController uIController)
     {
         this.uIController = uIController;
+        var addWorkout = new AddWorkoutCommand(uIController.app);
+        var setFitness = new SetFitnessGoalCommand(uIController.app);
+        var setWeight = new SetWeightGoalCommand(uIController.app);
+        var viewTargetCalories = new ViewTargetCaloriesCommand(uIController.app);
+        
         actions = new Dictionary<string, Invoker>
         {
-            { "Add Workout", new PTAddWorkoutInvoker(new AddWorkoutCommand(uIController.app)) },
-            { "Set Fitness Goal", new PTSetFitnessGoalInvoker(new SetFitnessGoalCommand(uIController.app)) },
-            {
-                "Set Weight Goal",
-                new PTSetWeightGoalInvoker(new SetWeightGoalCommand(uIController.app), uIController.app)
-            },
-            { "View Target Calories", new PTViewTargetCaloriesInvoker(new ViewTargetCaloriesCommand(uIController.app)) },
+            { "Add Workout", new PTAddWorkoutInvoker(addWorkout) },
+            { "Set Fitness Goal", new PTSetFitnessGoalInvoker(setFitness) },
+            { "Set Weight Goal", new PTSetWeightGoalInvoker(setWeight, uIController.app)},
+            { "View Target Calories", new PTViewTargetCaloriesInvoker(viewTargetCalories) },
             {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
             {"Help", new PTHelpInvoker(this)}
         };
+
+        new PTAddWorkoutUpdater(addWorkout, uIController.app);
+        new PTSetFitnessGoalUpdater(setFitness, uIController.app);
+        new PTSetWeightGoalInvoker(setWeight, uIController.app);
+        new PTViewTargetCaloriesUpdater(viewTargetCalories, uIController.app);
     }
 
     public void Handle()
     {
-        uIController.menu = this;
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("welcome to the fitness menu");
+        while (true)
+        {
+            Console.WriteLine("please enter a Command (Help to get options)");
+            string input = Console.ReadLine();
+            if (!actions.ContainsKey(input))
+            {
+                Console.WriteLine(input + " is not a valid input");
+            }
+            else
+            {
+                actions[input].Invoke();
+            }
+        }       
     }
 
     /// <summary>
@@ -90,16 +112,29 @@ class FoodMenu : Menu, Help
     public FoodMenu(UIController uIController)
     {
         this.uIController = uIController;
+        var consumeMeal = new ConsumeMealCommand(uIController.app);
+        var createRecipe = new CreateRecipesCommand(uIController.app);
+        var getShoppingList = new GetShoppingListCommand(uIController.app);
+        var purchaseFood = new PurchaseFoodCommand(uIController.app);
+        var searchIngredients = new SearchingIngredientsCommand(uIController.app);
+        
         actions = new Dictionary<string, Invoker>
             {
-                { "Consume Meal", new PTConsumeMealInvoker(new ConsumeMealCommand(uIController.app))},
-                { "Create Recipe", new PTCreateRecipesInvoker(new CreateRecipesCommand(uIController.app))},
-                { "Get Shopping List", new PTGetShoppingListInvoker(new GetShoppingListCommand(uIController.app))},
-                { "Purchase Food", new PTPurchaseFoodInvoker(new PurchaseFoodCommand(uIController.app))},
-                { "Search Ingredients", new PTSearchIngredientsInvoker(new SearchingIngredientsCommand(uIController.app))},
+                { "Consume Meal", new PTConsumeMealInvoker(consumeMeal)},
+                { "Create Recipe", new PTCreateRecipesInvoker(createRecipe)},
+                { "Get Shopping List", new PTGetShoppingListInvoker(getShoppingList)},
+                { "Purchase Food", new PTPurchaseFoodInvoker(purchaseFood)},
+                { "Search Ingredients", new PTSearchIngredientsInvoker(searchIngredients)},
                 {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
                 {"Help", new PTHelpInvoker(this)}
             };
+        
+        new PTConsumeMealUpdater(consumeMeal, uIController.app);
+        new PTCreateRecipesUpdater(createRecipe, uIController.app);
+        new PTGetShoppingListUpdater(getShoppingList, uIController.app);
+        new PTPurchaseFoodUpdater(purchaseFood, uIController.app);
+        new PTSearchIngredientsUpdater(searchIngredients, uIController.app);
+
     }
 
     /// <summary>
@@ -107,8 +142,22 @@ class FoodMenu : Menu, Help
     /// </summary>
     public void Handle()
     {
-        uIController.menu = this;
-
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("welcome to the food menu");
+        while (true)
+        {
+            Console.WriteLine("please enter a Command (Help to get options)");
+            string input = Console.ReadLine();
+            if (!actions.ContainsKey(input))
+            {
+                Console.WriteLine(input + " is not a valid input");
+            }
+            else
+            {
+                actions[input].Invoke();
+            }
+        }   
     }
 
 
@@ -126,16 +175,26 @@ class HistoryMenu : Menu, Help
     public HistoryMenu(UIController uIController)
     {
         this.uIController = uIController;
-        actions = new Dictionary<string, Invoker>
+        var viewCalories = new ViewCaloriesCommand(uIController.app);
+        var viewMeals = new ViewMealsCommand(uIController.app);
+        var viewWeight = new ViewWeightCommand(uIController.app);
+        var viewWorkouts = new ViewWorkoutsCommand(uIController.app);
+
+            actions = new Dictionary<string, Invoker>
             {
-                {"View Calories", new PTViewCaloriesInvoker(new ViewCaloriesCommand(uIController.app))},
-                {"View Meals", new PTViewMealsInvoker(new ViewMealsCommand(uIController.app))},
-                {"View Weight", new PTViewWeightInvoker(new ViewWeightCommand(uIController.app))},
-                {"View Workouts", new PTViewWorkoutsInvoker(new ViewWorkoutsCommand(uIController.app))},
+                {"View Calories", new PTViewCaloriesInvoker(viewCalories)},
+                {"View Meals", new PTViewMealsInvoker(viewMeals)},
+                {"View Weight", new PTViewWeightInvoker(viewWeight)},
+                {"View Workouts", new PTViewWorkoutsInvoker(viewWorkouts)},
                 {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
                 {"Help", new PTHelpInvoker(this)}
             };
         
+        new PTViewCaloriesUpdater(viewCalories, uIController.app);
+        new PTViewMealsUpdater(viewMeals, uIController.app);
+        new PTViewWeightUpdater(viewWeight, uIController.app);
+        new PTViewWorkoutsUpdater(viewWorkouts, uIController.app);
+
     }
     
 
@@ -144,7 +203,22 @@ class HistoryMenu : Menu, Help
     /// </summary>
     public void Handle()
     {
-        uIController.menu = this;
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("welcome to the history menu");
+        while (true)
+        {
+            Console.WriteLine("please enter a Command (Help to get options)");
+            string input = Console.ReadLine();
+            if (!actions.ContainsKey(input))
+            {
+                Console.WriteLine(input + " is not a valid input");
+            }
+            else
+            {
+                actions[input].Invoke();
+            }
+        }    
     }
 
     public List<string> GetOptions()
@@ -162,15 +236,20 @@ class ProfileMenu : Menu, Help
     public ProfileMenu(UIController uIController)
     {
         this.uIController = uIController;
+        var clearHistory = new ClearHistoryCommand(uIController.app);
+        var setDayLength = new SetDayLengthCommand(uIController.app);
+        var quit = new QuitCommand(uIController.app);
         actions = new Dictionary<string, Invoker>
             {
-                {"Clear History", new PTClearHistoryInvoker(new ClearHistoryCommand(uIController.app))},
-                {"Set Day Length", new PTSetDayLengthInvoker(new SetDayLengthCommand(uIController.app))},
-                {"Quit", new PTQuitInvoker(new QuitCommand(uIController.app))},
+                {"Clear History", new PTClearHistoryInvoker(clearHistory)},
+                {"Set Day Length", new PTSetDayLengthInvoker(setDayLength)},
+                {"Quit", new PTQuitInvoker(quit)},
                 {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
                 {"Help", new PTHelpInvoker(this)}
             };
-
+        new PTClearHistoryUpdater(clearHistory, uIController.app);
+        new PTSetDayLengthUpdater(setDayLength, uIController.app);
+        //no updater for quit
     }
 
     /// <summary>
@@ -179,8 +258,22 @@ class ProfileMenu : Menu, Help
 
     public void Handle()
     {
-        uIController.menu = this;
-    }
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("welcome to the profile menu");
+        while (true)
+        {
+            Console.WriteLine("please enter a Command (Help to get options)");
+            string input = Console.ReadLine();
+            if (!actions.ContainsKey(input))
+            {
+                Console.WriteLine(input + " is not a valid input");
+            }
+            else
+            {
+                actions[input].Invoke();
+            }
+        }       }
 
     public List<string> GetOptions()
     {
@@ -216,6 +309,8 @@ class MainMenu : Menu
     /// </summary>
     public void Handle()
     {
+        Console.WriteLine();
+        Console.WriteLine();
         Console.WriteLine("welcome to the main menu");
         while (true)
         {

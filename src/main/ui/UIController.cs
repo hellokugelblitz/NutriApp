@@ -16,8 +16,13 @@ public class UIController
     public Menu menu
     {
         get => _menu;
-        set => _menu = value;
+        set
+        {
+            _menu = value;
+            _menu.Handle();
+        }
     }
+
     public App app
     {
         get => _app;
@@ -31,8 +36,8 @@ public class UIController
     /// <param name="app"></param>
     public UIController(App app)
     {
-        _menu = new MainMenu(this); // Defaults as main menu
         this.app = app;
+        _menu = new MainMenu(this); // Defaults as main menu
         menu = new MainMenu(this);
     }
 }

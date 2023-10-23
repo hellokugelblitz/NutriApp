@@ -12,6 +12,7 @@ class PTViewCaloriesUpdater : Updater
  
     public override void Update()
     {
+        Console.WriteLine("View Calories");
         foreach (var calorie in _app.HistoryControl.Calories)
         {
             PrintEntry(calorie);
