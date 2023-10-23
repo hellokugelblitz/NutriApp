@@ -23,7 +23,8 @@ public class MaintainWeightGoal : Goal
     /// </summary>
     /// <param name="userWeight">The user's current weight.</param>
     /// <returns>Whether the goal was switched.</returns>
-    public bool CheckWeight(double userWeight) {
+    public bool CheckWeight(double userWeight)
+    {
         int thresh = 5;
         if (userWeight <= WeightGoal - thresh)
         {
@@ -36,9 +37,10 @@ public class MaintainWeightGoal : Goal
             return true;
         }
         return false;
-     }
+    }
 
-    public void IncorporateFitness(List<Workout> recommendedWorkouts) {
+    public void IncorporateFitness(List<Workout> recommendedWorkouts)
+    {
         controller.Goal = new FitnessGoal(this, recommendedWorkouts);
     }
 }

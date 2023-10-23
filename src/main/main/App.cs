@@ -1,7 +1,9 @@
 using System;
 using System.Threading;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.History;
 using NutriApp.Goal;
@@ -12,6 +14,9 @@ namespace NutriApp;
 
 public class App
 {
+    private readonly string userPath = $"{Persistence.UserDataPath}\\user.json";
+    private readonly string datePath = $"{Persistence.DateDataPath}\\date.json";
+
     private HistoryController history;
     private GoalController goal;
     private WorkoutController workout;
@@ -76,5 +81,31 @@ public class App
             Console.WriteLine("new day " + TimeStamp);
             date = date.AddDays(1d);
         }
+    }
+
+    public void Save()
+    {
+        // Write the user to a JSON file for persistence
+        var userJson = JsonConvert.SerializeObject(user);
+        File.WriteAllText(userPath, userJson);
+        
+        // Write the current date to a JSON file for persistence
+        var timeJson = JsonConvert.SerializeObject(new { date });
+        File.WriteAllText(datePath, timeJson);
+    }
+
+    public void Load()
+    {
+        // Don't do anything if data files don't exist yet (e.g. first startup)
+        if (!File.Exists(userPath) || !File.Exists(datePath))
+            return;
+
+        // Read the user from a JSON file
+        var json = File.ReadAllText(userPath);
+        user = JsonConvert.DeserializeObject<User>(json);
+        
+        // Read the date from a JSON file
+        json = File.ReadAllText(datePath);
+        date = JsonConvert.DeserializeObject<DateTime>(json);
     }
 }

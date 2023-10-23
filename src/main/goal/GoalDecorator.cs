@@ -7,9 +7,8 @@ public abstract class GoalDecorator : Goal
 {
     protected Goal goal;
 
-    public double WeightGoal { get; }
-    public double DailyCalorieGoal { get; }
-
+    public double WeightGoal => goal.WeightGoal;
+    public double DailyCalorieGoal => goal.DailyCalorieGoal;
 
     public GoalDecorator(Goal goal)
     {
@@ -17,13 +16,6 @@ public abstract class GoalDecorator : Goal
         this.goal = goal;
     }
 
-    public bool CheckWeight(double userWeight)
-    {
-        return goal.CheckWeight(userWeight);
-    }
-
-    public void IncorporateFitness(List<Workout> recommendedWorkouts)
-    {
-        goal.IncorporateFitness(recommendedWorkouts);
-    }
+    public bool CheckWeight(double userWeight) => goal.CheckWeight(userWeight);
+    public void IncorporateFitness(List<Workout> recommendedWorkouts) => goal.IncorporateFitness(recommendedWorkouts);
 }
