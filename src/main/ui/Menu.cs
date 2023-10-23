@@ -44,28 +44,32 @@ class FitnessMenu : Menu, Help
     private UIController uIController;
 
 
-    public FitnessMenu(UIController uIController)
+    public FitnessMenu(UIController uiController)
     {
-        this.uIController = uIController;
-        var addWorkout = new AddWorkoutCommand(uIController.app);
-        var setFitness = new SetFitnessGoalCommand(uIController.app);
-        var setWeight = new SetWeightGoalCommand(uIController.app);
-        var viewTargetCalories = new ViewTargetCaloriesCommand(uIController.app);
+        this.uIController = uiController;
+        var addWorkout = new AddWorkoutCommand(uiController.app);
+        var setFitness = new SetFitnessGoalCommand(uiController.app);
+        var setWeightGoal = new SetWeightGoalCommand(uiController.app);
+        var viewTargetCalories = new ViewTargetCaloriesCommand(uiController.app);
+        var setWeight = new SetWeightCommand(uiController.app);
         
         actions = new Dictionary<string, Invoker>
         {
-            { "Add Workout", new PTAddWorkoutInvoker(addWorkout) },
-            { "Set Fitness Goal", new PTSetFitnessGoalInvoker(setFitness) },
-            { "Set Weight Goal", new PTSetWeightGoalInvoker(setWeight, uIController.app)},
-            { "View Target Calories", new PTViewTargetCaloriesInvoker(viewTargetCalories) },
+            {"Add Workout", new PTAddWorkoutInvoker(addWorkout)},
+            {"Set Fitness Goal", new PTSetFitnessGoalInvoker(setFitness)},
+            {"Set Weight Goal", new PTSetWeightGoalInvoker(setWeightGoal, uIController.app)},
+            {"View Target Calories", new PTViewTargetCaloriesInvoker(viewTargetCalories)},
+            {"Set Weight", new PTSetWeightInvoker(setWeight)},
             {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
             {"Help", new PTHelpInvoker(this)}
         };
 
         new PTAddWorkoutUpdater(addWorkout, uIController.app);
         new PTSetFitnessGoalUpdater(setFitness, uIController.app);
-        new PTSetWeightGoalInvoker(setWeight, uIController.app);
+        new PTSetWeightGoalInvoker(setWeightGoal, uIController.app);
         new PTViewTargetCaloriesUpdater(viewTargetCalories, uIController.app);
+        
+        uIController.app.SubscribeDayEndEvent(PromptWeight);
     }
 
     public void Handle()
@@ -90,11 +94,13 @@ class FitnessMenu : Menu, Help
 
     /// <summary>
     /// Prompts the weight of user at the end of the day.
+    /// (dev-note)Doing the invoker asyncronously was causing problems with the input. So i moved it to manually.
     /// </summary>
     /// <param name="datetime"></param>
     public void PromptWeight(DateTime datetime)
     {
-        
+        // var invoker = new PTSetWeightInvoker(new SetWeightCommand(uIController.app));
+        // invoker.Invoke();
     }
 
     public List<string> GetOptions()
@@ -109,14 +115,14 @@ class FoodMenu : Menu, Help
     private Dictionary<string, Invoker> actions;
     private UIController uIController;
 
-    public FoodMenu(UIController uIController)
+    public FoodMenu(UIController uiController)
     {
-        this.uIController = uIController;
-        var consumeMeal = new ConsumeMealCommand(uIController.app);
-        var createRecipe = new CreateRecipesCommand(uIController.app);
-        var getShoppingList = new GetShoppingListCommand(uIController.app);
-        var purchaseFood = new PurchaseFoodCommand(uIController.app);
-        var searchIngredients = new SearchingIngredientsCommand(uIController.app);
+        this.uIController = uiController;
+        var consumeMeal = new ConsumeMealCommand(uiController.app);
+        var createRecipe = new CreateRecipesCommand(uiController.app);
+        var getShoppingList = new GetShoppingListCommand(uiController.app);
+        var purchaseFood = new PurchaseFoodCommand(uiController.app);
+        var searchIngredients = new SearchingIngredientsCommand(uiController.app);
         
         actions = new Dictionary<string, Invoker>
             {
@@ -125,15 +131,15 @@ class FoodMenu : Menu, Help
                 { "Get Shopping List", new PTGetShoppingListInvoker(getShoppingList)},
                 { "Purchase Food", new PTPurchaseFoodInvoker(purchaseFood)},
                 { "Search Ingredients", new PTSearchIngredientsInvoker(searchIngredients)},
-                {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
+                {"Main Menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
                 {"Help", new PTHelpInvoker(this)}
             };
         
-        new PTConsumeMealUpdater(consumeMeal, uIController.app);
-        new PTCreateRecipesUpdater(createRecipe, uIController.app);
-        new PTGetShoppingListUpdater(getShoppingList, uIController.app);
-        new PTPurchaseFoodUpdater(purchaseFood, uIController.app);
-        new PTSearchIngredientsUpdater(searchIngredients, uIController.app);
+        new PTConsumeMealUpdater(consumeMeal, uiController.app);
+        new PTCreateRecipesUpdater(createRecipe, uiController.app);
+        new PTGetShoppingListUpdater(getShoppingList, uiController.app);
+        new PTPurchaseFoodUpdater(purchaseFood, uiController.app);
+        new PTSearchIngredientsUpdater(searchIngredients, uiController.app);
 
     }
 
@@ -172,13 +178,13 @@ class HistoryMenu : Menu, Help
     private Dictionary<string, Invoker> actions;
     private UIController uIController;
 
-    public HistoryMenu(UIController uIController)
+    public HistoryMenu(UIController uiController)
     {
-        this.uIController = uIController;
-        var viewCalories = new ViewCaloriesCommand(uIController.app);
-        var viewMeals = new ViewMealsCommand(uIController.app);
-        var viewWeight = new ViewWeightCommand(uIController.app);
-        var viewWorkouts = new ViewWorkoutsCommand(uIController.app);
+        this.uIController = uiController;
+        var viewCalories = new ViewCaloriesCommand(uiController.app);
+        var viewMeals = new ViewMealsCommand(uiController.app);
+        var viewWeight = new ViewWeightCommand(uiController.app);
+        var viewWorkouts = new ViewWorkoutsCommand(uiController.app);
 
             actions = new Dictionary<string, Invoker>
             {
@@ -186,14 +192,14 @@ class HistoryMenu : Menu, Help
                 {"View Meals", new PTViewMealsInvoker(viewMeals)},
                 {"View Weight", new PTViewWeightInvoker(viewWeight)},
                 {"View Workouts", new PTViewWorkoutsInvoker(viewWorkouts)},
-                {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
+                {"Main Menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
                 {"Help", new PTHelpInvoker(this)}
             };
         
-        new PTViewCaloriesUpdater(viewCalories, uIController.app);
-        new PTViewMealsUpdater(viewMeals, uIController.app);
-        new PTViewWeightUpdater(viewWeight, uIController.app);
-        new PTViewWorkoutsUpdater(viewWorkouts, uIController.app);
+        new PTViewCaloriesUpdater(viewCalories, uiController.app);
+        new PTViewMealsUpdater(viewMeals, uiController.app);
+        new PTViewWeightUpdater(viewWeight, uiController.app);
+        new PTViewWorkoutsUpdater(viewWorkouts, uiController.app);
 
     }
     
@@ -233,22 +239,22 @@ class ProfileMenu : Menu, Help
     private Dictionary<string, Invoker> actions;
     private UIController uIController;
 
-    public ProfileMenu(UIController uIController)
+    public ProfileMenu(UIController uiController)
     {
-        this.uIController = uIController;
-        var clearHistory = new ClearHistoryCommand(uIController.app);
-        var setDayLength = new SetDayLengthCommand(uIController.app);
-        var quit = new QuitCommand(uIController.app);
+        this.uIController = uiController;
+        var clearHistory = new ClearHistoryCommand(uiController.app);
+        var setDayLength = new SetDayLengthCommand(uiController.app);
+        var quit = new QuitCommand(uiController.app);
         actions = new Dictionary<string, Invoker>
             {
-                {"Clear History", new PTClearHistoryInvoker(clearHistory)},
+                //{"Clear History", new PTClearHistoryInvoker(clearHistory)},
                 {"Set Day Length", new PTSetDayLengthInvoker(setDayLength)},
                 {"Quit", new PTQuitInvoker(quit)},
-                {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
+                {"Main Menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
                 {"Help", new PTHelpInvoker(this)}
             };
-        new PTClearHistoryUpdater(clearHistory, uIController.app);
-        new PTSetDayLengthUpdater(setDayLength, uIController.app);
+        new PTClearHistoryUpdater(clearHistory, uiController.app);
+        new PTSetDayLengthUpdater(setDayLength, uiController.app);
         //no updater for quit
     }
 
@@ -289,16 +295,16 @@ class MainMenu : Menu
     
     private Dictionary<string, Menu> _menus;
 
-    public MainMenu(UIController uIController)
+    public MainMenu(UIController uiController)
     {
-        this.uIController = uIController;
+        this.uIController = uiController;
         
         _menus = new Dictionary<string, Menu>()
         {
-            {"fitness", new FitnessMenu(uIController) },
-            {"food", new FoodMenu(uIController)},
-            {"history", new HistoryMenu(uIController)},
-            {"profile", new ProfileMenu(uIController)},
+            {"fitness", new FitnessMenu(uiController) },
+            {"food", new FoodMenu(uiController)},
+            {"history", new HistoryMenu(uiController)},
+            {"profile", new ProfileMenu(uiController)},
         };
         
         Handle();

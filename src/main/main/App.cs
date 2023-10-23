@@ -64,7 +64,7 @@ namespace NutriApp
 
         public static void Main(string[] args)
         {
-            App app = new App(2);
+            App app = new App(1);
         }
 
         private None DayLoop()
@@ -73,6 +73,7 @@ namespace NutriApp
             {
                 Thread.Sleep((int)(1000 * 60 * dayLength));
                 DayEndEvent?.Invoke(TimeStamp);
+                Console.WriteLine("new day " + TimeStamp);
                 date = date.AddDays(1d);
             }
         }
