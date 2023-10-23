@@ -5,8 +5,12 @@ namespace NutriApp.UI;
 
 class PTCreateRecipesInvoker : CommandInvoker<Recipe>
 {
+    private App _app;
 
-    public PTCreateRecipesInvoker(Command<Recipe> command) : base(command) { }
+    public PTCreateRecipesInvoker(Command<Recipe> command, App app) : base(command)
+    {
+        _app = app;
+    }
 
     public override void Invoke()
     {
@@ -24,6 +28,28 @@ class PTCreateRecipesInvoker : CommandInvoker<Recipe>
             if (instruction.ToLower() == "done") break;
 
             recipe.AddInstruction(instruction);
+        }
+        
+        Console.WriteLine("Enter food for the recipe. Type 'done' for food when you're finished.");
+        while (true)
+        {
+            try { 
+                Console.Write("Food: ");
+                string food = Console.ReadLine();
+
+                if (food.ToLower() == "done") break;
+            
+                Console.Write("Amount: ");
+                double amount = double.Parse(Console.ReadLine());
+
+                recipe.AddChild(_app.FoodControl.GetIngredient(food), amount);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("not a valid input");
+            }
+            
         }
 
         command.Execute(recipe);
