@@ -11,7 +11,7 @@ purchase food
 searching ingredients
 
 history
-vew calories
+view calories
 view meals
 view weight
 
