@@ -4,11 +4,8 @@ set weight goal
 view target calories
 
 food
-consume meal 
-create recipes
+consume meal
 get shopping list
-purchase food
-searching ingredients
 
 history
 view calories
