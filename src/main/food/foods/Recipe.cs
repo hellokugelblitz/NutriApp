@@ -29,7 +29,7 @@ public class SerializableRecipe : SerializablePreparedFood
 {
     [JsonProperty] private string[] preparationInstructions;
 
-    public string[] Instructions => preparationInstructions;
+    [JsonIgnore] public string[] Instructions => preparationInstructions;
 
     public SerializableRecipe(string name, string[] instructions) : base(name)
     {
