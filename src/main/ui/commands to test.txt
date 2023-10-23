@@ -6,11 +6,9 @@ view target calories
 food
 consume meal 
 view meals
-view recipies
-create recipes
+create meal
 get shopping list
 purchase food
-searching ingredients
 
 history
 view calories

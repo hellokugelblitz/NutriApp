@@ -118,18 +118,22 @@ class FoodMenu : Menu, Help
     public FoodMenu(UIController uiController)
     {
         this.uIController = uiController;
+     
+        
+
+        
         var consumeMeal = new ConsumeMealCommand(uiController.app);
         var createRecipe = new CreateRecipesCommand(uiController.app);
         var getShoppingList = new GetShoppingListCommand(uiController.app);
         var purchaseFood = new PurchaseFoodCommand(uiController.app);
-        var searchIngredients = new SearchingIngredientsCommand(uiController.app);
+        var searchIngredients = new SearchingIngredientsCommand(uiController.app, new PTSearchIngredientsUpdater(uiController.app));
         var viewMeals = new ViewMealsCommand();
         var viewRecipes = new ViewRecipesCommand();
         
         actions = new Dictionary<string, Invoker>
             {
                 {"Consume Meal", new PTConsumeMealInvoker(consumeMeal)},
-                {"Create Recipe", new PTCreateRecipesInvoker(createRecipe)},
+                {"Create Recipe", new PTCreateRecipesInvoker(createRecipe, uiController.app)},
                 {"Get Shopping List", new PTGetShoppingListInvoker(getShoppingList)},
                 {"Purchase Food", new PTPurchaseFoodInvoker(purchaseFood)},
                 {"Search Ingredients", new PTSearchIngredientsInvoker(searchIngredients)},
@@ -143,7 +147,6 @@ class FoodMenu : Menu, Help
         new PTCreateRecipesUpdater(createRecipe, uiController.app);
         new PTGetShoppingListUpdater(getShoppingList, uiController.app);
         new PTPurchaseFoodUpdater(purchaseFood, uiController.app);
-        new PTSearchIngredientsUpdater(searchIngredients, uiController.app);
         new PTViewMealsUpdater(viewMeals, uiController.app);
         new PTViewRecipesUpdater(viewRecipes, uiController.app);
 
