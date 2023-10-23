@@ -12,6 +12,8 @@ class PTViewWorkoutsUpdater : Updater
  
     public override void Update()
     {
+        Console.WriteLine("View Workouts");
+
         foreach (var workout in _app.HistoryControl.Workouts)
         {
             PrintEntry(workout);

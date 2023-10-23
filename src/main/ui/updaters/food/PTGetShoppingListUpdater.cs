@@ -14,7 +14,7 @@ class PTGetShoppingListUpdater : Updater
 
     public override void Update()
     {
-        foreach (var entry in _app.FoodControl.ShoppingList.getList())
+        foreach (var entry in _app.FoodControl.ShoppingList.List)
         {
             PrintEntry(entry);
         }

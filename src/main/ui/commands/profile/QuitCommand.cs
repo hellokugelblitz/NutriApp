@@ -1,3 +1,5 @@
+using System;
+
 namespace NutriApp.UI;
 
 class QuitCommand : Command<None>
@@ -13,5 +15,6 @@ class QuitCommand : Command<None>
         _app.FoodControl.Save();
         _app.HistoryControl.Save();
         onFinished?.Invoke();// saves everything
+        Environment.Exit(0);
     }
 }

@@ -13,6 +13,8 @@ class PTViewMealsUpdater : Updater
  
     public override void Update()
     {
+        Console.WriteLine("View Meals");
+
         foreach (var meal in _app.HistoryControl.Meals)
         {
             PrintEntry(meal);

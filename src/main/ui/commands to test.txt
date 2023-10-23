@@ -1,0 +1,21 @@
+fitness
+set fitness goal
+set weight goal
+view target calories
+
+food
+consume meal 
+create recipes
+get shopping list
+purchase food
+searching ingredients
+
+history
+view calories
+view meals
+view weight
+
+profile
+clear history
+quit
+set day length

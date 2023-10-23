@@ -22,7 +22,7 @@ class PTAddWorkoutInvoker : CommandInvoker<Workout.Workout>
                 Console.WriteLine("Enter duration of workout: ");
                 duration = Convert.ToInt32(Console.ReadLine());
             }
-            catch (Exception e)
+            catch
             {
                 Console.WriteLine("please enter a valid number");
             }
