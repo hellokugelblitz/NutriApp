@@ -8,6 +8,6 @@ class PTClearHistoryInvoker : CommandInvoker<None>
 
     public override void Invoke()
     {
-        command.Execute(new None());
+        command.Execute(null);
     }
 }

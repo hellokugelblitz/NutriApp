@@ -15,7 +15,7 @@ class PTConsumeMealInvoker : CommandInvoker<string>
     public override void Invoke()
     {
         Console.WriteLine("Enter name of meal consumed: ");
-        string name = Console.ReadLine();
+        string name = Console.ReadLine().ToLower();
 
         if (app.FoodControl.GetMeal(name) == null)
         {

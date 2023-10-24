@@ -20,7 +20,7 @@ class PTSetWeightInvoker : CommandInvoker<double>
                     weight = -1;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 Console.WriteLine("that was not a valid input");
             }

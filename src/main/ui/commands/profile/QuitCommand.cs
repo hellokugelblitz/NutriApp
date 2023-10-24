@@ -14,6 +14,8 @@ class QuitCommand : Command<None>
     {
         _app.FoodControl.Save();
         _app.HistoryControl.Save();
+        _app.GoalControl.Save();
+        _app.Save();
         onFinished?.Invoke();// saves everything
         Environment.Exit(0);
     }
