@@ -19,6 +19,7 @@ public class FoodController
     private List<Meal> meals;
 
     private ShoppingList shoppingList;
+    private ShoppingListCriteria recipeCriteria;
     private App app;
     private IngredientDatabase ingredientDatabase;
 
@@ -43,11 +44,16 @@ public class FoodController
         this.app = app;
         ingredientDatabase = new InMemoryIngredientDatabase();
         shoppingList = new ShoppingList();
+        recipeCriteria = new SpecificRecipeCriteria(shoppingList);
 
         recipes = new List<Recipe>();
         meals = new List<Meal>();
 
         Load();
+        shoppingList.SetCriteria(recipeCriteria);
+
+        foreach (Recipe recipe in recipes)
+            shoppingList.Update(recipe);
     }
 
     /// <summary>
@@ -160,16 +166,15 @@ public class FoodController
             meals.Add(meal);
         }
     }
-
-    /// <summary>
-    /// Adds a blank recipe with the given name to the user's saved recipes.
-    /// </summary>
-    public void AddRecipe(string name) => recipes.Add(new Recipe(name));
     
     /// <summary>
     /// Adds a recipe with some pre-configured attributes to the user's saved recipes.
     /// </summary>
-    public void AddRecipe(Recipe recipe) => recipes.Add(recipe);
+    public void AddRecipe(Recipe recipe)
+    {
+        recipes.Add(recipe);
+        shoppingList.Update(recipe);
+    }
 
     /// <summary>
     /// Retrieves a recipe given its unique name. Returns null if there is no
@@ -183,11 +188,6 @@ public class FoodController
 
         return null;
     }
-
-    /// <summary>
-    /// Adds a blank meal with the given name to the user's saved meals.
-    /// </summary>
-    public void AddMeal(string name) => meals.Add(new Meal(name));
     
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
@@ -274,7 +274,7 @@ public class FoodController
         Ingredient ingredient = ingredientDatabase.Get(name);
         ingredient.Stock += quantity;
 
-        shoppingList.AddItem(ingredient, quantity);
+        shoppingList.RemoveItem(ingredient, quantity);
     }
     public delegate void MealEventHandler(Meal meal);
     public event MealEventHandler MealConsumeEvent;

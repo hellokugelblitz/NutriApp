@@ -13,7 +13,7 @@ class PTPurchaseFoodInvoker : CommandInvoker<(string, double)>
     public override void Invoke()
     {
         Console.WriteLine("Enter name of food to purchase: ");
-        string name = Console.ReadLine();
+        string name = Console.ReadLine().ToLower();
         double quantity = -1;
 
         while (quantity == -1)
@@ -32,12 +32,6 @@ class PTPurchaseFoodInvoker : CommandInvoker<(string, double)>
                 Console.WriteLine("not a valid input");
             }
 
-        }
-
-        if (!_app.FoodControl.EnoughIngredients(name))
-        {
-            Console.WriteLine("not enough ingredients");
-            return;
         }
         
         command.Execute((name, quantity));

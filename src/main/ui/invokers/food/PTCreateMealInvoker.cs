@@ -13,7 +13,7 @@ class PTCreateMealInvoker : CommandInvoker<Meal>
     public override void Invoke()
     {
         Console.WriteLine("Enter the name of the meal you want to create: ");
-        string name = Console.ReadLine();
+        string name = Console.ReadLine().ToLower();
 
         Meal meal = new Meal(name);
 
@@ -22,7 +22,7 @@ class PTCreateMealInvoker : CommandInvoker<Meal>
         {
             try { 
                 Console.Write("Recipe: ");
-                string recipe = Console.ReadLine();
+                string recipe = Console.ReadLine().ToLower();
 
                 if (recipe.ToLower() == "done") break;
             
