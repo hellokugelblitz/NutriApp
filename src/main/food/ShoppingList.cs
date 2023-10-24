@@ -66,8 +66,7 @@ namespace NutriApp.Food
                 return;
 
             //Remove whatever we have
-            if(list[ingredient] >= amt)
-                list[ingredient] -= amt;
+            list[ingredient] -= amt;
 
             //If we have zero remove it from the list entirely
             if(list[ingredient] <= 0)
@@ -100,13 +99,16 @@ namespace NutriApp.Food
             Dictionary<Ingredient, double> newList = shoppingList.List;
 
             foreach (var item in recipe.Children)
-            {
+            {   
+                double currentIngredientStock = item.Key.Stock;
+                double recipeRequirement = item.Value;
+                
+                if (currentIngredientStock >= recipeRequirement)
+                    continue;
+
                 //If the shopping list doesn't contain this item already add it to the list and exit
                 if(!newList.ContainsKey(item.Key))
-                {
-                    newList.Add(item.Key, item.Value);
-                    return;
-                }
+                    newList.Add(item.Key, recipeRequirement - currentIngredientStock);
 
                 //Else we need to to bring it up to the minimum for each ingredient at least. 
                 //If its over already we don't care.

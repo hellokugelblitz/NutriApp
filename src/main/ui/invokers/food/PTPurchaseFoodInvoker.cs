@@ -33,12 +33,6 @@ class PTPurchaseFoodInvoker : CommandInvoker<(string, double)>
             }
 
         }
-
-        if (!_app.FoodControl.EnoughIngredients(name))
-        {
-            Console.WriteLine("not enough ingredients");
-            return;
-        }
         
         command.Execute((name, quantity));
     }
