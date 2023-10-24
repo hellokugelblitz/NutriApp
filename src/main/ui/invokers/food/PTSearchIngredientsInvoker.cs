@@ -11,7 +11,7 @@ class PTSearchIngredientsInvoker : CommandInvoker<string>
 	public override void Invoke()
 	{
 		Console.WriteLine("Enter name of food to search: ");
-		string name = Console.ReadLine();
+		string name = Console.ReadLine().ToLower();
 
 		command.Execute(name);
 	}

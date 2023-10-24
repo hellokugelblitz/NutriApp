@@ -12,5 +12,6 @@ class SetWeightCommand : Command<double>
     public override void Execute(double userinput)
     {
         _app.HistoryControl.SetWeight(userinput);
+        _app.GoalControl.CompareUserWeightToGoal();
     }
 }

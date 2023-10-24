@@ -33,8 +33,8 @@ public class ActionInvoker : Invoker
         this.action = action;
     }
     public void Invoke()
-    { 
-        action?.Invoke();   
+    {
+        action?.Invoke();
     }
 }
 
@@ -52,23 +52,23 @@ class FitnessMenu : Menu, Help
         var setWeightGoal = new SetWeightGoalCommand(uiController.app);
         var viewTargetCalories = new ViewTargetCaloriesCommand(uiController.app);
         var setWeight = new SetWeightCommand(uiController.app);
-        
+
         actions = new Dictionary<string, Invoker>
         {
-            {"Add Workout", new PTAddWorkoutInvoker(addWorkout)},
-            {"Set Fitness Goal", new PTSetFitnessGoalInvoker(setFitness)},
-            {"Set Weight Goal", new PTSetWeightGoalInvoker(setWeightGoal, uIController.app)},
-            {"View Target Calories", new PTViewTargetCaloriesInvoker(viewTargetCalories)},
-            {"Set Weight", new PTSetWeightInvoker(setWeight)},
-            {"Main Menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
-            {"Help", new PTHelpInvoker(this)}
+            {"add workout", new PTAddWorkoutInvoker(addWorkout)},
+            {"set fitness goal", new PTSetFitnessGoalInvoker(setFitness)},
+            {"set weight goal", new PTSetWeightGoalInvoker(setWeightGoal, uIController.app)},
+            {"view target calories", new PTViewTargetCaloriesInvoker(viewTargetCalories)},
+            {"set weight", new PTSetWeightInvoker(setWeight)},
+            {"main menu", new ActionInvoker(() => uIController.menu = new MainMenu(uIController))},
+            {"help", new PTHelpInvoker(this)}
         };
 
         new PTAddWorkoutUpdater(addWorkout, uIController.app);
         new PTSetFitnessGoalUpdater(setFitness, uIController.app);
         new PTSetWeightGoalInvoker(setWeightGoal, uIController.app);
         new PTViewTargetCaloriesUpdater(viewTargetCalories, uIController.app);
-        
+
         uIController.app.SubscribeDayEndEvent(PromptWeight);
     }
 
@@ -79,8 +79,8 @@ class FitnessMenu : Menu, Help
         Console.WriteLine("welcome to the fitness menu");
         while (true)
         {
-            Console.WriteLine("please enter a Command (Help to get options)");
-            string input = Console.ReadLine();
+            Console.WriteLine("please enter a Command (help to get options)");
+            string input = Console.ReadLine().ToLower();
             if (!actions.ContainsKey(input))
             {
                 Console.WriteLine(input + " is not a valid input");
@@ -89,7 +89,7 @@ class FitnessMenu : Menu, Help
             {
                 actions[input].Invoke();
             }
-        }       
+        }
     }
 
     /// <summary>
@@ -118,10 +118,10 @@ class FoodMenu : Menu, Help
     public FoodMenu(UIController uiController)
     {
         this.uIController = uiController;
-     
-        
 
-        
+
+
+
         var consumeMeal = new ConsumeMealCommand(uiController.app);
         var createRecipe = new CreateRecipesCommand(uiController.app);
         var createMeal = new CreateMealCommand(uiController.app);
@@ -130,21 +130,21 @@ class FoodMenu : Menu, Help
         var searchIngredients = new SearchingIngredientsCommand(uiController.app, new PTSearchIngredientsUpdater(uiController.app));
         var viewMeals = new ViewMealsCommand();
         var viewRecipes = new ViewRecipesCommand();
-        
+
         actions = new Dictionary<string, Invoker>
             {
-                {"Consume Meal", new PTConsumeMealInvoker(consumeMeal, uiController.app)},
-                {"Create Recipe", new PTCreateRecipesInvoker(createRecipe, uiController.app)},
-                {"Create Meal", new PTCreateMealInvoker(createMeal, uiController.app)},
-                {"Get Shopping List", new PTGetShoppingListInvoker(getShoppingList)},
-                {"Purchase Food", new PTPurchaseFoodInvoker(purchaseFood)},
-                {"Search Ingredients", new PTSearchIngredientsInvoker(searchIngredients)},
-                {"View Meals", new PTViewMealsInvoker(viewMeals)},
-                {"View Recipes", new PTViewRecipesInvoker(viewRecipes)},
-                {"Main Menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
-                {"Help", new PTHelpInvoker(this)}
+                {"consume meal", new PTConsumeMealInvoker(consumeMeal)},
+                {"create recipe", new PTCreateRecipesInvoker(createRecipe, uiController.app)},
+                {"create meal", new PTCreateMealInvoker(createMeal, uiController.app)},
+                {"get shopping list", new PTGetShoppingListInvoker(getShoppingList)},
+                {"purchase food", new PTPurchaseFoodInvoker(purchaseFood)},
+                {"search ingredients", new PTSearchIngredientsInvoker(searchIngredients)},
+                {"view meals", new PTViewMealsInvoker(viewMeals)},
+                {"view recipes", new PTViewRecipesInvoker(viewRecipes)},
+                {"main menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
+                {"help", new PTHelpInvoker(this)}
             };
-        
+
         new PTConsumeMealUpdater(consumeMeal, uiController.app);
         new PTCreateRecipesUpdater(createRecipe, uiController.app);
         new PTGetShoppingListUpdater(getShoppingList, uiController.app);
@@ -164,8 +164,8 @@ class FoodMenu : Menu, Help
         Console.WriteLine("welcome to the food menu");
         while (true)
         {
-            Console.WriteLine("please enter a Command (Help to get options)");
-            string input = Console.ReadLine();
+            Console.WriteLine("please enter a Command (help to get options)");
+            string input = Console.ReadLine().ToLower();
             if (!actions.ContainsKey(input))
             {
                 Console.WriteLine(input + " is not a valid input");
@@ -174,7 +174,7 @@ class FoodMenu : Menu, Help
             {
                 actions[input].Invoke();
             }
-        }   
+        }
     }
 
 
@@ -197,23 +197,23 @@ class HistoryMenu : Menu, Help
         var viewWeight = new ViewWeightCommand(uiController.app);
         var viewWorkouts = new ViewWorkoutsCommand(uiController.app);
 
-            actions = new Dictionary<string, Invoker>
+        actions = new Dictionary<string, Invoker>
             {
-                {"View Calories", new PTViewCaloriesInvoker(viewCalories)},
-                {"View Meals", new PTViewMealsEatenInvoker(viewMeals)},
-                {"View Weight", new PTViewWeightInvoker(viewWeight)},
-                {"View Workouts", new PTViewWorkoutsInvoker(viewWorkouts)},
-                {"Main Menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
-                {"Help", new PTHelpInvoker(this)}
+                {"view calories", new PTViewCaloriesInvoker(viewCalories)},
+                {"view meals", new PTViewMealsEatenInvoker(viewMeals)},
+                {"view weight", new PTViewWeightInvoker(viewWeight)},
+                {"view workouts", new PTViewWorkoutsInvoker(viewWorkouts)},
+                {"main menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
+                {"help", new PTHelpInvoker(this)}
             };
-        
+
         new PTViewCaloriesUpdater(viewCalories, uiController.app);
         new PTViewMealsEatenUpdater(viewMeals, uiController.app);
         new PTViewWeightUpdater(viewWeight, uiController.app);
         new PTViewWorkoutsUpdater(viewWorkouts, uiController.app);
 
     }
-    
+
 
     /// <summary>
     /// Sets the current menu to the history menu.
@@ -225,8 +225,8 @@ class HistoryMenu : Menu, Help
         Console.WriteLine("welcome to the history menu");
         while (true)
         {
-            Console.WriteLine("please enter a Command (Help to get options)");
-            string input = Console.ReadLine();
+            Console.WriteLine("please enter a Command (help to get options)");
+            string input = Console.ReadLine().ToLower();
             if (!actions.ContainsKey(input))
             {
                 Console.WriteLine(input + " is not a valid input");
@@ -235,7 +235,7 @@ class HistoryMenu : Menu, Help
             {
                 actions[input].Invoke();
             }
-        }    
+        }
     }
 
     public List<string> GetOptions()
@@ -259,10 +259,10 @@ class ProfileMenu : Menu, Help
         actions = new Dictionary<string, Invoker>
             {
                 //{"Clear History", new PTClearHistoryInvoker(clearHistory)},
-                {"Set Day Length", new PTSetDayLengthInvoker(setDayLength)},
-                {"Quit", new PTQuitInvoker(quit)},
-                {"Main Menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
-                {"Help", new PTHelpInvoker(this)}
+                {"set day length", new PTSetDayLengthInvoker(setDayLength)},
+                {"quit", new PTQuitInvoker(quit)},
+                {"main menu", new ActionInvoker(() => uiController.menu = new MainMenu(uiController))},
+                {"help", new PTHelpInvoker(this)}
             };
         new PTClearHistoryUpdater(clearHistory, uiController.app);
         new PTSetDayLengthUpdater(setDayLength, uiController.app);
@@ -280,8 +280,8 @@ class ProfileMenu : Menu, Help
         Console.WriteLine("welcome to the profile menu");
         while (true)
         {
-            Console.WriteLine("please enter a Command (Help to get options)");
-            string input = Console.ReadLine();
+            Console.WriteLine("please enter a Command (help to get options)");
+            string input = Console.ReadLine().ToLower();
             if (!actions.ContainsKey(input))
             {
                 Console.WriteLine(input + " is not a valid input");
@@ -290,7 +290,8 @@ class ProfileMenu : Menu, Help
             {
                 actions[input].Invoke();
             }
-        }       }
+        }
+    }
 
     public List<string> GetOptions()
     {
@@ -298,18 +299,18 @@ class ProfileMenu : Menu, Help
     }
 }
 
-    
+
 
 class MainMenu : Menu
 {
     private UIController uIController;
-    
+
     private Dictionary<string, Menu> _menus;
 
     public MainMenu(UIController uiController)
     {
         this.uIController = uiController;
-        
+
         _menus = new Dictionary<string, Menu>()
         {
             {"fitness", new FitnessMenu(uiController) },
@@ -317,7 +318,7 @@ class MainMenu : Menu
             {"history", new HistoryMenu(uiController)},
             {"profile", new ProfileMenu(uiController)},
         };
-        
+
         Handle();
     }
 
@@ -332,7 +333,7 @@ class MainMenu : Menu
         while (true)
         {
             Console.WriteLine("please enter a menu to navigate to(fitness, food, history, profile)");
-            string input = Console.ReadLine();
+            string input = Console.ReadLine().ToLower();
             if (!_menus.ContainsKey(input))
             {
                 Console.WriteLine(input + " is not a valid input");

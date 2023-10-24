@@ -20,7 +20,7 @@ public class HistoryController {
     public List<Entry<Workout.Workout>> Workouts => workouts;
     public List<Entry<Food.Meal>> Meals => meals; 
     public List<Entry<CalorieTracker>> Calories => calories;
-    public double CurrentWeight => weights[-1].Value; 
+    public double CurrentWeight => weights[^1].Value; 
 
     public List<Entry<double>> Weights
     {

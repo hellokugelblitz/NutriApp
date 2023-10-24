@@ -44,10 +44,10 @@ public class App
         timerThread = new Task<None>(DayLoop);
         timerThread.Start();
 
-        goal = new GoalController(this);
         workout = new WorkoutController();
         food = new FoodController(this);
         history = new HistoryController(this);
+        goal = new GoalController(this);
         ui = new UIController(this);
     }
 

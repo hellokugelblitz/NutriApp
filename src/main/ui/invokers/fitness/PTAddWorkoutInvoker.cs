@@ -12,7 +12,7 @@ class PTAddWorkoutInvoker : CommandInvoker<Workout.Workout>
     public override void Invoke()
     {
         Console.WriteLine("Enter the name of the workout");
-        string name = Console.ReadLine();
+        string name = Console.ReadLine().ToLower();
 
         int duration = -1;
         while (duration < 0)
