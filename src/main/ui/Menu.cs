@@ -151,6 +151,7 @@ class FoodMenu : Menu, Help
         new PTPurchaseFoodUpdater(purchaseFood, uiController.app);
         new PTViewMealsUpdater(viewMeals, uiController.app);
         new PTViewRecipesUpdater(viewRecipes, uiController.app);
+        new PTExceedCalorieGoalUpdater(uiController.app);
 
     }
 

@@ -24,15 +24,8 @@ public class LoseWeightGoal : Goal
     /// </summary>
     /// <param name="userWeight">The user's current weight.</param>
     /// <returns>Whether the goal was switched.</returns>
-    public bool CheckWeight(double userWeight)
-    {
-        if (userWeight <= WeightGoal)
-        {
-            controller.Goal = new MaintainWeightGoal(controller, WeightGoal);
-            return true;
-        }
-        return false;
-    }
+    public Goal CheckWeight(double userWeight)
+        => userWeight <= WeightGoal ? new MaintainWeightGoal(controller, WeightGoal) : this;
 
     public void IncorporateFitness(List<Workout> recommendedWorkouts)
     {

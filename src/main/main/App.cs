@@ -49,6 +49,8 @@ public class App
         history = new HistoryController(this);
         goal = new GoalController(this);
         ui = new UIController(this);
+
+        food.MealConsumeEvent += goal.ConsumeMealHandler;
     }
 
     public void KillTimer()

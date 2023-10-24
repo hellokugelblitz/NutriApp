@@ -23,7 +23,7 @@ public interface Goal
     /// </summary>
     /// <param name="userWeight">The user's current weight.</param>
     /// <returns>Whether the user reached the condition specified in the method.</returns>
-    bool CheckWeight(double userWeight);
+    Goal CheckWeight(double userWeight);
 
     /// <summary>
     /// Incorporates fitness into the user's goal.

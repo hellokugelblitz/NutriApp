@@ -12,10 +12,9 @@ public abstract class GoalDecorator : Goal
 
     public GoalDecorator(Goal goal)
     {
-
         this.goal = goal;
     }
 
-    public bool CheckWeight(double userWeight) => goal.CheckWeight(userWeight);
+    public virtual Goal CheckWeight(double userWeight) => goal.CheckWeight(userWeight);
     public void IncorporateFitness(List<Workout> recommendedWorkouts) => goal.IncorporateFitness(recommendedWorkouts);
 }
