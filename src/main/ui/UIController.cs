@@ -37,6 +37,14 @@ public class UIController
     public UIController(App app)
     {
         this.app = app;
+
+        // If there is no goal (meaning the user has not entered their info),
+        // then prompt the user to enter their info.
+        if (app.GoalControl.Goal == null)
+            new PTEnterUserInfoInvoker(
+                new EnterUserInfoCommand(app), app
+            ).Invoke();
+        
         _menu = new MainMenu(this); // Defaults as main menu
         menu = new MainMenu(this);
     }

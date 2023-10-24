@@ -5,20 +5,13 @@ using Newtonsoft.Json;
 namespace NutriApp;
 
 public class User {
-    [JsonProperty] private string name;
-    [JsonProperty] private int height; //in inches
-    [JsonProperty] private double weight;
-    [JsonProperty] private DateTime birthday;
+    public string Name { get; }
+    public int Height { get; }
+    public DateTime Birthday { get; }
 
-    public User(string name, int height, double weight, DateTime birthday) {
-        this.name = name;
-        this.height = height;
-        this.weight = weight;
-        this.birthday = birthday;
+    public User(string name, int height, DateTime birthday) {
+        Name = name;
+        Height = height;
+        Birthday = birthday;
     }
-
-    public string Name => name;
-    public int Height => height;
-    public double Weight => weight;
-    public DateTime Birthday => birthday;
 }
