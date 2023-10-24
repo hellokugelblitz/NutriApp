@@ -46,7 +46,6 @@ class PTCreateRecipesInvoker : CommandInvoker<Recipe>
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 Console.WriteLine("not a valid input");
             }
             

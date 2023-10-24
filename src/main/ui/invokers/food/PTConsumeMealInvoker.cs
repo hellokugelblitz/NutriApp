@@ -28,7 +28,19 @@ class PTConsumeMealInvoker : CommandInvoker<string>
             Console.WriteLine("Not enough ingredients to prepare this meal. Please consult the shopping list.");
             return;
         }
+        
+        Console.WriteLine("Instructions: ");
 
+        foreach (var recipe in app.FoodControl.GetMeal(name).Children.Keys)
+        {
+            Console.WriteLine("-" + recipe.Name);
+            foreach (var instruction in recipe.Instructions) 
+            {
+                Console.WriteLine("--" + instruction);
+            }
+            Console.WriteLine("");
+        }
+        
         command.Execute(name);
     }
 }
