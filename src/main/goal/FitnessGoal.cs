@@ -10,8 +10,11 @@ public class FitnessGoal : GoalDecorator
 
     public FitnessGoal(Goal goal, List<Workout> recommendedWorkouts) : base(goal)
     {
-        this.RecommendedWorkouts = recommendedWorkouts;
+        RecommendedWorkouts = recommendedWorkouts;
     }
+    
+    public override Goal CheckWeight(double userWeight)
+        => new FitnessGoal(goal.CheckWeight(userWeight), RecommendedWorkouts);
 
     /// <summary>
     /// Gets the number of additional calories the user should consume per day
