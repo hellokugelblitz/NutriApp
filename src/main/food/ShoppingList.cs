@@ -99,21 +99,6 @@ namespace NutriApp.Food
             Dictionary<Ingredient, double> newList = shoppingList.List;
             Dictionary<Ingredient, double> minimumIngredientRequirements = new Dictionary<Ingredient, double>();
 
-            // foreach (Recipe item in recipes)
-            // {   
-            //     double currentIngredientStock = item.Key.Stock;
-            //     double recipeRequirement = item.Value;
-                
-            //     if (currentIngredientStock >= recipeRequirement)
-            //         continue;
-
-            //     //If the shopping list doesn't contain this item already add it to the list and exit
-            //     if(!newList.ContainsKey(item.Key))
-            //         newList.Add(item.Key, recipeRequirement - currentIngredientStock);
-
-
-            // }
-
             foreach (Recipe recipe in recipes)
             {
                 foreach (Ingredient ingredient in recipe.Children.Keys)
