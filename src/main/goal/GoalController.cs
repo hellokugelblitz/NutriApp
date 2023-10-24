@@ -36,7 +36,7 @@ public class GoalController
     /// </summary>
     public void CompareUserWeightToGoal()
     {
-        Goal.CheckWeight(app.User.Weight);
+        Goal.CheckWeight(app.HistoryControl.CurrentWeight);
     }
 
     /// <summary>
@@ -70,15 +70,37 @@ public class GoalController
         return todaysCalories > calorieGoal + marginOfError;
     }
 
+    /// <summary>
+    /// Gets the goal based on the difference between the user's current weight
+    /// and their target weight.
+    /// <list type="bullet">
+    /// <item>If the difference is less than -5, the user wants to lose weight</item>
+    /// <item>If the difference is greater than 5, the user wants to gain weight</item>
+    /// <item>Else, the user wants to maintain their weight</item>
+    /// </list>
+    /// </summary>
+    /// <param name="targetWeight">The user's target weight</param>
+    /// <returns>The Goal instance</returns>
     public Goal GetGoalBasedOnWeightDifference(double targetWeight)
     {
         var targetMinusCurrent = targetWeight - app.HistoryControl.CurrentWeight;
         return targetMinusCurrent switch
         {
             < -5 => new LoseWeightGoal(this, targetWeight),
-            <= 5 => new MaintainWeightGoal(this, targetWeight),
-            _ => new GainWeightGoal(this, targetWeight)
+            > 5 => new GainWeightGoal(this, targetWeight),
+            _ => new MaintainWeightGoal(this, targetWeight)
         };
+    }
+    /// <summary>
+    /// Sets the goal based on the difference between the user's current weight
+    /// and their target weight. See <c>GetGoalBasedOnWeightDifference</c>
+    /// for further details.
+    /// </summary>
+    /// <param name="targetWeight">The user's target weight</param>
+    /// <seealso cref="GetGoalBasedOnWeightDifference"/>
+    public void SetGoalBasedOnWeightDifference(double targetWeight)
+    {
+        Goal = GetGoalBasedOnWeightDifference(targetWeight);
     }
 
     public void Save()
