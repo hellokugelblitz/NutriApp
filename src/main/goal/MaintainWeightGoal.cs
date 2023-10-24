@@ -25,10 +25,10 @@ public class MaintainWeightGoal : Goal
     /// <returns>Whether the goal was switched.</returns>
     public Goal CheckWeight(double userWeight)
     {
-        const int thresh = 5;
-        return userWeight <= WeightGoal - thresh ?
+        const int threshold = 5;
+        return userWeight <= WeightGoal - threshold ?
             new LoseWeightGoal(controller, WeightGoal) :
-            userWeight >= WeightGoal + thresh ?
+            userWeight >= WeightGoal + threshold ?
                 new GainWeightGoal(controller, WeightGoal) :
                 this;
     }
