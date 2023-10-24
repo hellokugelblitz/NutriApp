@@ -51,9 +51,7 @@ public class FoodController
 
         Load();
         shoppingList.SetCriteria(recipeCriteria);
-
-        foreach (Recipe recipe in recipes)
-            shoppingList.Update(recipe);
+        shoppingList.Update(Recipes);
     }
 
     /// <summary>
@@ -67,7 +65,8 @@ public class FoodController
 
         foreach (Recipe recipe in recipes)
             foreach (Ingredient ingredient in recipe.Ingredients.Keys)
-                ingredientStocks.Add(ingredient.Name, ingredient.Stock);
+                if (!ingredientStocks.ContainsKey(ingredient.Name))
+                    ingredientStocks.Add(ingredient.Name, ingredient.Stock);
 
         string ingredientJson = JsonConvert.SerializeObject(ingredientStocks);
         File.WriteAllText(ingredientStockPath, ingredientJson);
@@ -173,7 +172,7 @@ public class FoodController
     public void AddRecipe(Recipe recipe)
     {
         recipes.Add(recipe);
-        shoppingList.Update(recipe);
+        shoppingList.Update(Recipes);
     }
 
     /// <summary>
@@ -259,9 +258,7 @@ public class FoodController
             ingredient.Stock -= requiredStock;
         }
 
-        foreach (Recipe recipe in mealConsumed.Children.Keys)
-            shoppingList.Update(recipe);
-
+        shoppingList.Update(Recipes);
         return true;
     }
 

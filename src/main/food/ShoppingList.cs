@@ -26,9 +26,9 @@ namespace NutriApp.Food
         /// Update function is utilized by the food controller to initiate an update on the shopping list
         /// based on a specific criteria (criteria is defined inside of the ShoppingList class)
         /// </summary>
-        public void Update(Recipe recipe)
+        public void Update(Recipe[] recipes)
         {
-            criteria.Update(recipe);
+            criteria.Update(recipes);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace NutriApp.Food
 
     //Strategy interface
     public interface ShoppingListCriteria {
-        public void Update(Recipe recipe);
+        public void Update(Recipe[] recipes);
     }
 
     public class SpecificRecipeCriteria : ShoppingListCriteria {
@@ -93,27 +93,33 @@ namespace NutriApp.Food
             shoppingList = list;
         }
 
-        public void Update(Recipe recipe) 
+        public void Update(Recipe[] recipes) 
         { 
             //Here I am making a copy of the original shoppingList class list so that we can set it later.
             Dictionary<Ingredient, double> newList = shoppingList.List;
+            Dictionary<Ingredient, double> minimumIngredientRequirements = new Dictionary<Ingredient, double>();
 
-            foreach (var item in recipe.Children)
-            {   
-                double currentIngredientStock = item.Key.Stock;
-                double recipeRequirement = item.Value;
-                
-                if (currentIngredientStock >= recipeRequirement)
-                    continue;
+            foreach (Recipe recipe in recipes)
+            {
+                foreach (Ingredient ingredient in recipe.Children.Keys)
+                {
+                    double recipeRequirement = recipe.Children[ingredient];
 
-                //If the shopping list doesn't contain this item already add it to the list and exit
-                if(!newList.ContainsKey(item.Key))
-                    newList.Add(item.Key, recipeRequirement - currentIngredientStock);
+                    if (!minimumIngredientRequirements.ContainsKey(ingredient))
+                        minimumIngredientRequirements.Add(ingredient, recipeRequirement);
+                    else
+                    {
+                        if (recipeRequirement < minimumIngredientRequirements[ingredient])
+                            minimumIngredientRequirements[ingredient] = recipeRequirement;
+                        else continue;
+                    }
 
-                //Else we need to to bring it up to the minimum for each ingredient at least. 
-                //If its over already we don't care.
-                if(newList[item.Key] <= item.Value)
-                    newList[item.Key] = item.Value;
+                    if (ingredient.Stock >= recipeRequirement)
+                        continue;
+
+                    if(!newList.ContainsKey(ingredient))
+                        newList.Add(ingredient, recipeRequirement - ingredient.Stock);
+                }
             }
 
             //After we have made the changes we want we can save it to the shoppingList.
