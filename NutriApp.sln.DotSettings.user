@@ -6,6 +6,6 @@
     &lt;/TestAncestor&gt;&#xD;
     &lt;Project Location="C:\Users\dgram\SWEN 262\test" Presentation="&amp;lt;NutriAppTest&amp;gt;" /&gt;&#xD;
     &lt;Namespace&gt;NutriAppTest.history&lt;/Namespace&gt;&#xD;
-  &lt;/And&gt;&#xD;
+  &lt;/And&gt;&#xD; 
 &lt;/SessionState&gt;</s:String>
 	</wpf:ResourceDictionary>
