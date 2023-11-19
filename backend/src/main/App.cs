@@ -24,8 +24,8 @@ public class App
     private WorkoutController workout;
     private FoodController food;
     private UIController ui;
+    private UserController user;
     private DateTime date;
-    private User user;
     private double dayLength;
     private Task<None> timerThread;
     
@@ -35,8 +35,8 @@ public class App
     public FoodController FoodControl => food;
     public UIController UIControl => ui;
     public DateTime TimeStamp => date;
+    public UserController User => user;
     
-    public User User { get => user; set => user = value; }
     public double DayLength { set => dayLength = value; }
 
     public App(double dayLength)
@@ -110,16 +110,18 @@ public class App
 
     public void Load()
     {
-        // Don't do anything if data files don't exist yet (e.g. first startup)
-        if (!File.Exists(userPath) || !File.Exists(datePath))
-            return;
+        // this will need to be re-done anyway, i've commented it out for now so it doesn't break the build -dan
 
-        // Read the user from a JSON file
-        var json = File.ReadAllText(userPath);
-        user = JsonConvert.DeserializeObject<User>(json);
+        // // Don't do anything if data files don't exist yet (e.g. first startup)
+        // if (!File.Exists(userPath) || !File.Exists(datePath))
+        //     return;
+
+        // // Read the user from a JSON file
+        // var json = File.ReadAllText(userPath);
+        // user = JsonConvert.DeserializeObject<User>(json);
         
-        // Read the date from a JSON file
-        json = File.ReadAllText(datePath);
-        date = JsonConvert.DeserializeObject<DateTime>(json);
+        // // Read the date from a JSON file
+        // json = File.ReadAllText(datePath);
+        // date = JsonConvert.DeserializeObject<DateTime>(json);
     }
 }

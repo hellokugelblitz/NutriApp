@@ -42,16 +42,27 @@ public class TeamController
             code += (char)(new Random().NextInt64('a', 'z'));  // Generate the next random character (a-z)
 
         inviteCodes.Add(code, team);
+
+        // TODO: send notification to user
         return code;
     }
 
     /// <summary>
-    /// Adds the user with the given username to the team corresponding with the given invite code. Returns true
-    /// if the user was successfully added, false otherwise (e.g. an invalid invite code).
+    /// Returns whether an invite code is valid or not.
     /// </summary>
-    public bool AddMember(string username, string inviteCode)
+    public bool ValidateInviteCode(string inviteCode) => inviteCodes.ContainsKey(inviteCode);
+
+    /// <summary>
+    /// Adds the user with the given username to the team corresponding with the given invite code.
+    /// Note that this will remove that code from the pool of valid invite codes.
+    /// </summary>
+    public void AddMember(string username, string inviteCode)
     {
-        return false;
+        User user = app.User.GetUserByUsername(username);
+        Team team = inviteCodes[inviteCode];
+
+        team.AddMember(user);
+        inviteCodes.Remove(inviteCode);
     }
 
     /// <summary>
@@ -59,6 +70,8 @@ public class TeamController
     /// </summary>
     public void RemoveMember(string username, string teamName)
     {
-
+        User user = app.User.GetUserByUsername(username);
+        Team team = GetTeam(teamName);
+        team.RemoveMember(user);
     }
 }
