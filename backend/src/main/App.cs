@@ -9,6 +9,8 @@ using NutriApp.History;
 using NutriApp.Goal;
 using NutriApp.UI;
 using NutriApp.Workout;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NutriApp;
 
@@ -75,6 +77,13 @@ public class App
     public static void Main(string[] args)
     {
         App app = new App(1);
+
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddControllers();
+
+        WebApplication webapp = builder.Build();
+        webapp.MapControllers();
+        webapp.Run();
     }
 
     private None DayLoop()
