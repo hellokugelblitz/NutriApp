@@ -44,4 +44,21 @@ public class TeamController
         inviteCodes.Add(code, team);
         return code;
     }
+
+    /// <summary>
+    /// Adds the user with the given username to the team corresponding with the given invite code. Returns true
+    /// if the user was successfully added, false otherwise (e.g. an invalid invite code).
+    /// </summary>
+    public bool AddMember(string username, string inviteCode)
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// Removes the user with the given username from the team with the given name, if they are a member.
+    /// </summary>
+    public void RemoveMember(string username, string teamName)
+    {
+
+    }
 }
