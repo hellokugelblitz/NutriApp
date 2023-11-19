@@ -76,14 +76,14 @@ public class App
 
     public static void Main(string[] args)
     {
-        App app = new App(1);
-
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         builder.Services.AddControllers();
 
         WebApplication webapp = builder.Build();
         webapp.MapControllers();
         webapp.Run();
+
+        App app = new App(1);
     }
 
     private None DayLoop()
