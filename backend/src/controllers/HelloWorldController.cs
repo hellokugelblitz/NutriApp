@@ -6,9 +6,9 @@ using System.Collections.Generic;
 [Route("hello-world")]
 public class HelloWorldController : ControllerBase
 {
-    [HttpGet]
-    public ActionResult Get()
+    [HttpGet("{arg}")]
+    public ActionResult Get(string arg)
     {
-        return Ok(new Dictionary<string, string>() { {"message", "Hello world!"} });
+        return Ok(new Dictionary<string, string>() { {"message", $"You passed in arg {arg}"} });
     }
 }
