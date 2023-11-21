@@ -20,8 +20,8 @@ class PTEnterUserInfoInvoker : CommandInvoker<(User, double, double)>
         var weight = GetInputFromConsole<double>("Please enter your weight");
         var targetWeight = GetInputFromConsole<double>("Please enter the weight you'd like to achieve");
 
-        var user = new User(name, height, birthday);
+       // var user = new User(name, height, birthday);
         
-        command.Execute((user, weight, targetWeight));
+       // command.Execute((user, weight, targetWeight));
     }
 }
