@@ -11,6 +11,7 @@ using NutriApp.UI;
 using NutriApp.Workout;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace NutriApp;
 
@@ -79,11 +80,21 @@ public class App
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         builder.Services.AddControllers();
 
-        WebApplication webapp = builder.Build();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        builder.Services.AddSingleton(_ => new App(1));
+
+        var webapp = builder.Build();
+
+        if (webapp.Environment.IsDevelopment())
+        {
+            webapp.UseSwagger();
+            webapp.UseSwaggerUI();
+        }
+        
         webapp.MapControllers();
         webapp.Run();
-
-        App app = new App(1);
     }
 
     private None DayLoop()
