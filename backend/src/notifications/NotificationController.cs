@@ -44,6 +44,6 @@ public class NotificationController
     /// </summary>
     public void SendPendingNotifications(User user)
     {
-
+        
     }
 }
