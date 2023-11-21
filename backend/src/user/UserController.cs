@@ -8,11 +8,12 @@ namespace NutriApp;
 
 public class UserController : ISaveable
 {
-    private Dictionary<string, string>
-        _userLoginInfo = new(); //first string is username, second string is hashed password
+    //TODO serialize passwords 
+    private Dictionary<string, string> _userLoginInfo = new(); //first string is username, second string is hashed password
 
     //dictionary of guid
     private Dictionary<Guid, User> _users = new();
+    private Dictionary<string, User> _usersFromUsername = new();
     private ISaveSystem _saveSystem;
 
     //when I load the user from save system,
@@ -68,47 +69,26 @@ public class UserController : ISaveable
         throw new InvalidUsernameException();
     }
 
-    public void Logout(Guid sessionKey)
+    public void Logout(Guid sessionKey, string fileType)
     {
+        _saveSystem.Save(_saveSystem.CreateNewestFolderName(_users[sessionKey].UserName, fileType));
         _users.Remove(sessionKey);
-        //save user
     }
 
     public void Save(string folderName)
     {
-        //_saveSystem.GetFileSaver().Save(folderName + "\\user", UserToDictionary());
+        var split = SaveSystem.SplitFileName(folderName);
+        string username = split[0];
+        string fileType = split[1];
+        _saveSystem.GetFileSaver().Save($"{folderName}\\user.{fileType}", _usersFromUsername[username].ToDictionary());
     }
-
-    private Dictionary<string, string> UserToDictionary(User user)
-    {
-        Dictionary<string, string> data = new();
-        data["UserName"] = user.UserName;
-        data["Name"] = user.Name;
-        data["Height"] = user.Height.ToString();
-        data["Birthday"] = user.Birthday.ToString();
-        data["Bio"] = user.Bio;
-        data["TeamName"] = user.TeamName;
-        
-        return data;
-    }
-
-    // public (User, Guid) LoadUser(string folderName)
-    // {
-    //     return (null, Guid.Empty);
-    // }
 
     public void Load(string folderName)
     {
         Dictionary<string, string> data = _saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "user"));
-        User user = new User(
-            data["username"],
-            data["name"],
-            Int32.Parse(data["height"]),
-            DateTime.Parse(data["birthday"]),
-            data["bio"],
-            data["teamName"]);
-
-        _loadedUsers[data["username"]] = user;
+        User user = new User();
+        user.FromDictionary(data);
+        _loadedUsers[user.UserName] = user;
 
     }
 
@@ -123,6 +103,7 @@ public class UserController : ISaveable
     private void AddUserToDictionaries(Guid sessionKey, User user, string password = "")
     {
         _users[sessionKey] = user;
+        _usersFromUsername[user.UserName] = user;
 
         if (password != "")
         {

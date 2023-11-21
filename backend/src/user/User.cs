@@ -1,18 +1,25 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using NutriApp.Save;
 
 namespace NutriApp;
 
-public class User {
-    public string UserName { get; }
-    public string Name { get; }
+public class User : ISaveObject{
+    public string UserName { get; private set; }
+    public string Name { get; private set; }
 
-    public int Height { get; }
-    public DateTime Birthday { get; }
-    public string Bio { get; }
-    public string TeamName { get; }
+    public int Height { get; private set; }
+    public DateTime Birthday { get; private set; }
+    public string Bio { get; private set; }
+    public string TeamName { get; private set; }
 
+    public User()
+    {
+        
+    }
+    
     public User(string username, string name, int height, DateTime birthday, string bio, string teamName="")
     {
         UserName = username;
@@ -34,4 +41,37 @@ public class User {
     {
         return UserName.GetHashCode();
     }
+
+    public Dictionary<string, string> ToDictionary()
+    {
+        Dictionary<string, string> data = new();
+        data["UserName"] = UserName;
+        data["Name"] = Name;
+        data["Height"] = Height.ToString();
+        data["Birthday"] = Birthday.ToString();
+        data["Bio"] = Bio;
+        data["TeamName"] = TeamName;
+        
+        return data;    }
+
+    public void FromDictionary(Dictionary<string, string> data)
+    {
+        UserName = data["UserName"];
+        Name = data["Name"];
+        Height = Int32.Parse(data["Height"]);
+        Birthday = DateTime.Parse(data["Birthday"]);
+        Bio = data["Bio"];
+        TeamName = data["TeamName"];    
+    }
+
+    // public T FromDictionary<T>(Dictionary<string, string> data) where T: ISaveObject
+    // {
+    //     return new User(
+    //         data["username"],
+    //         data["name"],
+    //         Int32.Parse(data["height"]),
+    //         DateTime.Parse(data["birthday"]),
+    //         data["bio"],
+    //         data["teamName"]);
+    // }
 }

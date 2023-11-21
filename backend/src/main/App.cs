@@ -3,6 +3,8 @@ using System.Threading;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.History;

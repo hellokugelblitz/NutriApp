@@ -9,7 +9,7 @@ public class SaveSystem : ISaveSystem
     public static string SavePath => "data\\saves";
     public static string Seperator => "-";
 
-    private IFileFormatSaver _saver = null;
+    private IFileFormatSaver _saver = new JSONAdapter();
     private List<ISaveable> _saveables = new ();
     
     public void SetFileType(IFileFormatSaver type)
@@ -19,6 +19,8 @@ public class SaveSystem : ISaveSystem
 
     public void Save(string folderName)
     {
+        folderName = SavePath + "\\" + folderName;//need to add the folder path to the foldername
+        Directory.CreateDirectory(folderName);
         foreach (var saveable in _saveables)
         {
             saveable.Save(folderName);
@@ -30,7 +32,8 @@ public class SaveSystem : ISaveSystem
         foreach (var saveable in _saveables)
         {
             saveable.Load(folderName);
-        }    }
+        }    
+    }
 
     public void SubscribeSaveable(ISaveable saveable)
     {
@@ -42,13 +45,36 @@ public class SaveSystem : ISaveSystem
         return _saver;
     }
 
-    public String[] SplitFileName(string path)
+    public static String[] SplitFileName(string path)
     {
         string fileName = Path.GetFileName(path);
-        fileName = fileName.Substring(0, fileName.IndexOf("."));
         return fileName.Split(Seperator);
     }
 
+    /// <summary>
+    /// Creates a folder name with the format {username}:{filetype}:{file number}
+    /// </summary>
+    /// <param name="username">username you want to create save for</param>
+    /// <param name="fileType">file type(json, xml, csv) if empty it defaults to the current IFileFormatSaver's type</param>
+    /// <returns></returns>
+    public string CreateNewestFolderName(string username, string fileType = "")
+    {
+        if (fileType == "") fileType = _saver.GetFileType();
+        var strs = Directory.GetDirectories(SavePath);
+        int largestNum = -1;
+        foreach (var file in Directory.GetDirectories(SavePath))
+        {
+            var split = SplitFileName(file);
+            
+            if (Int32.Parse(split[2]) > largestNum && split[0] == username)
+            {
+                largestNum = Int32.Parse(split[2]);
+            }
+        }
+
+        return $"{username}{Seperator}{fileType}{Seperator}{largestNum + 1}";
+    } 
+    
     public string GetNewestFolder(string username)
     {
         var strs = Directory.GetDirectories(SavePath);
@@ -61,6 +87,7 @@ public class SaveSystem : ISaveSystem
             
             if (Int32.Parse(split[2]) > largestNum && split[0] == username)
             {
+                largestNum = Int32.Parse(split[2]);
                 newest = file;
             }
         }

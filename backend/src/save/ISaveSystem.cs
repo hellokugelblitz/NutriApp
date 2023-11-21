@@ -13,4 +13,6 @@ public interface ISaveSystem
     IFileFormatSaver GetFileSaver();
 
     string GetNewestFolder(string username);
+    public string CreateNewestFolderName(string username, string fileType);
+
 }
