@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.History;
 using NutriApp.Goal;
-using NutriApp.Save;
 using NutriApp.UI;
 using NutriApp.Workout;
 
@@ -53,7 +52,7 @@ public class App
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
         
-        //ui = new UIController(this);
+        ui = new UIController(this);
     }
 
     public void KillTimer()
@@ -75,12 +74,14 @@ public class App
 
     public static void Main(string[] args)
     {
-       // App app = new App(1);
-       var saveSystem = new SaveSystem();
-       var adapter = new JSONAdapter();
-      // Console.WriteLine(adapter.Load());
-       //saveSystem.SetFileType(new JSONAdapter());
-       
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddControllers();
+
+        WebApplication webapp = builder.Build();
+        webapp.MapControllers();
+        webapp.Run();
+
+        App app = new App(1);
     }
 
     private None DayLoop()
