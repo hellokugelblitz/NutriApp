@@ -30,7 +30,8 @@ public class SaveSystem : ISaveSystem
         foreach (var saveable in _saveables)
         {
             saveable.SaveController();
-        }    }
+        }    
+    }
 
     public void SaveUser(string folderName)
     {
@@ -60,12 +61,6 @@ public class SaveSystem : ISaveSystem
         return _saver;
     }
 
-    public static String[] SplitFileName(string path)
-    {
-        string fileName = Path.GetFileName(path);
-        return fileName.Split(Seperator);
-    }
-
     /// <summary>
     /// Creates a folder name with the format {username}:{filetype}:{file number}
     /// </summary>
@@ -90,6 +85,11 @@ public class SaveSystem : ISaveSystem
         return $"{username}{Seperator}{fileType}{Seperator}{largestNum + 1}";
     } 
     
+    /// <summary>
+    /// gets the folder with the largest number in the identifier portion
+    /// </summary>
+    /// <param name="username"></param>
+    /// <returns></returns>
     public string GetNewestFolder(string username)
     {
         var strs = Directory.GetDirectories(SavePath);
@@ -109,7 +109,14 @@ public class SaveSystem : ISaveSystem
         
         return  newest;
     }
+    
+    public static String[] SplitFileName(string path)
+    {
+        string fileName = Path.GetFileName(path);
+        return fileName.Split(Seperator);
+    }
 
+    //gets the 
     public static string GetFullPath(string foldername, string filename)
     {
         string extension = foldername.Split("-")[1];

@@ -71,7 +71,12 @@ public class UserController : ISaveableController
         throw new InvalidUsernameException();
     }
 
-    public void Logout(Guid sessionKey, string fileType)
+    /// <summary>
+    /// logs the user out of the system. Saves the user info in a new file.
+    /// </summary>
+    /// <param name="sessionKey"></param>
+    /// <param name="fileType">type of file you want to save to. defaults to current FileFormatType if not given</param>
+    public void Logout(Guid sessionKey, string fileType = "")
     {
         _saveSystem.SaveUser(_saveSystem.CreateNewestFolderName(_users[sessionKey].UserName, fileType));
         _users.Remove(sessionKey);
@@ -81,8 +86,7 @@ public class UserController : ISaveableController
     {
         var split = SaveSystem.SplitFileName(folderName);
         string username = split[0];
-        string fileType = split[1];
-        _saveSystem.GetFileSaver().Save($"{folderName}\\user.{fileType}", _usersFromUsername[username].ToDictionary());
+        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"user"), _usersFromUsername[username].ToDictionary());
     }
 
     public void LoadUser(string folderName)
@@ -91,7 +95,6 @@ public class UserController : ISaveableController
         User user = new User();
         user.FromDictionary(data);
         _loadedUsers[user.UserName] = user;
-
     }
 
     public void SaveController()

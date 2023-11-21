@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using Moq;
-using Newtonsoft.Json;
 using NutriApp.Save;
 
 namespace NutriAppTest.save;
@@ -9,7 +7,7 @@ namespace NutriAppTest.save;
 [TestClass]
 public class TestUserController
 {
-    private const string PATH = "data\\save";
+    private const string PATH = "data\\saves";
 
     [TestMethod]
     public void TestHashPassword()
@@ -32,8 +30,9 @@ public class TestUserController
     [TestMethod]
     public void TestSaveLoad()
     {
-        CreateDirectory();
+        ClearDirectory();
         
+        //set up objects and create them in controller
         User danny = new User("dannytga", "danny", 72, DateTime.Now, "I am realllllllly tallll");
         SaveSystem saveSystem = new SaveSystem();
         UserController ctl = new UserController(saveSystem);
@@ -60,7 +59,7 @@ public class TestUserController
         if (true)//scoping
         {
             string path = SaveSystem.SavePath + "\\userLogins.json";
-            CreateDirectory();//clear data of previous tests
+            ClearDirectory();//clear data of previous tests
 
             var saveSystem = new SaveSystem();
             UserController ctl = new UserController(saveSystem);
@@ -101,24 +100,26 @@ public class TestUserController
     [TestMethod]
     public void TestGetNewestFolder()
     {
+        ClearDirectory();
+
+        //create fake folders
         for (int i = 0; i < 5; i++)
         {
             Directory.CreateDirectory($"{SaveSystem.SavePath}\\dannytga-json-{i}");
         }
         
-        Directory.CreateDirectory($"{SaveSystem.SavePath}\\danny-json-{8}");
+        Directory.CreateDirectory($"{SaveSystem.SavePath}\\danny-json-{8}");//invalid username
 
         SaveSystem saveSystem = new SaveSystem();
         var newest = saveSystem.GetNewestFolder("dannytga");
         Assert.AreEqual($"{SaveSystem.SavePath}\\dannytga-json-4", newest);
         
-        CreateDirectory();
     }
     
     [TestMethod]
     public void TestLogin()
     {
-        CreateDirectory();//wipe any previous tests
+        ClearDirectory();//wipe any previous tests
         
         bool loggedIn = false;
         UserController ctl = CreateController();
@@ -167,7 +168,7 @@ public class TestUserController
     }
     
     
-
+    
     private UserController CreateController()
     {
         var saveSystem = new SaveSystem();
@@ -176,7 +177,10 @@ public class TestUserController
         return ctl;
     }
     
-    private void CreateDirectory()
+    /// <summary>
+    /// clears the directory and creates a new one at the PATH constant
+    /// </summary>
+    private void ClearDirectory()
     {
         if(Directory.Exists(PATH))
         {
@@ -186,6 +190,13 @@ public class TestUserController
         Directory.CreateDirectory(PATH);
     }
 
+    /// <summary>
+    /// wrapper function for userController.CreateUser
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="password"></param>
+    /// <param name="ctl"></param>
+    /// <returns></returns>
     private (Guid, User) UserControllerCreateUser(User user, string password, UserController ctl)
     {
         return ctl.CreateUser(user.UserName, password, user.Height, user.Birthday, user.Name, user.Bio);
