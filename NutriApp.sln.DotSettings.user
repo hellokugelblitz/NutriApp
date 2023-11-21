@@ -1,11 +1,21 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=703c7cd6_002D1e21_002D4e3b_002Da910_002D68b760cf3a83/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;And&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=703c7cd6_002D1e21_002D4e3b_002Da910_002D68b760cf3a83/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;And&gt;&#xD;
+      &lt;TestAncestor&gt;&#xD;
+        &lt;TestId&gt;MSTest::4AB46FF2-A40E-48D3-B052-F9396C278AC8::net7.0::NutriAppTest.history.TestHistoryController.TestSaveLoad&lt;/TestId&gt;&#xD;
+      &lt;/TestAncestor&gt;&#xD;
+      &lt;Project Location="C:\Users\dgram\SWEN 262\test" Presentation="&amp;lt;NutriAppTest&amp;gt;" /&gt;&#xD;
+      &lt;Namespace&gt;NutriAppTest.history&lt;/Namespace&gt;&#xD;
+    &lt;/And&gt;&#xD;
     &lt;TestAncestor&gt;&#xD;
-      &lt;TestId&gt;MSTest::4AB46FF2-A40E-48D3-B052-F9396C278AC8::net7.0::NutriAppTest.history.TestHistoryController.TestSaveLoad&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;MSTest::4AB46FF2-A40E-48D3-B052-F9396C278AC8::net7.0::NutriAppTest.Save.TestSaveSystem.TestLoadJsonAdapter&lt;/TestId&gt;&#xD;
     &lt;/TestAncestor&gt;&#xD;
-    &lt;Project Location="C:\Users\dgram\SWEN 262\test" Presentation="&amp;lt;NutriAppTest&amp;gt;" /&gt;&#xD;
-    &lt;Namespace&gt;NutriAppTest.history&lt;/Namespace&gt;&#xD;
-  &lt;/And&gt;&#xD;
+  &lt;/Or&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=da87797d_002D25d7_002D4091_002Dbe6e_002Daff7c12cd8a0/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestLoadJsonAdapter" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;MSTest::4AB46FF2-A40E-48D3-B052-F9396C278AC8::net7.0::NutriAppTest.Save.TestSaveSystem.TestLoadJsonAdapter&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	</wpf:ResourceDictionary>
