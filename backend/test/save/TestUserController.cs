@@ -25,7 +25,7 @@ public class TestUserController
     {
         UserController ctl = CreateController();
         User danny = new User("dannytga", "danny", 72, DateTime.Now, "I am realllllllly tallll");
-        (Guid, User) data = ctl.CreateUser(danny.UserName, "hii", danny.Height, danny.Birthday, danny.Name, danny.Bio);
+        (Guid, User) data = UserControllerCreateUser(danny, "hii", ctl);   
         Assert.AreEqual(danny, ctl.GetUser(data.Item1));
     }
     
@@ -38,11 +38,11 @@ public class TestUserController
         SaveSystem saveSystem = new SaveSystem();
         UserController ctl = new UserController(saveSystem);
         saveSystem.SubscribeSaveable(ctl);
-        (Guid, User) data = ctl.CreateUser(danny.UserName, "hii", danny.Height, danny.Birthday, danny.Name, danny.Bio);
+        (Guid, User) data = UserControllerCreateUser(danny, "hii", ctl);   
 
         var adapter = new JSONAdapter();
         saveSystem.SetFileType(new JSONAdapter());
-        saveSystem.Save(saveSystem.CreateNewestFolderName(danny.UserName));
+        saveSystem.SaveUser(saveSystem.CreateNewestFolderName(danny.UserName));
         
         ctl.Logout(data.Item1, adapter.GetFileType());
 
@@ -51,13 +51,53 @@ public class TestUserController
     }
 
     [TestMethod]
-    public void Test_()
+    public void TestSaveLoadPasswords()
     {
-        User danny = new User("dannytga", "danny", 72, DateTime.Now, "I am realllllllly tallll", "t1");
+        User danny = new User("dannytga", "danny", 72, DateTime.Now, "I am realllllllly tallll");
+        User dan = new User("noobles", "dan", 2, DateTime.Now, "I am a gamer");
 
-        var str = JsonConvert.SerializeObject(danny);
+
+        if (true)//scoping
+        {
+            string path = SaveSystem.SavePath + "\\userLogins.json";
+            CreateDirectory();//clear data of previous tests
+
+            var saveSystem = new SaveSystem();
+            UserController ctl = new UserController(saveSystem);
+            saveSystem.SubscribeSaveable(ctl);
+            saveSystem.SetFileType(new JSONAdapter());
+
+            UserControllerCreateUser(danny, "hii", ctl);
+            UserControllerCreateUser(dan, "pew pew", ctl);
+
+            saveSystem.SaveController();
+        }
+
+        if (true)
+        {
+            var saveSystem = new SaveSystem();
+            UserController ctl = new UserController(saveSystem);
+            saveSystem.SubscribeSaveable(ctl);
+            saveSystem.LoadController();
+            saveSystem.SetFileType(new JSONAdapter());
+
+            Assert.AreEqual(danny, ctl.Login(danny.UserName, "hii").Item2);
+            Assert.AreEqual(dan, ctl.Login(dan.UserName, "pew pew").Item2);
+
+            bool invalidLogin = false; //set to true in try catch to make sure that the user is invalid
+            try
+            {
+                ctl.Login("daniel", "daniel is weird");
+            }
+            catch (InvalidUsernameException e)
+            {
+                invalidLogin = true;
+            }
+            
+            Assert.IsTrue(invalidLogin);
+        }
     }
-
+    
     [TestMethod]
     public void TestGetNewestFolder()
     {
@@ -83,6 +123,7 @@ public class TestUserController
         bool loggedIn = false;
         UserController ctl = CreateController();
 
+        //test if the user exists
         try
         {
             ctl.Login("dannytga", "hii");
@@ -96,9 +137,10 @@ public class TestUserController
 
         loggedIn = false;
         User danny = new User("dannytga", "danny", 72, DateTime.Now, "I am realllllllly tallll");
-        (Guid, User) data = ctl.CreateUser(danny.UserName, "hii", danny.Height, danny.Birthday, danny.Name, danny.Bio);
+        (Guid, User) data = UserControllerCreateUser(danny, "hii", ctl);
         ctl.Logout(data.Item1, "json");
         
+        //test valid password
         try
         {
             ctl.Login("dannytga", "hi");
@@ -110,6 +152,7 @@ public class TestUserController
         
         Assert.IsTrue(loggedIn);//test login invalid password
         
+        //make sure that the login goes through
         try
         {
             ctl.Login("dannytga", "hii");
@@ -119,8 +162,8 @@ public class TestUserController
             Assert.Fail();
         }
         
+        //test if it loads the user correctly
         Assert.AreEqual(danny, ctl.Login("dannytga", "hii").Item2);
-        //need to test user exists and doesnt
     }
     
     
@@ -141,5 +184,11 @@ public class TestUserController
         }
 
         Directory.CreateDirectory(PATH);
+    }
+
+    private (Guid, User) UserControllerCreateUser(User user, string password, UserController ctl)
+    {
+        return ctl.CreateUser(user.UserName, password, user.Height, user.Birthday, user.Name, user.Bio);
+        
     }
 }

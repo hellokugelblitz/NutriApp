@@ -1,12 +1,14 @@
 using System;
 using NutriApp.Save;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace NutriApp;
 
-public class UserController : ISaveable
+public class UserController : ISaveableController
 {
     //TODO serialize passwords 
     private Dictionary<string, string> _userLoginInfo = new(); //first string is username, second string is hashed password
@@ -55,7 +57,7 @@ public class UserController : ISaveable
         {
             if (_userLoginInfo[username] == HashPassword(password))
             {
-                _saveSystem.Load(_saveSystem.GetNewestFolder(username));
+                _saveSystem.LoadUser(_saveSystem.GetNewestFolder(username));
                 
                 Guid userGuid = Guid.NewGuid();
                 _loadedUsers.Remove(username, out User user);
@@ -71,11 +73,11 @@ public class UserController : ISaveable
 
     public void Logout(Guid sessionKey, string fileType)
     {
-        _saveSystem.Save(_saveSystem.CreateNewestFolderName(_users[sessionKey].UserName, fileType));
+        _saveSystem.SaveUser(_saveSystem.CreateNewestFolderName(_users[sessionKey].UserName, fileType));
         _users.Remove(sessionKey);
     }
 
-    public void Save(string folderName)
+    public void SaveUser(string folderName)
     {
         var split = SaveSystem.SplitFileName(folderName);
         string username = split[0];
@@ -83,13 +85,41 @@ public class UserController : ISaveable
         _saveSystem.GetFileSaver().Save($"{folderName}\\user.{fileType}", _usersFromUsername[username].ToDictionary());
     }
 
-    public void Load(string folderName)
+    public void LoadUser(string folderName)
     {
         Dictionary<string, string> data = _saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "user"));
         User user = new User();
         user.FromDictionary(data);
         _loadedUsers[user.UserName] = user;
 
+    }
+
+    public void SaveController()
+    {
+        //will do saving with json
+        string filePath = SaveSystem.SavePath + "\\userLogins.json";
+        using (var file = File.CreateText(filePath))
+        {
+            file.WriteLine(JsonConvert.SerializeObject(_userLoginInfo));
+        }
+
+        foreach (var pair in _users)
+        {
+            _saveSystem.SaveUser(_saveSystem.CreateNewestFolderName(pair.Value.UserName));
+        }
+    }
+
+    public void LoadController()
+    {
+        string filePath = SaveSystem.SavePath + "\\userLogins.json";
+        if(!File.Exists(filePath))return;
+        
+        using (var file = File.OpenText(filePath))
+        {
+            _userLoginInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(file.ReadLine());
+            
+        }
+        
     }
 
     public string HashPassword(string password)

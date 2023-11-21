@@ -4,15 +4,18 @@ public interface ISaveSystem
 {
     void SetFileType(IFileFormatSaver type);
 
-    void Save(string folderName);
+    void LoadController();
+    void SaveController();
 
-    void Load(string folderName);
+    void SaveUser(string folderName);
 
-    void SubscribeSaveable(ISaveable saveable);
+    void LoadUser(string folderName);
+
+    void SubscribeSaveable(ISaveableController saveableController);
 
     IFileFormatSaver GetFileSaver();
 
     string GetNewestFolder(string username);
-    public string CreateNewestFolderName(string username, string fileType);
+    public string CreateNewestFolderName(string username, string fileType = "");
 
 }

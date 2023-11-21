@@ -7,6 +7,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f15aefd6_002D80b2_002D451c_002Da7b7_002D43d696415377/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestLogin #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.save.TestUserController.TestLogin&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.save.TestUserController.TestSaveLoadPasswords&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	

@@ -10,34 +10,49 @@ public class SaveSystem : ISaveSystem
     public static string Seperator => "-";
 
     private IFileFormatSaver _saver = new JSONAdapter();
-    private List<ISaveable> _saveables = new ();
+    private List<ISaveableController> _saveables = new ();
     
     public void SetFileType(IFileFormatSaver type)
     {
         _saver = type;
     }
 
-    public void Save(string folderName)
+    public void LoadController()
+    {
+        foreach (var saveable in _saveables)
+        {
+            saveable.LoadController();
+        }
+    }
+
+    public void SaveController()
+    {
+        foreach (var saveable in _saveables)
+        {
+            saveable.SaveController();
+        }    }
+
+    public void SaveUser(string folderName)
     {
         folderName = SavePath + "\\" + folderName;//need to add the folder path to the foldername
         Directory.CreateDirectory(folderName);
         foreach (var saveable in _saveables)
         {
-            saveable.Save(folderName);
+            saveable.SaveUser(folderName);
         }
     }
 
-    public void Load(string folderName)
+    public void LoadUser(string folderName)
     {
         foreach (var saveable in _saveables)
         {
-            saveable.Load(folderName);
+            saveable.LoadUser(folderName);
         }    
     }
 
-    public void SubscribeSaveable(ISaveable saveable)
+    public void SubscribeSaveable(ISaveableController saveableController)
     {
-        _saveables.Add(saveable);
+        _saveables.Add(saveableController);
     }
 
     public IFileFormatSaver GetFileSaver()
