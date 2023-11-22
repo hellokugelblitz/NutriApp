@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
@@ -7,6 +9,7 @@ namespace NutriApp.Controllers;
 
 [Route("api/Goal")]
 [ApiController]
+[Authorize]
 public class GoalApiController : ControllerBase
 {
     private readonly App _app;

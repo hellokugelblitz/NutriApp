@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
@@ -7,6 +8,7 @@ namespace NutriApp.Controllers;
 
 [Route("api/History")]
 [ApiController]
+[Authorize]
 public class HistoryApiController : ControllerBase
 {
     private readonly App _app;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
@@ -334,6 +335,7 @@ public class RecipesApiController : ControllerBase
     
     // POST api/Recipes
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<Recipe>> CreateRecipe(CreateRecipeInfo info)
     {
         Recipe recipe = new() { Name = info.Name };
@@ -342,6 +344,7 @@ public class RecipesApiController : ControllerBase
     
     // PUT api/Recipes/{name}
     [HttpPut("{name}")]
+    [Authorize]
     public async Task<IActionResult> EditRecipe(string name, CreateRecipeInfo info)
     {
         if (name != info.Name)
@@ -354,6 +357,7 @@ public class RecipesApiController : ControllerBase
     
     // DELETE api/Recipes/{name}
     [HttpDelete("{name}")]
+    [Authorize]
     public async Task<IActionResult> DeleteRecipe(string name)
     {
         return NoContent();

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
@@ -9,6 +10,7 @@ namespace NutriApp.Controllers;
 
 [Route("api/Workouts")]
 [ApiController]
+[Authorize]
 public class WorkoutsApiController : ControllerBase
 {
     private readonly App _app;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
@@ -104,6 +105,7 @@ public class IngredientsApiController : ControllerBase
     
     // PUT api/Ingredients/purchase
     [HttpPut("purchase")]
+    [Authorize]
     public async Task<IActionResult> PurchaseIngredients(string name, PurchaseIngredientInfo[] info)
     {
         return NoContent();
