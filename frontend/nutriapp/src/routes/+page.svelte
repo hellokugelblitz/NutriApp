@@ -1,3 +1,5 @@
+<!-- Home page -->
+
 <script>
     import { SvelteToast, toast } from '@zerodevx/svelte-toast'
 
