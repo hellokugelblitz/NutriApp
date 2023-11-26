@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NutriApp.Notifications;
 
 namespace NutriApp.Teams;
 
@@ -25,9 +26,16 @@ public class TeamController
     public Team GetTeam(string name) => teams.First(team => team.Name == name);
 
     /// <summary>
-    /// Creates a new team with the given name.
+    /// Creates a new team with the given name. Returns true if successfully created, false otherwise
+    /// (typically if name is already taken).
     /// </summary>
-    public void CreateTeam(string name) => teams.Add(new Team(name));
+    public bool CreateTeam(string name)
+    {
+        if (GetTeam(name) != null) return false;
+
+        teams.Add(new Team(name));
+        return true;
+    }
 
     /// <summary>
     /// Generates an invite code and sends a notification to the given user, inviting them to join
@@ -43,7 +51,10 @@ public class TeamController
 
         inviteCodes.Add(code, team);
 
-        // TODO: send notification to user
+        User recipient = app.UserControl.GetUser(username);
+
+        // TODO: actually incorporate invite code into notification
+        NotificationController.Instance.CreateNotification($"You have been invited to join team {teamName}", "localhost:5173", new User[] { recipient });
         return code;
     }
 

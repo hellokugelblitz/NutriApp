@@ -40,7 +40,7 @@ public class App
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
     public UIController UIControl => ui;
-    public User User => user;
+    public User User { get; set; }
     public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
     
