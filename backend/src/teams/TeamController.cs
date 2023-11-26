@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NutriApp.Notifications;
 
 namespace NutriApp.Teams;
@@ -23,7 +22,14 @@ public class TeamController
     /// <summary>
     /// Returns the team with the given unique name.
     /// </summary>
-    public Team GetTeam(string name) => teams.First(team => team.Name == name);
+    public Team GetTeam(string name)
+    {
+        foreach (Team team in teams)
+            if (team.Name == name)
+                return team;
+
+        return null;
+    }
 
     /// <summary>
     /// Creates a new team with the given name. Returns true if successfully created, false otherwise
@@ -69,6 +75,8 @@ public class TeamController
     /// </summary>
     public void AddMember(string username, string inviteCode)
     {
+        if (!inviteCodes.ContainsKey(inviteCode)) return;
+
         User user = app.UserControl.GetUser(username);
         Team team = inviteCodes[inviteCode];
 

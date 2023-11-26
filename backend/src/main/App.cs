@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using NutriApp.Controllers.Middleware;
 using NutriApp.Notifications;
+using NutriApp.Save;
 
 namespace NutriApp;
 
@@ -57,12 +58,11 @@ public class App
         food = new FoodController(this);
         history = new HistoryController(this);
         goal = new GoalController(this);
+        userCtrl = new UserController(new SaveSystem());
         NotificationController.Instance.AppInstance = this;
 
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
-        
-        ui = new UIController(this);
     }
 
     public void KillTimer()

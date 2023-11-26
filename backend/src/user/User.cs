@@ -17,9 +17,9 @@ public class User : ISaveObject
     public int Height { get; private set; }
     public DateTime Birthday { get; private set; }
     public string Bio { get; private set; }
-    public string TeamName { get; private set; }
+    public string TeamName { get; set; }
     
-    public Notification[] Notifications { get; private set; }
+    public Notification[] Notifications => notifications.ToArray();
 
     public User()
     {

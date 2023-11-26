@@ -50,18 +50,26 @@ public class Team
     public Team(string name)
     {
         this.name = name;
+        this.members = new List<User>();
     }
 
     /// <summary>
     /// Adds a new member to the team.
     /// </summary>
-    public void AddMember(User user) => members.Add(user);
+    public void AddMember(User user)
+    {
+        members.Add(user);
+        user.TeamName = name;
+    }
 
     /// <summary>
     /// Removes a user from the team if they are a member of the team.
     /// </summary>
-    public void RemoveMember(User user) => members.Remove(user);
-
+    public void RemoveMember(User user)
+    {
+        members.Remove(user);
+        user.TeamName = string.Empty;
+    }
     /// <summary>
     /// Starts a weeklong challenge for the team on the given date.
     /// </summary>

@@ -41,6 +41,8 @@ public class NotificationController
             Notification notification = new Notification(contents, url);
             pendingNotifications[user.UserName].Add(notification);
         }
+
+        NotifyOnlineUsers();
     }
 
     private void NotifyOnlineUsers()
