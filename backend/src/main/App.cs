@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using NutriApp.Controllers.Middleware;
+using NutriApp.Notifications;
 
 namespace NutriApp;
 
@@ -28,7 +29,8 @@ public class App
     private WorkoutController workout;
     private FoodController food;
     private UIController ui;
-    private UserController user;
+    private User user;
+    private UserController userCtrl;
     private DateTime date;
     private double dayLength;
     private Task<None> timerThread;
@@ -38,8 +40,9 @@ public class App
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
     public UIController UIControl => ui;
+    public User User => user;
+    public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
-    public UserController User => user;
     
     public double DayLength { set => dayLength = value; }
 
@@ -54,6 +57,7 @@ public class App
         food = new FoodController(this);
         history = new HistoryController(this);
         goal = new GoalController(this);
+        NotificationController.Instance.AppInstance = this;
 
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;

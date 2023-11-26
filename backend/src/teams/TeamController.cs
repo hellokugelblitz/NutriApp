@@ -58,7 +58,7 @@ public class TeamController
     /// </summary>
     public void AddMember(string username, string inviteCode)
     {
-        User user = app.User.GetUserByUsername(username);
+        User user = app.UserControl.GetUser(username);
         Team team = inviteCodes[inviteCode];
 
         team.AddMember(user);
@@ -70,7 +70,7 @@ public class TeamController
     /// </summary>
     public void RemoveMember(string username, string teamName)
     {
-        User user = app.User.GetUserByUsername(username);
+        User user = app.UserControl.GetUser(username);
         Team team = GetTeam(teamName);
         team.RemoveMember(user);
     }
