@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using NutriApp.Controllers.Middleware;
+using NutriApp.Notifications;
+using NutriApp.Save;
 
 namespace NutriApp;
 
@@ -28,8 +30,9 @@ public class App
     private WorkoutController workout;
     private FoodController food;
     private UIController ui;
-    private DateTime date;
     private User user;
+    private UserController userCtrl;
+    private DateTime date;
     private double dayLength;
     private Task<None> timerThread;
     
@@ -38,9 +41,10 @@ public class App
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
     public UIController UIControl => ui;
+    public User User { get; set; }
+    public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
     
-    public User User { get => user; set => user = value; }
     public double DayLength { set => dayLength = value; }
 
     public App(double dayLength)
@@ -54,11 +58,11 @@ public class App
         food = new FoodController(this);
         history = new HistoryController(this);
         goal = new GoalController(this);
+        userCtrl = new UserController(new SaveSystem());
+        NotificationController.Instance.AppInstance = this;
 
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
-        
-        ui = new UIController(this);
     }
 
     public void KillTimer()
@@ -134,16 +138,18 @@ public class App
 
     public void Load()
     {
-        // Don't do anything if data files don't exist yet (e.g. first startup)
-        if (!File.Exists(userPath) || !File.Exists(datePath))
-            return;
+        // this will need to be re-done anyway, i've commented it out for now so it doesn't break the build -dan
 
-        // Read the user from a JSON file
-        var json = File.ReadAllText(userPath);
-        user = JsonConvert.DeserializeObject<User>(json);
+        // // Don't do anything if data files don't exist yet (e.g. first startup)
+        // if (!File.Exists(userPath) || !File.Exists(datePath))
+        //     return;
+
+        // // Read the user from a JSON file
+        // var json = File.ReadAllText(userPath);
+        // user = JsonConvert.DeserializeObject<User>(json);
         
-        // Read the date from a JSON file
-        json = File.ReadAllText(datePath);
-        date = JsonConvert.DeserializeObject<DateTime>(json);
+        // // Read the date from a JSON file
+        // json = File.ReadAllText(datePath);
+        // date = JsonConvert.DeserializeObject<DateTime>(json);
     }
 }
