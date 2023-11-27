@@ -1,9 +1,8 @@
 using System;
-using NutriApp.UI;
 
 namespace NutriApp.Undo;
 
-abstract class UndoCommand<T>
+public abstract class UndoCommand
 {
     protected CommandFinished onFinished;
 
@@ -15,4 +14,4 @@ abstract class UndoCommand<T>
     public abstract void Execute();
 }
 
-delegate void CommandFinished();
+public delegate void CommandFinished();

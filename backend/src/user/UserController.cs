@@ -5,6 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using NutriApp.Undo;
 
 namespace NutriApp;
 
@@ -22,6 +23,9 @@ public class UserController : ISaveableController
     //the load will dump the user here. then login can pull it from here and remove it.
     //I am doing this to make it thread safe
     private Dictionary<string, User> _loadedUsers = new();
+
+    // A dictionary to store undo stacks for each user
+    private Dictionary<Guid, Stack<UndoCommand>> _userUndoStacks = new();
 
     public UserController(ISaveSystem saveSystem)
     {
@@ -62,14 +66,14 @@ public class UserController : ISaveableController
     /// <returns>a tuple of a new session key and loaded user</returns>
     /// <exception cref="InvalidPasswordException">throws an exception if the user exists but the password was wrong</exception>
     /// <exception cref="InvalidUsernameException">throws an exception if the user is not in the system</exception>
-    public (Guid, User) Login(string username, string password) 
+    public (Guid, User) Login(string username, string password)
     {
         if (_userLoginInfo.ContainsKey(username))
         {
             if (_userLoginInfo[username] == HashPassword(password))
             {
                 _saveSystem.LoadUser(_saveSystem.GetNewestFolder(username));
-                
+
                 Guid userGuid = Guid.NewGuid();
                 _loadedUsers.Remove(username, out User user);
                 AddUserToDictionaries(userGuid, user);
@@ -97,7 +101,7 @@ public class UserController : ISaveableController
     {
         var split = SaveSystem.SplitFileName(folderName);
         string username = split[0];
-        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"user"), _usersFromUsername[username].ToDictionary());
+        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName, "user"), _usersFromUsername[username].ToDictionary());
     }
 
     public void LoadUser(string folderName)
@@ -126,14 +130,14 @@ public class UserController : ISaveableController
     public void LoadController()
     {
         string filePath = SaveSystem.SavePath + "\\userLogins.json";
-        if(!File.Exists(filePath))return;
-        
+        if (!File.Exists(filePath)) return;
+
         using (var file = File.OpenText(filePath))
         {
             _userLoginInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(file.ReadLine());
-            
+
         }
-        
+
     }
 
     public string HashPassword(string password)
@@ -153,5 +157,27 @@ public class UserController : ISaveableController
         {
             _userLoginInfo[user.UserName] = HashPassword(password);
         }
+    }
+
+    public void AddUndoCommand(Guid sessionKey, UndoCommand command)
+    {
+        if (!_userUndoStacks.ContainsKey(sessionKey))
+        {
+            _userUndoStacks[sessionKey] = new Stack<UndoCommand>();
+        }
+        _userUndoStacks[sessionKey].Push(command);
+    }
+
+    public void Undo(Guid sessionKey)
+    {
+        if (_userUndoStacks.TryGetValue(sessionKey, out Stack<UndoCommand> undoStack) && undoStack.Count > 0)
+        {
+            UndoCommand command = undoStack.Pop();
+            command.Execute();
+        }
+        // else
+        // {
+        //     // Alert user
+        // } Not sure if needed
     }
 }
