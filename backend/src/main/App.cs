@@ -3,14 +3,18 @@ using System.Threading;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.History;
 using NutriApp.Goal;
 using NutriApp.UI;
 using NutriApp.Workout;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using NutriApp.Controllers.Middleware;
 
 namespace NutriApp;
 
@@ -79,11 +83,31 @@ public class App
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         builder.Services.AddControllers();
 
-        WebApplication webapp = builder.Build();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        builder.Services.AddSingleton(_ => new App(1));
+
+        builder.Services.AddAuthentication("NutriAppScheme")
+            .AddScheme<AuthenticationSchemeOptions, NutriAppAuthHandler>("NutriAppScheme", _ => { });
+        builder.Services.AddAuthorization();
+
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "NutriApp API", Version = "v1" });
+            c.OperationFilter<AddHeaderOperationFilter>();
+        });
+
+        var webapp = builder.Build();
+
+        if (webapp.Environment.IsDevelopment())
+        {
+            webapp.UseSwagger();
+            webapp.UseSwaggerUI();
+        }
+        
         webapp.MapControllers();
         webapp.Run();
-
-        App app = new App(1);
     }
 
     private None DayLoop()

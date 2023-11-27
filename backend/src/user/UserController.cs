@@ -34,6 +34,11 @@ public class UserController : ISaveableController
         return _users[sessionKey];
     }
 
+    public User GetUser(string username)
+    {
+        return _usersFromUsername[username];
+    }
+
     public (Guid, User) CreateUser(string username, string password, int height, DateTime birthday,
         string name, string bio)
     {
