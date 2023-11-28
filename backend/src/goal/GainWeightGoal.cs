@@ -11,11 +11,14 @@ public class GainWeightGoal : Goal
     public double WeightGoal { get; }
     public double DailyCalorieGoal { get; }
 
-    public GainWeightGoal(GoalController controller, double weightGoal)
+    private string username;
+
+    public GainWeightGoal(GoalController controller, double weightGoal, string username)
     {
         this.controller = controller;
         this.WeightGoal = weightGoal;
         this.DailyCalorieGoal = 3500;
+        this.username = username;
     }
 
     /// <summary>
@@ -25,10 +28,10 @@ public class GainWeightGoal : Goal
     /// <param name="userWeight">The user's current weight.</param>
     /// <returns>Whether the goal was switched.</returns>
     public Goal CheckWeight(double userWeight)
-        => userWeight >= WeightGoal ? new MaintainWeightGoal(controller, WeightGoal) : this;
+        => userWeight >= WeightGoal ? new MaintainWeightGoal(controller, WeightGoal, username) : this;
 
     public void IncorporateFitness(List<Workout> recommendedWorkouts)
     {
-        controller.Goal = new FitnessGoal(this, recommendedWorkouts);
+        controller.SetGoal(new FitnessGoal(this, recommendedWorkouts), username);
     }
 }

@@ -241,15 +241,15 @@ public class FoodController
     /// Consumes a meal if there is enough ingredient stock. Returns true if meal consumption
     /// was successful, false otherwise.
     /// </summary>
-    public bool ConsumeMeal(string name)
+    public bool ConsumeMeal(string mealName, string username)
     {
-        Meal mealConsumed = GetMeal(name);
+        Meal mealConsumed = GetMeal(mealName);
 
         // Check ingredient stock
-        if (!EnoughIngredients(name)) return false;
+        if (!EnoughIngredients(mealName)) return false;
 
         // Meal consumed successfully
-        MealConsumeEvent?.Invoke(mealConsumed);
+        MealConsumeEvent?.Invoke(mealConsumed, username);
 
         // Remove ingredient stock
         foreach (Ingredient ingredient in mealConsumed.Ingredients.Keys)
@@ -273,6 +273,6 @@ public class FoodController
 
         shoppingList.RemoveItem(ingredient, quantity);
     }
-    public delegate void MealEventHandler(Meal meal);
+    public delegate void MealEventHandler(Meal meal, string username);
     public event MealEventHandler MealConsumeEvent;
 }

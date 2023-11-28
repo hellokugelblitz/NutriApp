@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using NutriApp.History;
+using NutriApp.Save;
 
 namespace NutriApp.Food;
 

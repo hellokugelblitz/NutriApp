@@ -1,7 +1,19 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ac097b20_002D730d_002D485b_002Dac62_002D9b2bd665ee75/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ac097b20_002D730d_002D485b_002Dac62_002D9b2bd665ee75/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;And&gt;&#xD;
     &lt;Project Location="C:\Users\dgram\SWEN 262\backend\test" Presentation="&amp;lt;NutriAppTest&amp;gt;" /&gt;&#xD;
     &lt;Namespace&gt;NutriAppTest.save&lt;/Namespace&gt;&#xD;
   &lt;/And&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=baf304ad_002D2bc7_002D4681_002D8cb6_002D22abda923598/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestJson" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.save.TestSaveAdapters.TestJson&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.save.TestSaveAdapters.TestCsv&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb0a685d_002D8e44_002D4026_002D9ce0_002D3a5992fc2378/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestJson #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.save.TestSaveAdapters.TestJson&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.save.TestSaveAdapters.TestCsv&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
