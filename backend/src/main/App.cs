@@ -29,7 +29,6 @@ public class App
     private GoalController goal;
     private WorkoutController workout;
     private FoodController food;
-    private UIController ui;
     private User user;
     private UserController userCtrl;
     private DateTime date;
@@ -40,7 +39,6 @@ public class App
     public GoalController GoalControl => goal; 
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
-    public UIController UIControl => ui;
     public User User { get; set; }
     public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
