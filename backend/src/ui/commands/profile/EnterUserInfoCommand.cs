@@ -13,7 +13,7 @@ class EnterUserInfoCommand : Command<(User, double, double)>
 
     public override void Execute((User, double, double) userinput)
     {
-        app.User = userinput.Item1;
+        // app.User = userinput.Item1;
 
         var userWeight = userinput.Item2;
         var targetWeight = userinput.Item3;

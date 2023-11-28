@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using NutriApp.Controllers.Middleware;
+using NutriApp.Save;
 
 namespace NutriApp;
 
@@ -27,9 +28,10 @@ public class App
     private GoalController goal;
     private WorkoutController workout;
     private FoodController food;
-    private UIController ui;
+    // private UIController ui;
+    private UserController user;
     private DateTime date;
-    private User user;
+    // private User user;
     private double dayLength;
     private Task<None> timerThread;
     
@@ -37,10 +39,11 @@ public class App
     public GoalController GoalControl => goal; 
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
-    public UIController UIControl => ui;
+    // public UIController UIControl => ui;
+    public UserController UserControl => user;
     public DateTime TimeStamp => date;
     
-    public User User { get => user; set => user = value; }
+    // public User User { get => user; set => user = value; }
     public double DayLength { set => dayLength = value; }
 
     public App(double dayLength)
@@ -54,6 +57,7 @@ public class App
         food = new FoodController(this);
         history = new HistoryController(this);
         goal = new GoalController(this);
+        user = new UserController(new SaveSystem());
 
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
@@ -135,8 +139,8 @@ public class App
     public void Save()
     {
         // Write the user to a JSON file for persistence
-        var userJson = JsonConvert.SerializeObject(user);
-        File.WriteAllText(userPath, userJson);
+        // var userJson = JsonConvert.SerializeObject(user);
+        // File.WriteAllText(userPath, userJson);
         
         // Write the current date to a JSON file for persistence
         var timeJson = JsonConvert.SerializeObject(new { date });
@@ -150,11 +154,11 @@ public class App
             return;
 
         // Read the user from a JSON file
-        var json = File.ReadAllText(userPath);
-        user = JsonConvert.DeserializeObject<User>(json);
+        // var json = File.ReadAllText(userPath);
+        // user = JsonConvert.DeserializeObject<User>(json);
         
         // Read the date from a JSON file
-        json = File.ReadAllText(datePath);
+        var json = File.ReadAllText(datePath);
         date = JsonConvert.DeserializeObject<DateTime>(json);
     }
 }
