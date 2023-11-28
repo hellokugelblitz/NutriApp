@@ -8,24 +8,24 @@ namespace NutriApp.Commands;
 
 class AddWorkoutCommand : Command<Workout.Workout>
 {
-    private readonly App app;
-    private readonly Guid sessionKey;
+    private readonly App _app;
+    private readonly Guid _sessionKey;
 
     public AddWorkoutCommand(App app, Guid sessionKey)
     {
-        this.app = app;
-        this.sessionKey = sessionKey;
+        _app = app;
+        _sessionKey = sessionKey;
     }
 
     public override void Execute(Workout.Workout userinput)
     {
 
-        app.HistoryControl.AddWorkout(userinput);
+        _app.HistoryControl.AddWorkout(userinput);
 
-        var timestamp = app.TimeStamp;
-        UndoAddWorkout undoCommand = new UndoAddWorkout(app.HistoryControl, userinput, timestamp);
+        var timestamp = _app.TimeStamp;
+        UndoAddWorkout undoCommand = new UndoAddWorkout(_app.HistoryControl, userinput, timestamp);
 
-        app.UserControl.AddUndoCommand(sessionKey, undoCommand);
+        _app.UserControl.AddUndoCommand(_sessionKey, undoCommand);
 
         onFinished?.Invoke();
     }

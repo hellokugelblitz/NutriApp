@@ -4,9 +4,9 @@ namespace NutriApp.Undo;
 
 public abstract class UndoCommand
 {
-    protected CommandFinished onFinished;
+    protected UndoCommandFinished onFinished;
 
-    public void Subscribe(CommandFinished handler)
+    public void Subscribe(UndoCommandFinished handler)
     {
         onFinished += handler;
     }
@@ -14,4 +14,4 @@ public abstract class UndoCommand
     public abstract void Execute();
 }
 
-public delegate void CommandFinished();
+public delegate void UndoCommandFinished();

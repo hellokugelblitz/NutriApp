@@ -10,6 +10,7 @@ using NutriApp.History;
 using NutriApp.Goal;
 using NutriApp.UI;
 using NutriApp.Workout;
+using NutriApp.Teams;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +29,7 @@ public class App
     private HistoryController history;
     private GoalController goal;
     private WorkoutController workout;
+    private TeamController team;
     private FoodController food;
     private UIController ui;
     private User user;
@@ -39,6 +41,7 @@ public class App
     public HistoryController HistoryControl => history;
     public GoalController GoalControl => goal; 
     public WorkoutController WorkoutControl => workout;
+    public TeamController TeamControl => team;
     public FoodController FoodControl => food;
     public UIController UIControl => ui;
     public User User { get; set; }
@@ -56,6 +59,7 @@ public class App
 
         workout = new WorkoutController();
         food = new FoodController(this);
+        team = new TeamController(this);
         history = new HistoryController(this);
         goal = new GoalController(this);
         userCtrl = new UserController(new SaveSystem());

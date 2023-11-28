@@ -16,7 +16,7 @@ class QuitCommand : Command<None>
         _app.HistoryControl.Save();
         _app.GoalControl.Save();
         _app.Save();
-        onFinished?.Invoke();// saves everything
+        onFinished?.Invoke();
         Environment.Exit(0);
     }
 }
