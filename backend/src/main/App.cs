@@ -27,7 +27,6 @@ public class App
     private GoalController goal;
     private WorkoutController workout;
     private FoodController food;
-    private UIController ui;
     private DateTime date;
     private User user;
     private double dayLength;
@@ -37,7 +36,6 @@ public class App
     public GoalController GoalControl => goal; 
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
-    public UIController UIControl => ui;
     public DateTime TimeStamp => date;
     
     public User User { get => user; set => user = value; }
@@ -57,8 +55,6 @@ public class App
 
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
-        
-        ui = new UIController(this);
     }
 
     public void KillTimer()
