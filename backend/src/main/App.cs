@@ -58,7 +58,7 @@ public class App
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
         
-        ui = new UIController(this);
+        // ui = new UIController(this);
     }
 
     public void KillTimer()
@@ -97,6 +97,16 @@ public class App
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "NutriApp API", Version = "v1" });
             c.OperationFilter<AddHeaderOperationFilter>();
         });
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigin", builder =>
+            {
+                builder.WithOrigins("http://localhost:5173")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
 
         var webapp = builder.Build();
 
@@ -105,7 +115,8 @@ public class App
             webapp.UseSwagger();
             webapp.UseSwaggerUI();
         }
-        
+
+        webapp.UseCors("AllowSpecificOrigin");
         webapp.MapControllers();
         webapp.Run();
     }
