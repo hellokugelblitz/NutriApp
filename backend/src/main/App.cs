@@ -66,8 +66,8 @@ public class App
         timerThread.Dispose();
     }
 
-    public List<Workout.Workout> GetRecommendedWorkouts() 
-        => workout.GenerateRecommendedWorkouts(history.Workouts);
+    public List<Workout.Workout> GetRecommendedWorkouts(string username) 
+        => workout.GenerateRecommendedWorkouts(history.GetWorkouts(username));
     public double GetTodaysCalories() { return -1d; }
 
     public delegate void DayEventHandler(DateTime date);

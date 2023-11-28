@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text.Json;
-using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.Save;
 using NutriApp.Workout;
@@ -13,16 +9,17 @@ namespace NutriApp.History;
 public class HistoryController : ISaveableController
 {
     private App app;
-    private Dictionary<string, HistoryObject> history = new();
+    private Dictionary<string, HistoryObject> history = new(); //username to history data
 
-    private readonly string historyPath = $"{Persistence.HistoryDataPath}history.json";
+    private const string EntryValueSep = ","; //seperator between values of the entrie and generic(datetime,weight)
+    private const string EntrySep = " | "; //seperator between entries
 
-    public List<Entry<Workout.Workout>> GetWorkouts(string username) => history[username].workouts;
-    public List<Entry<Food.Meal>> GetMeals(string username) => history[username].meals;
-    public List<Entry<CalorieTracker>> GetCalories(string username) => history[username].calories;
-    public double CurrentWeight(string username) => history[username].weights[^1].Value;
+    public List<Entry<Workout.Workout>> GetWorkouts(string username) => history[username].Workouts;
+    public List<Entry<Meal>> GetMeals(string username) => history[username].Meals;
+    public List<Entry<CalorieTracker>> GetCalories(string username) => history[username].Calories;
+    public double CurrentWeight(string username) => history[username].Weights[^1].Value;
 
-    public List<Entry<Weight>> Weights(string username) => history[username].weights;
+    public List<Entry<double>> Weights(string username) => history[username].Weights;
 
 
     public HistoryController(App app)
@@ -32,35 +29,35 @@ public class HistoryController : ISaveableController
 
     public void AddWorkout(Workout.Workout workout, string username)
     {
-        history[username].workouts.Add(new Entry<Workout.Workout>(app.TimeStamp, workout));
+        history[username].Workouts.Add(new Entry<Workout.Workout>(app.TimeStamp, workout));
     }
 
     public void SetWeight(double weight, string username)
     {
-        history[username].weights.Add(new Entry<Weight>(app.TimeStamp, weight));
+        history[username].Weights.Add(new Entry<double>(app.TimeStamp, weight));
     }
 
-    public void AddMeal(Food.Meal meal, string username)
+    public void AddMeal(Meal meal, string username)
     {
-        history[username].meals.Add(new Entry<Food.Meal>(app.TimeStamp, meal));
+        history[username].Meals.Add(new Entry<Meal>(app.TimeStamp, meal));
     }
 
-    public void AddCalories(DateTime date, string username)
+    public void AddCalories(string username)
     {
-        history[username].calories.Add(new Entry<CalorieTracker>(app.TimeStamp,
-            new CalorieTracker(GetCalorieCount(date), app.GoalControl.Goal.DailyCalorieGoal)));
+        history[username].Calories.Add(new Entry<CalorieTracker>(app.TimeStamp,
+            new CalorieTracker(GetCalorieCount(username), app.GoalControl.GetGoal(username).DailyCalorieGoal)));
     }
 
     /// <summary>
     /// calculates the calories eaten that day
     /// </summary>
-    /// <param name="date">the date you are checking</param>
-    /// <returns>number of calories eaten</returns>
+    /// <param name="username">the username your are checking for</param>
+    /// <returns>number of calories eaten on the current day</returns>
     public double GetCalorieCount(string username)
     {
         double calorieCount = 0;
         DateTime timeStamp = app.TimeStamp;
-        foreach (var meal in history[username].meals)
+        foreach (var meal in history[username].Meals)
         {
             if (meal.TimeStamp != timeStamp) break;
 
@@ -92,62 +89,7 @@ public class HistoryController : ISaveableController
     //     serialize.Deserialize(this);
     // }
 
-    public class HistoryObject : ISaveObject
-    {
-        public List<Entry<Workout.Workout>> workouts = new();
-        public List<Entry<Weight>> weights = new();
-        public List<Entry<Food.Meal>> meals = new();
-        public List<Entry<CalorieTracker>> calories = new();
-
-        public Dictionary<string, string> ToDictionary()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void FromDictionary(Dictionary<string, string> data)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    // private class HistorySerialize : ISaveObject
-    // {
-    //     [JsonProperty] public List<Entry<Workout.Workout>> workouts;
-    //     [JsonProperty] public List<Entry<Weight>> weights;
-    //     [JsonProperty] public List<Entry<MealName>> meals;
-    //     [JsonProperty] public List<Entry<CalorieTracker>> calories;
-    //
-    //     public HistorySerialize(HistoryController history)
-    //     {
-    //         workouts = history.Workouts;
-    //         weights = history.Weights;
-    //         meals = new();
-    //         history.Meals.ForEach((meal) => { meals.Add(new Entry<MealName>(meal.TimeStamp, meal.Value.Name)); });
-    //         calories = history.Calories;
-    //     }
-    //
-    //     public HistorySerialize() { }
-    //
-    //     public void Deserialize(HistoryController history)
-    //     {
-    //         history.workouts = workouts;
-    //         history.weights = weights;
-    //         history.meals = new();
-    //         meals.ForEach((meal) => {history.meals.Add(new Entry<Meal>(meal.TimeStamp, new Meal(meal.Value)));});
-    //         history.calories = calories;
-    //     }
-    //
-    //     public Dictionary<string, string> ToDictionary()
-    //     {
-    //         throw new NotImplementedException();
-    //     }
-    //
-    //     public void FromDictionary(Dictionary<string, string> data)
-    //     {
-    //         throw new NotImplementedException();
-    //     }
-    // }
-
+    
     public void SaveUser(string folderName)
     {
         throw new NotImplementedException();
@@ -169,94 +111,107 @@ public class HistoryController : ISaveableController
     }
 
 
+    public class HistoryObject : ISaveObject
+    {
+        public readonly List<Entry<Workout.Workout>> Workouts = new();
+        public readonly List<Entry<double>> Weights = new();
+        public readonly List<Entry<Meal>> Meals = new();
+        public readonly List<Entry<CalorieTracker>> Calories = new();
+
+        private readonly FoodController _foodController;
+
+        public HistoryObject(FoodController foodController)
+        {
+            _foodController = foodController;
+        }
+        
+        public Dictionary<string, string> ToDictionary()
+        {
+            Dictionary<string, string> data = new();
+            string workoutString = "";
+            foreach (var workout in Workouts)
+            {
+                workoutString += workout.TimeStamp + EntryValueSep + workout.Value.Name + EntryValueSep +
+                                 workout.Value.Minutes + EntryValueSep + workout.Value.Intensity + EntrySep;
+            }
+
+            workoutString = workoutString.Substring(0, workoutString.Length - 3);
+            data["workouts"] = workoutString;
+
+            string weightString = "";
+            foreach (var weight in Weights)
+            {
+                weightString += weight.TimeStamp + EntryValueSep + weight.Value + EntrySep;
+            }
+
+            weightString = weightString.Substring(0, workoutString.Length - 3);
+            data["weights"] = weightString;
+            
+            string mealString = "";
+            foreach (var meal in Meals)
+            {
+                mealString += meal.TimeStamp + EntryValueSep + meal.Value.Name + EntrySep;
+            }
+
+            mealString = mealString.Substring(0, workoutString.Length - 3);
+            data["meals"] = mealString;
+            
+            string calorieString = "";
+            foreach (var calorie in Calories)
+            {
+                calorieString += calorie.TimeStamp + EntryValueSep + calorie.Value.ActualCalories + EntryValueSep +
+                                 calorie.Value.ActualCalories + EntrySep;
+            }
+
+            calorieString = calorieString.Substring(0, workoutString.Length - 3);
+            data["calories"] = calorieString;
+
+            return data;
+        }
+ 
+        public void FromDictionary(Dictionary<string, string> data)
+        {
+            string[] wrktStrs = data["workouts"].Split(EntrySep);
+            foreach (var str in wrktStrs)
+            {
+                string[] split = str.Split(EntryValueSep);
+                Workout.Workout workout = new Workout.Workout(split[1], Int32.Parse(split[2]),
+                        Enum.Parse<WorkoutIntensity>(split[3]));
+                Entry<Workout.Workout> entry = new Entry<Workout.Workout>(DateTime.Parse(split[0]), workout);
+                Workouts.Add(entry);
+            }
+            
+            string[] wtStrs = data["weights"].Split(EntrySep);
+            foreach (var str in wtStrs)
+            {
+                string[] split = str.Split(EntryValueSep);
+                Entry<double> entry = new Entry<double>(DateTime.Parse(split[0]), double.Parse(split[1]));
+                Weights.Add(entry);
+            }
+            
+            string[] mealsStrs = data["meals"].Split(EntrySep);
+            foreach (var str in mealsStrs)
+            {
+                string[] split = str.Split(EntryValueSep);
+                Entry<Meal> entry = new Entry<Meal>(DateTime.Parse(split[0]), _foodController.GetMeal(split[1]));
+            }
+            
+            string[] calStrs = data["calories"].Split(EntrySep);
+            foreach (var str in calStrs)
+            {
+                string[] split = str.Split(EntryValueSep);
+                Workout.Workout workout = new Workout.Workout(split[1], Int32.Parse(split[2]),
+                    Enum.Parse<WorkoutIntensity>(split[3]));
+                Entry<Workout.Workout> entry = new Entry<Workout.Workout>(DateTime.Parse(split[0]), workout);
+            }
+        }
+    }
+    
+    
     /// <summary>
     /// data class used for the calories history
     /// </summary>
     /// <param name="ActualCalories">number of calories the user ate that day</param>
     /// <param name="TargetCalories">number of calories the user was recommended to eat that day</param>
-    public class CalorieTracker : IHistorySaveable
-    {
-        public double ActualCalories { get; set; }
-        public double TargetCalories { get; set; }
-
-        public CalorieTracker(double actualCalories, double targetCalories)
-        {
-            this.ActualCalories = actualCalories;
-            this.TargetCalories = targetCalories;
-        }
-
-        public CalorieTracker() { }
-
-        public string ToSaveString()
-        {
-            return ActualCalories + IHistorySaveable.HISTORY_SAVEABLE_SEPERATOR + TargetCalories;
-        }
-
-        public void FromSaveString(string str)
-        {
-            var strs = str.Split(IHistorySaveable.HISTORY_SAVEABLE_SEPERATOR);
-            ActualCalories = Int32.Parse(strs[0]);
-            TargetCalories = Int32.Parse(strs[1]);
-        }
-    }
-
-    public class Weight : IHistorySaveable
-    {
-        private double weight;
-
-        public Weight(double d)
-        {
-            weight = d;
-        }
-
-        public Weight() { }
-
-
-        public string ToSaveString()
-        {
-            return weight.ToString();
-        }
-
-        public void FromSaveString(string str)
-        {
-            weight = double.Parse(str);
-        }
-
-        public static implicit operator double(Weight w) => w.weight;
-        public static implicit operator Weight(double d) => new Weight(d);
-
-    }
-
-    public class MealName : IHistorySaveable
-    {
-        private string name;
-        private static FoodController _foodController;
-
-        public MealName(string s) : this()
-        {
-            name = s;
-        }
-
-        public MealName()
-        {
-            _foodController = app.FoodControl;
-        }
-
-
-        public string ToSaveString()
-        {
-            return name;
-        }
-
-        public void FromSaveString(string str)
-        {
-            name = str;
-        }
-
-        public static implicit operator string(MealName m) => m.name;
-        public static implicit operator MealName(string s) => new MealName(s);
-        public static implicit operator Meal(MealName m) => .GetMeal(m.name);
-
-    }
-
+    public record CalorieTracker(double ActualCalories, double TargetCalories);
 }
