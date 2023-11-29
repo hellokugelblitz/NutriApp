@@ -10,6 +10,8 @@ public interface ISaveSystem
     void SaveUser(string folderName);
 
     void LoadUser(string folderName);
+    public void AddNewUser(User user);
+
 
     void SubscribeSaveable(ISaveableController saveableController);
 

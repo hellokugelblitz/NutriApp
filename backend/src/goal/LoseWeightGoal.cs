@@ -8,7 +8,7 @@ public class LoseWeightGoal : Goal
 {
 
     private readonly GoalController controller;
-    public double WeightGoal { get; }
+    public double WeightGoal { get; private set; }
     public double DailyCalorieGoal { get; }
 
     private string username;
@@ -33,5 +33,12 @@ public class LoseWeightGoal : Goal
     public void IncorporateFitness(List<Workout> recommendedWorkouts)
     {
         controller.SetGoal(new FitnessGoal(this, recommendedWorkouts), username);
+    }
+    
+    public Dictionary<string, string> ToDictionary()
+    {
+        Dictionary<string, string> data = new();
+        data["WeightGoal"] = WeightGoal.ToString();
+        return data;
     }
 }

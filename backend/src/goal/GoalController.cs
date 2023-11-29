@@ -13,15 +13,17 @@ public class GoalController : ISaveableController
     private readonly string goalsPath = $"{Persistence.GoalsDataPath}\\goals.json";
 
     private readonly App app;
+    private readonly ISaveSystem saveSystem;
 
     private Dictionary<string, Goal> goals = new();
 
     public Goal GetGoal(string username) => goals[username];
     public void SetGoal(Goal goal, string username) => goals[username] = goal;
-    public GoalController(App app)
+    public GoalController(App app, ISaveSystem saveSystem)
     {
         this.app = app;
-        //Load();
+        this.saveSystem = saveSystem;
+        saveSystem.SubscribeSaveable(this);
     }
 
     /// <summary>
@@ -138,21 +140,33 @@ public class GoalController : ISaveableController
 
     public void SaveUser(string folderName)
     {
-        throw new System.NotImplementedException();
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"goal"), goals[username].ToDictionary());
     }
 
     public void LoadUser(string folderName)
     {
-        throw new System.NotImplementedException();
+        Dictionary<string, string> data = saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "goal"));
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        
+        var weightGoal = double.Parse(data["weightGoal"]);
+        var isFitness = bool.Parse(data["isFitness"]);
+        
+        var goal = GetGoalBasedOnWeightDifference(weightGoal, username);
+        
+        if (isFitness)
+            goal = new FitnessGoal(goal, app.GetRecommendedWorkouts(username));
+        goals[username] = goal;
     }
 
     public void SaveController()
-    {
-        throw new System.NotImplementedException();
-    }
+    { }
 
     public void LoadController()
+    { }
+
+    public void AddNewUser(User user)
     {
-        throw new System.NotImplementedException();
+        goals[user.UserName] = new DefaultGoal();
     }
 }

@@ -51,6 +51,14 @@ public class SaveSystem : ISaveSystem
         }    
     }
 
+    public void AddNewUser(User user)
+    {
+        foreach (var saveable in _saveables)
+        {
+            saveable.AddNewUser(user);
+        }  
+    }
+    
     public void SubscribeSaveable(ISaveableController saveableController)
     {
         _saveables.Add(saveableController);
@@ -109,8 +117,10 @@ public class SaveSystem : ISaveSystem
         
         return  newest;
     }
-    
-    public static String[] SplitFileName(string path)
+
+    public static string GetUsernameFromFile(string path) => SplitFileName(path)[0];
+
+    public static string[] SplitFileName(string path)
     {
         string fileName = Path.GetFileName(path);
         return fileName.Split(Seperator);
