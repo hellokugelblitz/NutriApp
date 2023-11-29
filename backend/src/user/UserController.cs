@@ -154,7 +154,6 @@ public class UserController : ISaveableController
         {
             _userLoginInfo[user.UserName] = HashPassword(password);
         }
-        
         _saveSystem.AddNewUser(user);
     }
 }

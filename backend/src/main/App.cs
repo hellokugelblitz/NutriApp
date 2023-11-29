@@ -24,6 +24,7 @@ public class App
     private readonly string userPath = $"{Persistence.UserDataPath}\\user.json";
     private readonly string datePath = $"{Persistence.DateDataPath}\\date.json";
 
+    private ISaveSystem saveSystem;
     private UserController user;
     private HistoryController history;
     private GoalController goal;
@@ -33,6 +34,7 @@ public class App
     private double dayLength;
     private Task<None> timerThread;
 
+    public ISaveSystem SaveSyst => saveSystem;
     public UserController UserControl => user;
     public HistoryController HistoryControl => history;
     public GoalController GoalControl => goal; 
@@ -49,7 +51,7 @@ public class App
         timerThread = new Task<None>(DayLoop);
         timerThread.Start();
 
-        ISaveSystem saveSystem = new SaveSystem();
+        saveSystem = new SaveSystem();
         user = new UserController(saveSystem);
         workout = new WorkoutController();
         food = new FoodController(this);
