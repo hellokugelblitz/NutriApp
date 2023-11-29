@@ -1,13 +1,4 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2e89a4f9_002D2497_002D44ba_002D81f2_002D6e6e8db6c896/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Or&gt;&#xD;
-    &lt;And&gt;&#xD;
-      &lt;Project Location="C:\Users\dgram\SWEN 262\backend\test" Presentation="&amp;lt;NutriAppTest&amp;gt;" /&gt;&#xD;
-      &lt;Namespace&gt;NutriAppTest.history&lt;/Namespace&gt;&#xD;
-    &lt;/And&gt;&#xD;
-    &lt;And&gt;&#xD;
-      &lt;Project Location="C:\Users\dgram\SWEN 262\backend\test" Presentation="&amp;lt;NutriAppTest&amp;gt;" /&gt;&#xD;
-      &lt;Namespace&gt;NutriAppTest.save&lt;/Namespace&gt;&#xD;
-    &lt;/And&gt;&#xD;
-  &lt;/Or&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=eaeebbfb_002D0ca8_002D4179_002D84e0_002D45f35bc69bdf/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
