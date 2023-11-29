@@ -14,8 +14,8 @@ public class CSVAdapter : IFileFormatSaver
 
         foreach (var pair in data)
         {
-            headers += pair.Key + ",";
-            values += pair.Value + ",";
+            headers += pair.Key + COMMA;
+            values += pair.Value + COMMA;
         }
 
         headers = headers.Substring(0, headers.Length - 1);
