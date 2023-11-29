@@ -10,9 +10,8 @@ public class JSONAdapter : IFileFormatSaver
     public void Save(string fileName, Dictionary<string, string> data)
     {
         var str = JsonConvert.SerializeObject(data);
-        var file = File.Create(fileName);
-        file.Write(Encoding.ASCII.GetBytes(str));
-        file.Close();
+        File.WriteAllText(fileName, str);
+
     }
 
     public Dictionary<string, string> Load(string fileName)

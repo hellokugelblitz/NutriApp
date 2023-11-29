@@ -1,3 +1,5 @@
+using NutriApp.Save;
+
 namespace NutriApp.Goal;
 using Newtonsoft.Json;
 
@@ -6,27 +8,31 @@ using System.IO;
 using NutriApp;
 using NutriApp.Food;
 
-public class GoalController
+public class GoalController : ISaveableController
 {
     private readonly string goalsPath = $"{Persistence.GoalsDataPath}\\goals.json";
 
     private readonly App app;
+    private readonly ISaveSystem saveSystem;
 
-    public Goal Goal { get; set; }
+    private Dictionary<string, Goal> goals = new();
 
-    public GoalController(App app)
+    public Goal GetGoal(string username) => goals[username];
+    public void SetGoal(Goal goal, string username) => goals[username] = goal;
+    public GoalController(App app, ISaveSystem saveSystem)
     {
         this.app = app;
-        Load();
+        this.saveSystem = saveSystem;
+        saveSystem.SubscribeSaveable(this);
     }
 
     /// <summary>
     /// Incorporates fitness into the user's goal.
     /// </summary>
-    public void IncorporateFitness()
+    public void IncorporateFitness(string username)
     {
-        var workouts = app.GetRecommendedWorkouts();
-        Goal.IncorporateFitness(workouts);
+        var workouts = app.GetRecommendedWorkouts(username);
+        GetGoal(username).IncorporateFitness(workouts);
     }
 
     /// <summary>
@@ -34,9 +40,9 @@ public class GoalController
     /// May switch the goal if the user has reached certain conditions, like
     /// completing a goal or deviating from the goal.
     /// </summary>
-    public void CompareUserWeightToGoal()
+    public void CompareUserWeightToGoal(string username)
     {
-        Goal = Goal.CheckWeight(app.HistoryControl.CurrentWeight);
+        goals[username] = GetGoal(username).CheckWeight(app.HistoryControl.CurrentWeight(username));
     }
 
     /// <summary>
@@ -49,9 +55,10 @@ public class GoalController
     /// Handles the event of the user consuming a meal.
     /// </summary>
     /// <param name="_">Required param to fulfill <c>MealEventHandler</c> signature</param>
-    public void ConsumeMealHandler(Meal _)
+    /// <param name="username">username of user</param>
+    public void ConsumeMealHandler(Meal _, string username)
     {
-        if (CheckUserExceededCalorieGoal())
+        if (CheckUserExceededCalorieGoal(username))
             PassedCalorieGoalEvent?.Invoke();
     }
 
@@ -59,10 +66,11 @@ public class GoalController
     /// Checks if the user has exceeeded their daily calorie goal.
     /// </summary>
     /// <returns>Whether the user exceeded their daily calorie goal.</returns>
-    public bool CheckUserExceededCalorieGoal()
+    public bool CheckUserExceededCalorieGoal(string username)
     {
+        
         double todaysCalories = app.GetTodaysCalories();
-        double calorieGoal = Goal.DailyCalorieGoal;
+        double calorieGoal = GetGoal(username).DailyCalorieGoal;
 
         // can adjust as needed
         double marginOfError = 100;
@@ -80,50 +88,85 @@ public class GoalController
     /// </list>
     /// </summary>
     /// <param name="targetWeight">The user's target weight</param>
+    /// <param name="username">username of user</param>
     /// <returns>The Goal instance</returns>
-    public Goal GetGoalBasedOnWeightDifference(double targetWeight)
+    public Goal GetGoalBasedOnWeightDifference(double targetWeight, string username)
     {
-        var targetMinusCurrent = targetWeight - app.HistoryControl.CurrentWeight;
+        var targetMinusCurrent = targetWeight - app.HistoryControl.CurrentWeight(username);
         return targetMinusCurrent switch
         {
-            < -5 => new LoseWeightGoal(this, targetWeight),
-            > 5 => new GainWeightGoal(this, targetWeight),
-            _ => new MaintainWeightGoal(this, targetWeight)
+            < -5 => new LoseWeightGoal(this, targetWeight, username),
+            > 5 => new GainWeightGoal(this, targetWeight, username),
+            _ => new MaintainWeightGoal(this, targetWeight, username)
         };
     }
+
     /// <summary>
     /// Sets the goal based on the difference between the user's current weight
     /// and their target weight. See <c>GetGoalBasedOnWeightDifference</c>
     /// for further details.
     /// </summary>
     /// <param name="targetWeight">The user's target weight</param>
+    /// <param name="username">username of user</param>
     /// <seealso cref="GetGoalBasedOnWeightDifference"/>
-    public void SetGoalBasedOnWeightDifference(double targetWeight)
+    public void SetGoalBasedOnWeightDifference(double targetWeight, string username)
     {
-        Goal = GetGoalBasedOnWeightDifference(targetWeight);
+        goals[username] = GetGoalBasedOnWeightDifference(targetWeight, username);
     }
 
-    public void Save()
+    // public void Save()
+    // {
+    //     // Write the goal to a JSON file for persistence
+    //     var goalData = Goal.ToDictionary;
+    //     goalData["isFitness"] = Goal is FitnessGoal;
+    //     File.WriteAllText(goalsPath, JsonConvert.SerializeObject(goalData));
+    // }
+    // public void Load()
+    // {
+    //     // Don't do anything if data files don't exist yet (e.g. first startup)
+    //     if (!File.Exists(goalsPath))
+    //         return;
+    //
+    //     // Read the goal from a JSON file for persistence
+    //     var goalDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(goalsPath));
+    //     var weightGoal = (double)goalDict["weightGoal"];
+    //     var isFitness = (bool)goalDict["isFitness"];
+    //
+    //     var goal = GetGoalBasedOnWeightDifference(weightGoal);
+    //     if (isFitness)
+    //         goal = new FitnessGoal(goal, app.GetRecommendedWorkouts());
+    //     Goal = goal;
+    // }
+
+    public void SaveUser(string folderName)
     {
-        // Write the goal to a JSON file for persistence
-        var goalData = Goal.ToDictionary;
-        goalData["isFitness"] = Goal is FitnessGoal;
-        File.WriteAllText(goalsPath, JsonConvert.SerializeObject(goalData));
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"goal"), goals[username].ToDictionary());
     }
-    public void Load()
+
+    public void LoadUser(string folderName)
     {
-        // Don't do anything if data files don't exist yet (e.g. first startup)
-        if (!File.Exists(goalsPath))
-            return;
-
-        // Read the goal from a JSON file for persistence
-        var goalDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(goalsPath));
-        var weightGoal = (double)goalDict["weightGoal"];
-        var isFitness = (bool)goalDict["isFitness"];
-
-        var goal = GetGoalBasedOnWeightDifference(weightGoal);
+        Dictionary<string, string> data = saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "goal"));
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        
+        var weightGoal = double.Parse(data["weightGoal"]);
+        var isFitness = bool.Parse(data["isFitness"]);
+        
+        var goal = GetGoalBasedOnWeightDifference(weightGoal, username);
+        
         if (isFitness)
-            goal = new FitnessGoal(goal, app.GetRecommendedWorkouts());
-        Goal = goal;
+            goal = new FitnessGoal(goal, app.GetRecommendedWorkouts(username));
+        goals[username] = goal;
+    }
+
+    public void SaveController()
+    { }
+
+    public void LoadController()
+    { }
+
+    public void AddNewUser(User user)
+    {
+        goals[user.UserName] = new DefaultGoal();
     }
 }
