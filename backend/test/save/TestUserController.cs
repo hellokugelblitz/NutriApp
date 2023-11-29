@@ -40,7 +40,6 @@ public class TestUserController
 
         var adapter = new JSONAdapter();
         saveSystem.SetFileType(adapter);
-        saveSystem.SaveUser(saveSystem.CreateNewestFolderName(danny.UserName));
         
         ctl.Logout(data.Item1, adapter.GetFileType());
 
@@ -62,7 +61,6 @@ public class TestUserController
 
             var saveSystem = new SaveSystem();
             UserController ctl = new UserController(saveSystem);
-            saveSystem.SubscribeSaveable(ctl);
             saveSystem.SetFileType(new JSONAdapter());
 
             UserControllerCreateUser(danny, "hii", ctl);
