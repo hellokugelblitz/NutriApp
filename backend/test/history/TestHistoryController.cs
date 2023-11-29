@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
@@ -52,23 +53,4 @@ public class TestHistoryController
     
         Assert.AreEqual(history.GetCalorieCount(testUser.UserName), 450);
     }
-
-    [TestMethod]
-    public void TestWorkouts()
-    {
-        
-    }
-
-    [TestMethod]
-    public void TestCalories()
-    {
-        
-    }
-
-    public void TestWeight()
-    {
-        
-    }
-    
-    
 }
