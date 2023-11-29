@@ -1,20 +1,27 @@
 using System;
-using NutriApp.Food;
+using NutriApp.Undo;
 
 namespace NutriApp.UI;
 
 class ConsumeMealCommand : Command<string>
 {
-    private App app;
+    private App _app;
+    private Guid _sessionKey;
 
-    public ConsumeMealCommand(App app)
+    public ConsumeMealCommand(App app, Guid sessionKey)
     {
-        this.app = app;
+        _app = app;
+        _sessionKey = sessionKey;
     }
 
     public override void Execute(string userinput)
     {
-        app.FoodControl.ConsumeMeal(userinput);
+        _app.FoodControl.ConsumeMeal(userinput);
+
+        var timestamp = _app.TimeStamp;
+        UndoCommand undoCommand = new UndoConsumeMeal(_app.HistoryControl, userinput, timestamp);
+        _app.UserControl.AddUndoCommand(_sessionKey, undoCommand);
+
         onFinished?.Invoke();
     }
 }

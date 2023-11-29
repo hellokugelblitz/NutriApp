@@ -5,15 +5,8 @@ namespace NutriApp.UI;
 
 class ViewTargetCaloriesCommand : Command<None>
 {
-    private App app;
-
-    public ViewTargetCaloriesCommand(App app)
+    public override void Execute(None userinput)
     {
-        this.app = app;
-    }
-
-    public override void Execute(None input)
-    {
-        onFinished?.Invoke();
+        onFinished?.Invoke(); // Front end will view the target calories
     }
 }

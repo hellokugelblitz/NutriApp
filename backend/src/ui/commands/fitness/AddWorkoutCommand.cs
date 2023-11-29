@@ -1,15 +1,13 @@
 using System;
-using NutriApp.History;
 using NutriApp.UI;
 using NutriApp.Undo;
-using NutriApp.Workout;
 
 namespace NutriApp.Commands;
 
 class AddWorkoutCommand : Command<Workout.Workout>
 {
-    private readonly App _app;
-    private readonly Guid _sessionKey;
+    private App _app;
+    private Guid _sessionKey;
 
     public AddWorkoutCommand(App app, Guid sessionKey)
     {
@@ -24,7 +22,6 @@ class AddWorkoutCommand : Command<Workout.Workout>
 
         var timestamp = _app.TimeStamp;
         UndoAddWorkout undoCommand = new UndoAddWorkout(_app.HistoryControl, userinput, timestamp);
-
         _app.UserControl.AddUndoCommand(_sessionKey, undoCommand);
 
         onFinished?.Invoke();

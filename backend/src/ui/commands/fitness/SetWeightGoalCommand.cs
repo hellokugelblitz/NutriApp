@@ -1,20 +1,28 @@
 using System;
-using NutriApp.Workout;
+using NutriApp.Undo;
 
 namespace NutriApp.UI;
 
 class SetWeightGoalCommand : Command<Goal.Goal>
 {
-    private App app;
+    private App _app;
+    private Guid _sessionKey;
 
-    public SetWeightGoalCommand(App app)
+    public SetWeightGoalCommand(App app, Guid sessionKey)
     {
-        this.app = app;
+        _app = app;
+        _sessionKey = sessionKey;
     }
 
     public override void Execute(Goal.Goal userinput)
     {
-        app.GoalControl.Goal = userinput;
-        onFinished?.Invoke();
+        Goal.Goal prevGoal = _app.GoalControl.Goal;
+
+        _app.GoalControl.Goal = userinput;
+
+        UndoCommand undoCommand = new UndoSetWeightGoal(_app.GoalControl, prevGoal);      
+        _app.UserControl.AddUndoCommand(_sessionKey, undoCommand);
+
+        onFinished?.Invoke();  
     }
 }
