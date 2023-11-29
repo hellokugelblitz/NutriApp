@@ -31,22 +31,6 @@ public class Team
     /// </summary>
     public DateTime ChallengeEndDate => challengeStartDate == DateTime.UnixEpoch ? DateTime.UnixEpoch : challengeStartDate.AddDays(7);
 
-    /// <summary>
-    /// All members that have participated in the most recent weeklong challenge, ranked from most minutes to least.
-    /// Dictionary key is username, value is number of workout minutes logged.
-    /// </summary>
-    public Dictionary<string, int> ChallengeParticipants
-    {
-        get
-        {
-            Dictionary<string, int> result = new Dictionary<string, int>();
-
-            // TODO: get user workout histories and aggregate them here
-            return result;
-        }
-    }
-
-
     public Team(string name)
     {
         this.name = name;

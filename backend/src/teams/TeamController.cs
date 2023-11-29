@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using NutriApp.History;
 using NutriApp.Notifications;
+using System.Linq;
 
 namespace NutriApp.Teams;
 
@@ -92,5 +94,36 @@ public class TeamController
         User user = app.UserControl.GetUser(username);
         Team team = GetTeam(teamName);
         team.RemoveMember(user);
+    }
+
+    /// <summary>
+    /// Retrieves a dictionary of usernames to the number of workout minutes logged during the current
+    /// weeklong challenge period; sorted by minutes logged, descending.
+    /// </summary>
+    public Dictionary<string, int> GetChallengeParticipants(string teamName)
+    {
+        Dictionary<string, int> result = new Dictionary<string, int>();
+        Team team = GetTeam(teamName);
+
+        if (team is null) return null;
+
+        foreach (User user in team.Members)
+        {
+            Entry<Workout.Workout>[] workoutEntries = app.HistoryControl.GetWorkouts(user.UserName).ToArray();
+            
+            foreach (Entry<Workout.Workout> entry in workoutEntries)
+            {
+                if (entry.TimeStamp < team.ChallengeStartDate || entry.TimeStamp > team.ChallengeEndDate)
+                    continue;
+
+                if (!result.ContainsKey(user.UserName))
+                    result.Add(user.UserName, 0);
+                
+                result[user.UserName] += entry.Value.Minutes;
+            }
+        }
+
+        result = result.OrderByDescending(d => d.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+        return result;
     }
 }
