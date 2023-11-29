@@ -70,29 +70,6 @@ public class HistoryController : ISaveableController
         return calorieCount;
     }
 
-    /// <summary>
-    /// saves each of the histories
-    /// </summary>
-    // public void Save()
-    // {
-    //     var serialize = new HistorySerialize(this);
-    //     string json =  JsonConvert.SerializeObject(serialize);
-    //     File.WriteAllText(historyPath, json);
-    // }
-
-    /// <summary>
-    /// loads each of the histories in the constructor
-    /// </summary>
-    // public void Load()
-    // {
-    //     if(!File.Exists(historyPath)) return;
-    //     
-    //     string json = File.ReadAllText(historyPath);
-    //     HistorySerialize serialize = JsonConvert.DeserializeObject<HistorySerialize>(json);
-    //     serialize.Deserialize(this);
-    // }
-
-    
     public void SaveUser(string folderName)
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);

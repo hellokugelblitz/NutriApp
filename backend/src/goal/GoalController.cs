@@ -114,30 +114,6 @@ public class GoalController : ISaveableController
         goals[username] = GetGoalBasedOnWeightDifference(targetWeight, username);
     }
 
-    // public void Save()
-    // {
-    //     // Write the goal to a JSON file for persistence
-    //     var goalData = Goal.ToDictionary;
-    //     goalData["isFitness"] = Goal is FitnessGoal;
-    //     File.WriteAllText(goalsPath, JsonConvert.SerializeObject(goalData));
-    // }
-    // public void Load()
-    // {
-    //     // Don't do anything if data files don't exist yet (e.g. first startup)
-    //     if (!File.Exists(goalsPath))
-    //         return;
-    //
-    //     // Read the goal from a JSON file for persistence
-    //     var goalDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(goalsPath));
-    //     var weightGoal = (double)goalDict["weightGoal"];
-    //     var isFitness = (bool)goalDict["isFitness"];
-    //
-    //     var goal = GetGoalBasedOnWeightDifference(weightGoal);
-    //     if (isFitness)
-    //         goal = new FitnessGoal(goal, app.GetRecommendedWorkouts());
-    //     Goal = goal;
-    // }
-
     public void SaveUser(string folderName)
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);
