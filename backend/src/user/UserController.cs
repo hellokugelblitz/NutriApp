@@ -26,7 +26,6 @@ public class UserController : ISaveableController
     public UserController(ISaveSystem saveSystem)
     {
         _saveSystem = saveSystem;
-        _saveSystem.SubscribeSaveable(this);
     }
 
     public User GetUser(Guid sessionKey)
@@ -160,7 +159,6 @@ public class UserController : ISaveableController
         {
             _userLoginInfo[user.UserName] = HashPassword(password);
         }
-        
         _saveSystem.AddNewUser(user);
     }
 }

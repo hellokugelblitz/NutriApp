@@ -27,7 +27,7 @@ public class FitnessGoal : GoalDecorator
     public override Dictionary<string, string> ToDictionary()
     {
         Dictionary<string, string> data = new Dictionary<string, string>(goal.ToDictionary());
-        data["isFitess"] = "true";
+        data["isFitness"] = "true";
         return data;
     }
 }

@@ -27,7 +27,6 @@ public class HistoryController : ISaveableController
     {
         _app = app;
         _saveSystem = saveSystem;
-        _saveSystem.SubscribeSaveable(this);
     }
 
     public void AddWorkout(Workout.Workout workout, string username)
@@ -98,6 +97,7 @@ public class HistoryController : ISaveableController
 
     public void AddNewUser(User user)
     {
+        if(history.ContainsKey(user.UserName)) return;
         history[user.UserName] = new HistoryObject(_app.FoodControl);
     }
 
@@ -126,7 +126,7 @@ public class HistoryController : ISaveableController
                                  workout.Value.Minutes + EntryValueSep + workout.Value.Intensity + EntrySep;
             }
 
-            workoutString = workoutString.Substring(0, workoutString.Length - 3);
+            if(workoutString.Length > 0) workoutString = workoutString.Substring(0, workoutString.Length - EntrySep.Length);
             data["workouts"] = workoutString;
 
             string weightString = "";
@@ -135,7 +135,7 @@ public class HistoryController : ISaveableController
                 weightString += weight.TimeStamp + EntryValueSep + weight.Value + EntrySep;
             }
 
-            weightString = weightString.Substring(0, workoutString.Length - 3);
+            if(weightString.Length > 0) weightString = weightString.Substring(0, weightString.Length - EntrySep.Length);
             data["weights"] = weightString;
             
             string mealString = "";
@@ -144,17 +144,17 @@ public class HistoryController : ISaveableController
                 mealString += meal.TimeStamp + EntryValueSep + meal.Value.Name + EntrySep;
             }
 
-            mealString = mealString.Substring(0, workoutString.Length - 3);
+            if(mealString.Length > 0)mealString = mealString.Substring(0, mealString.Length - EntrySep.Length);
             data["meals"] = mealString;
             
             string calorieString = "";
             foreach (var calorie in Calories)
             {
                 calorieString += calorie.TimeStamp + EntryValueSep + calorie.Value.ActualCalories + EntryValueSep +
-                                 calorie.Value.ActualCalories + EntrySep;
+                                 calorie.Value.TargetCalories + EntrySep;
             }
 
-            calorieString = calorieString.Substring(0, workoutString.Length - 3);
+            if(calorieString.Length > 0) calorieString = calorieString.Substring(0, calorieString.Length - EntrySep.Length);
             data["calories"] = calorieString;
 
             return data;
@@ -185,16 +185,29 @@ public class HistoryController : ISaveableController
             {
                 string[] split = str.Split(EntryValueSep);
                 Entry<Meal> entry = new Entry<Meal>(DateTime.Parse(split[0]), _foodController.GetMeal(split[1]));
+                Meals.Add(entry);
             }
             
             string[] calStrs = data["calories"].Split(EntrySep);
             foreach (var str in calStrs)
             {
                 string[] split = str.Split(EntryValueSep);
-                Workout.Workout workout = new Workout.Workout(split[1], Int32.Parse(split[2]),
-                    Enum.Parse<WorkoutIntensity>(split[3]));
-                Entry<Workout.Workout> entry = new Entry<Workout.Workout>(DateTime.Parse(split[0]), workout);
+                CalorieTracker calorieTracker = new CalorieTracker(double.Parse(split[1]), double.Parse(split[2]));
+                Entry<CalorieTracker> entry = new Entry<CalorieTracker>(DateTime.Parse(split[0]), calorieTracker);
+                Calories.Add(entry);
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            HistoryObject other = obj as HistoryObject;
+            
+            return other is not null && Equals(Workouts, other.Workouts) && Equals(Weights, other.Weights) && Equals(Meals, other.Meals) && Equals(Calories, other.Calories);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Workouts, Weights, Meals, Calories);
         }
     }
     
