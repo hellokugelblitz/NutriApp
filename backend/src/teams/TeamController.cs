@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using NutriApp.History;
 using NutriApp.Notifications;
 using System.Linq;
+using NutriApp.Save;
 
 namespace NutriApp.Teams;
 
-public class TeamController
+public class TeamController : ISaveableController
 {
     private const int INVITE_CODE_LENGTH = 8;
 
     private App app;
     private List<Team> teams;
     private Dictionary<string, Team> inviteCodes;
-
-    public TeamController(App app)
+    private ISaveSystem saveSystem;
+    
+    public TeamController(App app, ISaveSystem saveSystem)
     {
         this.app = app;
         teams = new List<Team>();
         inviteCodes = new Dictionary<string, Team>();
+        this.saveSystem = saveSystem;
     }
 
     /// <summary>
@@ -125,5 +128,21 @@ public class TeamController
 
         result = result.OrderByDescending(d => d.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
         return result;
+    }
+
+    public void SaveUser(string folderName) { }
+
+    public void LoadUser(string folderName) { }
+
+    public void SaveController()
+    {
+    }
+
+    public void LoadController()
+    {
+    }
+
+    public void AddNewUser(User user)
+    {
     }
 }

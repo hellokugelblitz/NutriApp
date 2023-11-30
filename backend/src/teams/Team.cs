@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using NutriApp.Save;
 
 namespace NutriApp.Teams;
 
-public class Team
+public class Team : ISaveObject
 {
     private string name;
+    private static readonly string memberSeperator = ",";
     private List<User> members;
     private DateTime challengeStartDate;
 
@@ -54,8 +56,27 @@ public class Team
         members.Remove(user);
         user.TeamName = string.Empty;
     }
+    
     /// <summary>
     /// Starts a weeklong challenge for the team on the given date.
     /// </summary>
     public void StartNewChallenge(DateTime startDate) => challengeStartDate = startDate;
+
+    public Dictionary<string, string> ToDictionary()
+    {
+        Dictionary<string, string> data = new();
+        data["Name"] = name;
+        string str = "";
+        members.ForEach((ele) => str += ele.Name + memberSeperator);
+        str = str.Substring(0, str.Length - memberSeperator.Length);
+        data["Members"] = str;
+        return data;
+    }
+
+    public void FromDictionary(Dictionary<string, string> data)
+    {
+        name = data["Name"];
+        
+        
+    }
 }

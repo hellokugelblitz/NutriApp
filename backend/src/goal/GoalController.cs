@@ -23,7 +23,6 @@ public class GoalController : ISaveableController
     {
         this.app = app;
         this.saveSystem = saveSystem;
-        saveSystem.SubscribeSaveable(this);
     }
 
     /// <summary>
