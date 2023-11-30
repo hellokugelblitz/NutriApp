@@ -52,7 +52,7 @@ public class TeamController
     public string CreateInvite(string username, string teamName)
     {
         Team team = GetTeam(teamName);
-        string code = string.Empty;
+        string code = "";
 
         for (int i = 0; i < INVITE_CODE_LENGTH; i++)
             code += (char)(new Random().NextInt64('a', 'z'));  // Generate the next random character (a-z)
