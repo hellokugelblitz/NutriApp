@@ -18,4 +18,12 @@ public class Entry<T>
     public DateTime TimeStamp => timeStamp;
 
     public T Value => value;
+
+    public override bool Equals(object obj)
+    {
+        Entry<T> other = obj as Entry<T>;
+        return other is not null && value.Equals(other.value) && timeStamp.ToString() ==  other.timeStamp.ToString();
+    }
+    
+    
 }

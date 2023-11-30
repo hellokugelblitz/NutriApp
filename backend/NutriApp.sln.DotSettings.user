@@ -1,24 +1,9 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3dd2dae6_002D0d33_002D43fe_002D9db9_002D4ced388338d5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;And&gt;&#xD;
-    &lt;TestAncestor&gt;&#xD;
-      &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.history.TestHistoryController.TestGetCalorieCount&lt;/TestId&gt;&#xD;
-    &lt;/TestAncestor&gt;&#xD;
-    &lt;Project Location="C:\Users\dgram\SWEN 262\backend\test" Presentation="&amp;lt;NutriAppTest&amp;gt;" /&gt;&#xD;
-    &lt;Namespace&gt;NutriAppTest.history&lt;/Namespace&gt;&#xD;
-  &lt;/And&gt;&#xD;
+	
+	
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c0b63e54_002Ded6c_002D4ee9_002Db12a_002D6b52f7a6916c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestXml" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.save.TestSaveAdapters.TestXml&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5467b609_002Db385_002D4d88_002D80b5_002D874fca3446a2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Session #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Or&gt;&#xD;
-    &lt;And&gt;&#xD;
-      &lt;TestAncestor&gt;&#xD;
-        &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.history.TestHistoryController.TestGetCalorieCount&lt;/TestId&gt;&#xD;
-      &lt;/TestAncestor&gt;&#xD;
-      &lt;Project Location="C:\Users\dgram\SWEN 262\backend\test" Presentation="&amp;lt;NutriAppTest&amp;gt;" /&gt;&#xD;
-      &lt;Namespace&gt;NutriAppTest.history&lt;/Namespace&gt;&#xD;
-    &lt;/And&gt;&#xD;
-    &lt;TestAncestor&gt;&#xD;
-      &lt;TestId&gt;MSTest::A4C9AFCD-0977-4837-B0BA-D8955C4E08FC::net7.0::NutriAppTest.history.TestHistoryController.TestWorkouts&lt;/TestId&gt;&#xD;
-    &lt;/TestAncestor&gt;&#xD;
-  &lt;/Or&gt;&#xD;
-&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
+	</wpf:ResourceDictionary>
