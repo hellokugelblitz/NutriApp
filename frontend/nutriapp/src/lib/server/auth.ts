@@ -9,10 +9,13 @@ export const authenticateUser = (event: RequestEvent) => {
 
     //TODO -> This will need to be updated to work with our system. These are placeholder values.
 	if (userToken === "regularusertoken") {
+        
 		const user = {
 			id: 1,
             username: "hello"
 		}
+
+        console.log("Authenicating user")
 		return user
 	}
 
