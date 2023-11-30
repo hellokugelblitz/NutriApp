@@ -12,7 +12,7 @@ public class TestTeamController
     public void TestCreateGetTeam()
     {
         Mock<App> mockApp = new Mock<App>(2);
-        TeamController teamCtrl = new TeamController(mockApp.Object);
+        TeamController teamCtrl = new TeamController(mockApp.Object, null);
         string teamName = "cool team";
 
         Assert.IsTrue(teamCtrl.CreateTeam(teamName));   // create team
@@ -22,10 +22,10 @@ public class TestTeamController
         Team team = teamCtrl.GetTeam(teamName);
         User user = new User("thatnoobles", "dan", 70, new System.DateTime(2004, 04, 25), "bio");
 
-        team.AddMember(user);
+        team.AddMember(user.UserName);
         Assert.AreEqual(1, team.Members.Length);
 
-        team.RemoveMember(user);
+        team.RemoveMember(user.UserName);
         Assert.AreEqual(0, team.Members.Length);
     }
 
@@ -33,7 +33,7 @@ public class TestTeamController
     public void TestInvite()
     {
         App app = new App(2);
-        TeamController teamCtrl = new TeamController(app);
+        TeamController teamCtrl = new TeamController(app, null);
 
         (Guid, User) userData = app.UserControl.CreateUser("thatnoobles", "password", 70, new System.DateTime(2004, 04, 25), "dan", "bio");
         User user = userData.Item2;

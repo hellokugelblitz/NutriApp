@@ -10,11 +10,13 @@ public class TestShoppingList
     public void TestAddToShoppingList()
     {
         // Setup
+        ShoppingListController shoppingListController = new ShoppingListController();
         Ingredient ingredientOne = new Ingredient("egg", 1, 1, 1, 1, 1);
         ShoppingList list = new ShoppingList();
 
         // Invoke
-        list.AddItem(ingredientOne, 1);
+        shoppingListController.AddUser("test_user");
+        shoppingListController.AddItem(ingredientOne, 1, "test_user");
 
         // Create the expected dictionary
         Dictionary<Ingredient, double> expected = new Dictionary<Ingredient, double>
@@ -23,7 +25,7 @@ public class TestShoppingList
         };
 
         // Get the actual shopping list contents
-        Dictionary<Ingredient, double> actual = list.List;
+        Dictionary<Ingredient, double> actual = shoppingListController.GetShoppingList("test_user").Entries;
 
         // Assert
         CollectionAssert.AreEqual(expected, actual);

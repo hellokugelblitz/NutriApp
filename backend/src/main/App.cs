@@ -17,6 +17,7 @@ using Microsoft.OpenApi.Models;
 using NutriApp.Controllers.Middleware;
 using NutriApp.Notifications;
 using NutriApp.Save;
+using NutriApp.Teams;
 
 namespace NutriApp;
 
@@ -31,6 +32,7 @@ public class App
     private WorkoutController workout;
     private FoodController food;
     private UserController userCtrl;
+    private TeamController team;
     private DateTime date;
     private double dayLength;
     private Task<None> timerThread;
@@ -61,16 +63,18 @@ public class App
         food = new FoodController(this);
         history = new HistoryController(this, saveSystem);
         goal = new GoalController(this, saveSystem);
+        team = new TeamController(this, saveSystem);
         NotificationController.Instance.AppInstance = this;
 
+        saveSystem.SubscribeSaveable(userCtrl);
+        saveSystem.SubscribeSaveable(history);
+        saveSystem.SubscribeSaveable(goal);
+        saveSystem.SubscribeSaveable(team);
+        
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
     }
-
-    public void KillTimer()
-    {
-        timerThread.Dispose();
-    }
+    
 
     public List<Workout.Workout> GetRecommendedWorkouts(string username)
         => workout.GenerateRecommendedWorkouts(history.GetWorkouts(username));
