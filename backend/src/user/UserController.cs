@@ -25,7 +25,7 @@ public class UserController : ISaveableController
     private Dictionary<string, User> _loadedUsers = new();
 
     // A dictionary to store undo stacks for each user
-    private Dictionary<Guid, Stack<UndoCommand>> _userUndoStacks = new();
+    private Dictionary<Guid, UndoController<UndoCommand>> _userUndoControllerStacks = new();
 
     public UserController(ISaveSystem saveSystem)
     {
@@ -159,25 +159,17 @@ public class UserController : ISaveableController
         }
     }
 
-    public void AddUndoCommand(Guid sessionKey, UndoCommand command)
+    public void AddUndoCommand(Guid sessionKey, UndoCommand undoCommand)
     {
-        if (!_userUndoStacks.ContainsKey(sessionKey))
+        if (!_userUndoControllerStacks.ContainsKey(sessionKey))
         {
-            _userUndoStacks[sessionKey] = new Stack<UndoCommand>();
+            _userUndoControllerStacks[sessionKey] = new UndoController<UndoCommand>();
         }
-        _userUndoStacks[sessionKey].Push(command);
+        _userUndoControllerStacks[sessionKey].Add(undoCommand);
     }
 
     public void Undo(Guid sessionKey)
     {
-        if (_userUndoStacks.TryGetValue(sessionKey, out Stack<UndoCommand> undoStack) && undoStack.Count > 0)
-        {
-            UndoCommand command = undoStack.Pop();
-            command.Execute();
-        }
-        // else
-        // {
-        //     // Alert user
-        // } Not sure if needed
+        _userUndoControllerStacks[sessionKey].Undo();
     }
 }

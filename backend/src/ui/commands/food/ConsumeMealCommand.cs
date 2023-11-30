@@ -19,7 +19,7 @@ class ConsumeMealCommand : Command<string>
         _app.FoodControl.ConsumeMeal(userinput);
 
         var timestamp = _app.TimeStamp;
-        UndoCommand undoCommand = new UndoConsumeMeal(_app.HistoryControl, userinput, timestamp);
+        UndoCommand undoCommand = new UndoConsumeMeal(_app, userinput, timestamp);
         _app.UserControl.AddUndoCommand(_sessionKey, undoCommand);
 
         onFinished?.Invoke();

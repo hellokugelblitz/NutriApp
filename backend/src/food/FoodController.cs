@@ -194,6 +194,11 @@ public class FoodController
     public void AddMeal(Meal meal) => meals.Add(meal);
 
     /// <summary>
+    /// Removes a meal
+    /// </summary>
+    public void RemoveMeal(Meal meal) => meals.Remove(meal);
+
+    /// <summary>
     /// Retrieves a meal given its unique name. Returns null if there is no
     /// meal with that name.
     /// </summary>

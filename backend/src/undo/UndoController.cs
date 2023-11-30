@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.SignalR;
 
 namespace NutriApp.Undo;
 
 class UndoController<T> where T : UndoCommand
 {
-    private readonly Stack<T> _undoStack = new();
+    private Stack<T> _undoStack { get; }
 
     public void Add(T command)
     {
@@ -21,7 +22,7 @@ class UndoController<T> where T : UndoCommand
         }
         else
         {
-            // Alert user
+            throw new Exception("There is no commands to undo.");
         }
     }
 }
