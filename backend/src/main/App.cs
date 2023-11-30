@@ -41,7 +41,6 @@ public class App
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
     public User User { get; set; }
-    public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
     
     public double DayLength { set => dayLength = value; }
@@ -57,8 +56,8 @@ public class App
         user = new UserController(saveSystem);
         workout = new WorkoutController();
         food = new FoodController(this);
-        history = new HistoryController(this);
-        goal = new GoalController(this);
+        history = new HistoryController(this, saveSystem);
+        goal = new GoalController(this, saveSystem);
         userCtrl = new UserController(new SaveSystem());
         NotificationController.Instance.AppInstance = this;
 
@@ -151,3 +150,4 @@ public class App
     //     json = File.ReadAllText(datePath);
     //     date = JsonConvert.DeserializeObject<DateTime>(json);
     // }
+}

@@ -23,7 +23,7 @@ public class FoodController
     // Value: data class representing remaining ingredient stock
     private Dictionary<string, IngredientStocks> ingredientStocks = new Dictionary<string, IngredientStocks>();
 
-    private ShoppingList shoppingList;
+    private ShoppingListController shoppingList;
     private ShoppingListCriteria recipeCriteria;
     private App app;
     private IngredientDatabase ingredientDatabase;
@@ -38,25 +38,21 @@ public class FoodController
     /// </summary>
     public Meal[] Meals => meals.ToArray();
 
-    /// <summary>
-    /// The shopping list representing which ingredients the user
-    /// should purchase soon.
-    /// </summary>
-    public ShoppingList ShoppingList => shoppingList;
-
     public FoodController(App app)
     {
         this.app = app;
         ingredientDatabase = new InMemoryIngredientDatabase();
-        shoppingList = new ShoppingList();
-        recipeCriteria = new SpecificRecipeCriteria(shoppingList);
+        shoppingList = new ShoppingListController();
+        recipeCriteria = new SpecificRecipeCriteria(shoppingList, this);
 
         ingredientStocks = new Dictionary<string, IngredientStocks>();
         recipes = new List<Recipe>();
         meals = new List<Meal>();
 
         shoppingList.SetCriteria(recipeCriteria);
-        shoppingList.Update(Recipes);
+        
+        foreach (string username in ingredientStocks.Keys)
+            shoppingList.Update(Recipes, username);
     }
     
     /// <summary>
@@ -65,7 +61,9 @@ public class FoodController
     public void AddRecipe(Recipe recipe)
     {
         recipes.Add(recipe);
-        shoppingList.Update(Recipes);
+        
+        foreach (string username in ingredientStocks.Keys)
+            shoppingList.Update(Recipes, username);
     }
 
     /// <summary>
@@ -159,7 +157,7 @@ public class FoodController
             EditIngredientStock(ingredient.Name, -requiredStock, username);
         }
 
-        shoppingList.Update(Recipes);
+        shoppingList.Update(Recipes, username);
         return true;
     }
 
