@@ -1,9 +1,55 @@
-<script>
-    //Some auth stuff happens here
-    import { fade } from 'svelte/transition'
+<script lang="ts">
+    import { redirect } from '@sveltejs/kit';
+    import { fade } from 'svelte/transition';
+  
+    let username = '';
+    let password = '';
+  
+    // const handleSubmit = async (event: SubmitEvent) => {
+    //   event.preventDefault();
+  
+    //   const credentials = {
+    //     userName: username,
+    //     password: password,
+    //   };
+  
+    //   try {
+    //     const response = await fetch('http://localhost:5072/api/Auth/login', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify(credentials),
+    //     });
+  
+    //     if (response.ok) {
+    //       const data = await response.json();
+    //       const sessionKey = data.session;
+          
+    //         console.log("logging in...")
 
+	// 	    cookies.set("auth", "regularusertoken", {
+	// 		    path: "/",
+	// 		    httpOnly: true,
+	// 		    sameSite: "strict",
+	// 		    secure: process.env.NODE_ENV === "production",
+	// 		    maxAge: 60 * 60 * 24 * 7, // 1 week
+	// 	    });
 
-</script>
+	// 	throw redirect(303, "/")
+	    
+
+    //     // },
+    //     } else {
+    //       // Handle authentication failure
+    //       const errorData = await response.json();
+    //       console.error('Login failed:', errorData);
+    //     }
+    //   } catch (error) {
+    //     console.error('Error during login:', error);
+    //   }
+    // };
+  </script>
 
 
 <div role="dialog" class="modal">
@@ -22,14 +68,14 @@
                     <!-- Modal body -->
                     <div class="p-4 md:p-5">
                         <!-- "action" here is the api endpoint for auth -->
-                        <form class="space-y-4" action="/login">
+                        <form  class="space-y-4" action="?/login" method="POST">
                             <div>
-                                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 ">Your username:</label>
-                                <input type="username" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="username" required>
+                                <label for="username" class="block mb-2 text-sm font-medium text-gray-900 ">Your username:</label>
+                                <input bind:value={username} type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="username" required>
                             </div>
                             <div>
                                 <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Your password:</label>
-                                <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " required>
+                                <input bind:value={password} type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " required>
                             </div>
                             <button type="submit" class="w-full text-white bg-dark-green mt-6 hover:bg-primary-green focus:ring-4 focus:outline-none focus:ring-light-green font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all">Sign in to your account</button>
                             <div class="text-sm font-medium text-gray-500 ">
