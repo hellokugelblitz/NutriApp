@@ -1,4 +1,6 @@
-﻿namespace NutriApp.Goal;
+﻿using NutriApp.Save;
+
+namespace NutriApp.Goal;
 
 using System.Collections.Generic;
 using NutriApp.Workout;
@@ -32,11 +34,8 @@ public interface Goal
     void IncorporateFitness(List<Workout> recommendedWorkouts);
 
     /// <summary>
-    /// Returns a dictionary of the goal's properties, for serialization.
+    /// Converts the goal to a dictionary of variable name: value
     /// </summary>
     /// <returns></returns>
-    Dictionary<string, object> ToDictionary => new()
-    {
-        {"weightGoal", WeightGoal}
-    };
+    Dictionary<string, string> ToDictionary();
 }

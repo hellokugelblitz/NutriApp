@@ -17,4 +17,5 @@ public abstract class GoalDecorator : Goal
 
     public virtual Goal CheckWeight(double userWeight) => goal.CheckWeight(userWeight);
     public void IncorporateFitness(List<Workout> recommendedWorkouts) => goal.IncorporateFitness(recommendedWorkouts);
+    public abstract Dictionary<string, string> ToDictionary();
 }
