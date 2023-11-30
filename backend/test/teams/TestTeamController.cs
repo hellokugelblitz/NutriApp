@@ -22,10 +22,10 @@ public class TestTeamController
         Team team = teamCtrl.GetTeam(teamName);
         User user = new User("thatnoobles", "dan", 70, new System.DateTime(2004, 04, 25), "bio");
 
-        team.AddMember(user);
+        team.AddMember(user.UserName);
         Assert.AreEqual(1, team.Members.Length);
 
-        team.RemoveMember(user);
+        team.RemoveMember(user.UserName);
         Assert.AreEqual(0, team.Members.Length);
     }
 
