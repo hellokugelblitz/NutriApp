@@ -23,4 +23,11 @@ public class FitnessGoal : GoalDecorator
     /// <returns>The number of additional calories.</returns>
     public double GetAdditionalCalories() =>
         RecommendedWorkouts.Aggregate(0, (acc, w) => acc + w.GetCaloriesBurned());
+    
+    public override Dictionary<string, string> ToDictionary()
+    {
+        Dictionary<string, string> data = new Dictionary<string, string>(goal.ToDictionary());
+        data["isFitess"] = "true";
+        return data;
+    }
 }

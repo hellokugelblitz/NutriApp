@@ -8,7 +8,8 @@ namespace NutriApp.History;
 
 public class HistoryController : ISaveableController
 {
-    private App app;
+    private App _app;
+    private ISaveSystem _saveSystem;
     private Dictionary<string, HistoryObject> history = new(); //username to history data
 
     private const string EntryValueSep = ","; //seperator between values of the entrie and generic(datetime,weight)
@@ -22,30 +23,32 @@ public class HistoryController : ISaveableController
     public List<Entry<double>> Weights(string username) => history[username].Weights;
 
 
-    public HistoryController(App app)
+    public HistoryController(App app, ISaveSystem saveSystem)
     {
-        this.app = app;
+        _app = app;
+        _saveSystem = saveSystem;
+        _saveSystem.SubscribeSaveable(this);
     }
 
     public void AddWorkout(Workout.Workout workout, string username)
     {
-        history[username].Workouts.Add(new Entry<Workout.Workout>(app.TimeStamp, workout));
+        history[username].Workouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
     }
 
     public void SetWeight(double weight, string username)
     {
-        history[username].Weights.Add(new Entry<double>(app.TimeStamp, weight));
+        history[username].Weights.Add(new Entry<double>(_app.TimeStamp, weight));
     }
 
     public void AddMeal(Meal meal, string username)
     {
-        history[username].Meals.Add(new Entry<Meal>(app.TimeStamp, meal));
+        history[username].Meals.Add(new Entry<Meal>(_app.TimeStamp, meal));
     }
 
     public void AddCalories(string username)
     {
-        history[username].Calories.Add(new Entry<CalorieTracker>(app.TimeStamp,
-            new CalorieTracker(GetCalorieCount(username), app.GoalControl.GetGoal(username).DailyCalorieGoal)));
+        history[username].Calories.Add(new Entry<CalorieTracker>(_app.TimeStamp,
+            new CalorieTracker(GetCalorieCount(username), _app.GoalControl.GetGoal(username).DailyCalorieGoal)));
     }
 
     /// <summary>
@@ -56,7 +59,7 @@ public class HistoryController : ISaveableController
     public double GetCalorieCount(string username)
     {
         double calorieCount = 0;
-        DateTime timeStamp = app.TimeStamp;
+        DateTime timeStamp = _app.TimeStamp;
         foreach (var meal in history[username].Meals)
         {
             if (meal.TimeStamp != timeStamp) break;
@@ -67,47 +70,35 @@ public class HistoryController : ISaveableController
         return calorieCount;
     }
 
-    /// <summary>
-    /// saves each of the histories
-    /// </summary>
-    // public void Save()
-    // {
-    //     var serialize = new HistorySerialize(this);
-    //     string json =  JsonConvert.SerializeObject(serialize);
-    //     File.WriteAllText(historyPath, json);
-    // }
-
-    /// <summary>
-    /// loads each of the histories in the constructor
-    /// </summary>
-    // public void Load()
-    // {
-    //     if(!File.Exists(historyPath)) return;
-    //     
-    //     string json = File.ReadAllText(historyPath);
-    //     HistorySerialize serialize = JsonConvert.DeserializeObject<HistorySerialize>(json);
-    //     serialize.Deserialize(this);
-    // }
-
-    
     public void SaveUser(string folderName)
     {
-        throw new NotImplementedException();
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"history"), history[username].ToDictionary());
+        
     }
 
     public void LoadUser(string folderName)
     {
-        throw new NotImplementedException();
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        Dictionary<string, string> data = _saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "history"));
+        HistoryObject obj = new HistoryObject(_app.FoodControl);
+        obj.FromDictionary(data);
+        history[username] = obj;
     }
 
-    public void SaveController()
-    {
-        throw new NotImplementedException();
-    }
+    /// <summary>
+    /// satisfy ISaveableController requirments
+    /// </summary>
+    public void SaveController() { }
 
-    public void LoadController()
+    /// <summary>
+    /// satisfy ISaveableController requirments
+    /// </summary>
+    public void LoadController() { }
+
+    public void AddNewUser(User user)
     {
-        throw new NotImplementedException();
+        history[user.UserName] = new HistoryObject(_app.FoodControl);
     }
 
 

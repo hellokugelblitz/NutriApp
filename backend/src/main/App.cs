@@ -25,16 +25,17 @@ public class App
     private readonly string userPath = $"{Persistence.UserDataPath}\\user.json";
     private readonly string datePath = $"{Persistence.DateDataPath}\\date.json";
 
+    private UserController user;
     private HistoryController history;
     private GoalController goal;
     private WorkoutController workout;
     private FoodController food;
-    private User user;
     private UserController userCtrl;
     private DateTime date;
     private double dayLength;
     private Task<None> timerThread;
-    
+
+    public UserController UserControl => user;
     public HistoryController HistoryControl => history;
     public GoalController GoalControl => goal; 
     public WorkoutController WorkoutControl => workout;
@@ -52,6 +53,8 @@ public class App
         timerThread = new Task<None>(DayLoop);
         timerThread.Start();
 
+        ISaveSystem saveSystem = new SaveSystem();
+        user = new UserController(saveSystem);
         workout = new WorkoutController();
         food = new FoodController(this);
         history = new HistoryController(this);
@@ -122,32 +125,29 @@ public class App
             date = date.AddDays(1d);
         }
     }
-
-    public void Save()
-    {
-        // Write the user to a JSON file for persistence
-        var userJson = JsonConvert.SerializeObject(user);
-        File.WriteAllText(userPath, userJson);
-        
-        // Write the current date to a JSON file for persistence
-        var timeJson = JsonConvert.SerializeObject(new { date });
-        File.WriteAllText(datePath, timeJson);
-    }
-
-    public void Load()
-    {
-        // this will need to be re-done anyway, i've commented it out for now so it doesn't break the build -dan
-
-        // // Don't do anything if data files don't exist yet (e.g. first startup)
-        // if (!File.Exists(userPath) || !File.Exists(datePath))
-        //     return;
-
-        // // Read the user from a JSON file
-        // var json = File.ReadAllText(userPath);
-        // user = JsonConvert.DeserializeObject<User>(json);
-        
-        // // Read the date from a JSON file
-        // json = File.ReadAllText(datePath);
-        // date = JsonConvert.DeserializeObject<DateTime>(json);
-    }
-}
+    
+    // public void Save()
+    // {
+    //     // Write the user to a JSON file for persistence
+    //     var userJson = JsonConvert.SerializeObject(user);
+    //     File.WriteAllText(userPath, userJson);
+    //     
+    //     // Write the current date to a JSON file for persistence
+    //     var timeJson = JsonConvert.SerializeObject(new { date });
+    //     File.WriteAllText(datePath, timeJson);
+    // }
+    //
+    // public void Load()
+    // {
+    //     // Don't do anything if data files don't exist yet (e.g. first startup)
+    //     if (!File.Exists(userPath) || !File.Exists(datePath))
+    //         return;
+    //
+    //     // Read the user from a JSON file
+    //     var json = File.ReadAllText(userPath);
+    //     user = JsonConvert.DeserializeObject<User>(json);
+    //     
+    //     // Read the date from a JSON file
+    //     json = File.ReadAllText(datePath);
+    //     date = JsonConvert.DeserializeObject<DateTime>(json);
+    // }
