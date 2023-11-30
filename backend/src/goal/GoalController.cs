@@ -125,8 +125,8 @@ public class GoalController : ISaveableController
         Dictionary<string, string> data = saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "goal"));
         string username = SaveSystem.GetUsernameFromFile(folderName);
         
-        var weightGoal = double.Parse(data["weightGoal"]);
-        var isFitness = bool.Parse(data["isFitness"]);
+        var weightGoal = double.Parse(data["WeightGoal"]);
+        var isFitness = data.ContainsKey("isFitness");
         
         var goal = GetGoalBasedOnWeightDifference(weightGoal, username);
         
@@ -143,6 +143,7 @@ public class GoalController : ISaveableController
 
     public void AddNewUser(User user)
     {
+        if(goals.ContainsKey(user.UserName)) return;
         goals[user.UserName] = new DefaultGoal();
     }
 }

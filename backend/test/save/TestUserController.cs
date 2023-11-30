@@ -36,12 +36,10 @@ public class TestUserController
         User danny = new User("dannytga", "danny", 72, DateTime.Now, "I am realllllllly tallll");
         SaveSystem saveSystem = new SaveSystem();
         UserController ctl = new UserController(saveSystem);
-        saveSystem.SubscribeSaveable(ctl);
         (Guid, User) data = UserControllerCreateUser(danny, "hii", ctl);   
 
         var adapter = new JSONAdapter();
-        saveSystem.SetFileType(new JSONAdapter());
-        saveSystem.SaveUser(saveSystem.CreateNewestFolderName(danny.UserName));
+        saveSystem.SetFileType(adapter);
         
         ctl.Logout(data.Item1, adapter.GetFileType());
 
@@ -63,7 +61,6 @@ public class TestUserController
 
             var saveSystem = new SaveSystem();
             UserController ctl = new UserController(saveSystem);
-            saveSystem.SubscribeSaveable(ctl);
             saveSystem.SetFileType(new JSONAdapter());
 
             UserControllerCreateUser(danny, "hii", ctl);
@@ -173,7 +170,6 @@ public class TestUserController
     {
         var saveSystem = new SaveSystem();
         UserController ctl = new UserController(saveSystem);
-        saveSystem.SubscribeSaveable(ctl);
         return ctl;
     }
     

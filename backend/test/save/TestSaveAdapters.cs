@@ -44,13 +44,14 @@ public class TestSaveAdapters
     [TestMethod]
     public void TestXml()
     {
+        //Assert.IsTrue(true);
         ClearDirectory();
         
         string filename = $"{PATH}\\xml.xml"; 
         var adapter = new XMLAdapter();
         User user = new User("dannytga", "danny", 72, DateTime.Now, "im tallll");
         adapter.Save(filename, user.ToDictionary());
-
+        
         User loaded = new User();
         loaded.FromDictionary(adapter.Load(filename));
         
