@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System;
 using System.Linq;
+using NutriApp.Save;
 
 namespace NutriApp.Food;
 
 /// <summary>
 /// High-level controller responsible for food-related operations.
 /// </summary>
-public class FoodController
+public class FoodController : ISaveableController
 {
     private readonly string ingredientStockPath = $"{Persistence.FoodDataPath}\\ingredient_stock.json";
     private readonly string recipePath = $"{Persistence.FoodDataPath}\\recipes.json";
@@ -177,6 +178,32 @@ public class FoodController
 
     public delegate void MealEventHandler(Meal meal, string username);
     public event MealEventHandler MealConsumeEvent;
+
+    public void AddNewUser(User user)
+    {
+        // Create a new entry for ingredient stock
+        // Call the ShoppingListController to add that user to the shopping list dictionary
+    }
+
+    public void SaveUser(string username)
+    {
+        // Save ingredient stocks for a user
+    }
+
+    public void LoadUser(string username)
+    {
+        // Load ingredient stocks for a user
+    }
+
+    public void SaveController()
+    {
+        // Save recipes and meals
+    }
+
+    public void LoadController()
+    {
+        // Load recipes and meals
+    }
 }
 
 public class IngredientStocks
