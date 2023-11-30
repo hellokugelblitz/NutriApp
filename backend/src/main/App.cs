@@ -26,7 +26,6 @@ public class App
     private readonly string datePath = $"{Persistence.DateDataPath}\\date.json";
 
     private ISaveSystem saveSystem;
-    private UserController user;
     private HistoryController history;
     private GoalController goal;
     private WorkoutController workout;
@@ -37,16 +36,17 @@ public class App
     private Task<None> timerThread;
 
     public ISaveSystem SaveSyst => saveSystem;
-    public UserController UserControl => user;
     public HistoryController HistoryControl => history;
-    public GoalController GoalControl => goal; 
+    public GoalController GoalControl => goal;
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
-    public User User { get; set; }
     public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
-    
-    public double DayLength { set => dayLength = value; }
+
+    public double DayLength
+    {
+        set => dayLength = value;
+    }
 
     public App(double dayLength)
     {
@@ -56,12 +56,11 @@ public class App
         timerThread.Start();
 
         saveSystem = new SaveSystem();
-        user = new UserController(saveSystem);
+        userCtrl = new UserController(saveSystem);
         workout = new WorkoutController();
         food = new FoodController(this);
-        history = new HistoryController(this);
-        goal = new GoalController(this);
-        userCtrl = new UserController(new SaveSystem());
+        history = new HistoryController(this, saveSystem);
+        goal = new GoalController(this, saveSystem);
         NotificationController.Instance.AppInstance = this;
 
         food.MealConsumeEvent += goal.ConsumeMealHandler;
@@ -73,11 +72,16 @@ public class App
         timerThread.Dispose();
     }
 
-    public List<Workout.Workout> GetRecommendedWorkouts(string username) 
+    public List<Workout.Workout> GetRecommendedWorkouts(string username)
         => workout.GenerateRecommendedWorkouts(history.GetWorkouts(username));
-    public double GetTodaysCalories() { return -1d; }
+
+    public double GetTodaysCalories()
+    {
+        return -1d;
+    }
 
     public delegate void DayEventHandler(DateTime date);
+
     public event DayEventHandler DayEndEvent;
 
     public void SubscribeDayEndEvent(DayEventHandler dayEndEvent)
@@ -112,7 +116,7 @@ public class App
             webapp.UseSwagger();
             webapp.UseSwaggerUI();
         }
-        
+
         webapp.MapControllers();
         webapp.Run();
     }
@@ -126,30 +130,6 @@ public class App
             Console.WriteLine("new day " + TimeStamp);
             date = date.AddDays(1d);
         }
+        return new None();
     }
-    
-    // public void Save()
-    // {
-    //     // Write the user to a JSON file for persistence
-    //     var userJson = JsonConvert.SerializeObject(user);
-    //     File.WriteAllText(userPath, userJson);
-    //     
-    //     // Write the current date to a JSON file for persistence
-    //     var timeJson = JsonConvert.SerializeObject(new { date });
-    //     File.WriteAllText(datePath, timeJson);
-    // }
-    //
-    // public void Load()
-    // {
-    //     // Don't do anything if data files don't exist yet (e.g. first startup)
-    //     if (!File.Exists(userPath) || !File.Exists(datePath))
-    //         return;
-    //
-    //     // Read the user from a JSON file
-    //     var json = File.ReadAllText(userPath);
-    //     user = JsonConvert.DeserializeObject<User>(json);
-    //     
-    //     // Read the date from a JSON file
-    //     json = File.ReadAllText(datePath);
-    //     date = JsonConvert.DeserializeObject<DateTime>(json);
-    // }
+}
