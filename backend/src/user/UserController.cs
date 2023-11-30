@@ -53,6 +53,11 @@ public class UserController : ISaveableController
         string name, string bio)
     {
         User user = new User(username, name, height, birthday, bio);
+        return CreateUser(user, password);
+    }
+
+    public (Guid, User) CreateUser(User user, string password)
+    {
         Guid userGuid = Guid.NewGuid();
         AddUserToDictionaries(userGuid, user, password);
         return (userGuid, user);
@@ -68,22 +73,14 @@ public class UserController : ISaveableController
     /// <exception cref="InvalidUsernameException">throws an exception if the user is not in the system</exception>
     public (Guid, User) Login(string username, string password)
     {
-        if (_userLoginInfo.ContainsKey(username))
-        {
-            if (_userLoginInfo[username] == HashPassword(password))
-            {
-                _saveSystem.LoadUser(_saveSystem.GetNewestFolder(username));
-
-                Guid userGuid = Guid.NewGuid();
-                _loadedUsers.Remove(username, out User user);
-                AddUserToDictionaries(userGuid, user);
-                return (userGuid, user);
-            }
-
-            throw new InvalidPasswordException();
-        }
-
-        throw new InvalidUsernameException();
+        if (!_userLoginInfo.ContainsKey(username)) throw new InvalidUsernameException();
+        if (_userLoginInfo[username] != HashPassword(password)) throw new InvalidPasswordException();
+        
+        _saveSystem.LoadUser(_saveSystem.GetNewestFolder(username));
+        Guid userGuid = Guid.NewGuid();
+        _loadedUsers.Remove(username, out User user);
+        AddUserToDictionaries(userGuid, user);
+        return (userGuid, user);
     }
 
     /// <summary>
@@ -101,7 +98,7 @@ public class UserController : ISaveableController
     {
         var split = SaveSystem.SplitFileName(folderName);
         string username = split[0];
-        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName, "user"), _usersFromUsername[username].ToDictionary());
+        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"user"), _usersFromUsername[username].ToDictionary());
     }
 
     public void LoadUser(string folderName)
@@ -140,6 +137,11 @@ public class UserController : ISaveableController
 
     }
 
+    public void AddNewUser(User user)
+    {
+        _usersFromUsername[user.UserName] = user;    
+    }
+
     public string HashPassword(string password)
     {
         SHA256 sha = SHA256.Create();
@@ -148,15 +150,20 @@ public class UserController : ISaveableController
         return Convert.ToBase64String(hashed);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sessionKey">generated session key</param>
+    /// <param name="user">user you want to add</param>
+    /// <param name="password">if you are creating a user enter in a password. If they are already in system leave blank</param>
     private void AddUserToDictionaries(Guid sessionKey, User user, string password = "")
     {
         _users[sessionKey] = user;
-        _usersFromUsername[user.UserName] = user;
-
         if (password != "")
         {
             _userLoginInfo[user.UserName] = HashPassword(password);
         }
+        _saveSystem.AddNewUser(user);
     }
 
     public void AddUndoCommand(Guid sessionKey, UndoCommand undoCommand)

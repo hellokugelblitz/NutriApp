@@ -35,7 +35,7 @@ public class NotificationController
     {
         foreach (User user in recipients)
         {
-            if (!pendingNotifications.ContainsKey(user.UserName));
+            if (!pendingNotifications.ContainsKey(user.UserName))
                 pendingNotifications.Add(user.UserName, new List<Notification>());
 
             Notification notification = new Notification(contents, url);

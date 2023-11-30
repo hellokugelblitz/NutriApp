@@ -7,14 +7,16 @@ using NutriApp.Workout;
 public class MaintainWeightGoal : Goal
 {
     private readonly GoalController controller;
-    public double WeightGoal { get; }
+    public double WeightGoal { get; private set; }
     public double DailyCalorieGoal { get; }
 
-    public MaintainWeightGoal(GoalController controller, double weightGoal)
+    private string username;
+    public MaintainWeightGoal(GoalController controller, double weightGoal, string username)
     {
         this.controller = controller;
         this.WeightGoal = weightGoal;
         this.DailyCalorieGoal = 2500;
+        this.username = username;
     }
 
     /// <summary>
@@ -27,14 +29,21 @@ public class MaintainWeightGoal : Goal
     {
         const int threshold = 5;
         return userWeight <= WeightGoal - threshold ?
-            new LoseWeightGoal(controller, WeightGoal) :
+            new LoseWeightGoal(controller, WeightGoal, username) :
             userWeight >= WeightGoal + threshold ?
-                new GainWeightGoal(controller, WeightGoal) :
+                new GainWeightGoal(controller, WeightGoal, username) :
                 this;
     }
 
     public void IncorporateFitness(List<Workout> recommendedWorkouts)
     {
-        controller.Goal = new FitnessGoal(this, recommendedWorkouts);
+        controller.SetGoal(new FitnessGoal(this, recommendedWorkouts), username);
+    }
+    
+    public Dictionary<string, string> ToDictionary()
+    {
+        Dictionary<string, string> data = new();
+        data["WeightGoal"] = WeightGoal.ToString();
+        return data;
     }
 }

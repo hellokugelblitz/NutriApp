@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using NutriApp.Controllers.Middleware;
 using NutriApp.Notifications;
 using NutriApp.Save;
+using NutriApp.Teams;
 
 namespace NutriApp;
 
@@ -26,29 +27,31 @@ public class App
     private readonly string userPath = $"{Persistence.UserDataPath}\\user.json";
     private readonly string datePath = $"{Persistence.DateDataPath}\\date.json";
 
+    private ISaveSystem saveSystem;
     private HistoryController history;
     private GoalController goal;
     private WorkoutController workout;
     private TeamController team;
     private FoodController food;
-    private UIController ui;
-    private User user;
     private UserController userCtrl;
+    private TeamController team;
     private DateTime date;
     private double dayLength;
     private Task<None> timerThread;
-    
+
+    public ISaveSystem SaveSyst => saveSystem;
     public HistoryController HistoryControl => history;
-    public GoalController GoalControl => goal; 
+    public GoalController GoalControl => goal;
     public WorkoutController WorkoutControl => workout;
     public TeamController TeamControl => team;
     public FoodController FoodControl => food;
-    public UIController UIControl => ui;
-    public User User { get; set; }
     public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
-    
-    public double DayLength { set => dayLength = value; }
+
+    public double DayLength
+    {
+        set => dayLength = value;
+    }
 
     public App(double dayLength)
     {
@@ -57,28 +60,35 @@ public class App
         timerThread = new Task<None>(DayLoop);
         timerThread.Start();
 
+        saveSystem = new SaveSystem();
+        userCtrl = new UserController(saveSystem);
         workout = new WorkoutController();
         food = new FoodController(this);
-        team = new TeamController(this);
-        history = new HistoryController(this);
-        goal = new GoalController(this);
-        userCtrl = new UserController(new SaveSystem());
+        history = new HistoryController(this, saveSystem);
+        goal = new GoalController(this, saveSystem);
+        team = new TeamController(this, saveSystem);
         NotificationController.Instance.AppInstance = this;
 
+        saveSystem.SubscribeSaveable(userCtrl);
+        saveSystem.SubscribeSaveable(history);
+        saveSystem.SubscribeSaveable(goal);
+        saveSystem.SubscribeSaveable(team);
+        
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
     }
+    
 
-    public void KillTimer()
+    public List<Workout.Workout> GetRecommendedWorkouts(string username)
+        => workout.GenerateRecommendedWorkouts(history.GetWorkouts(username));
+
+    public double GetTodaysCalories()
     {
-        timerThread.Dispose();
+        return -1d;
     }
 
-    public List<Workout.Workout> GetRecommendedWorkouts() 
-        => workout.GenerateRecommendedWorkouts(history.Workouts);
-    public double GetTodaysCalories() { return -1d; }
-
     public delegate void DayEventHandler(DateTime date);
+
     public event DayEventHandler DayEndEvent;
 
     public void SubscribeDayEndEvent(DayEventHandler dayEndEvent)
@@ -113,7 +123,7 @@ public class App
             webapp.UseSwagger();
             webapp.UseSwaggerUI();
         }
-        
+
         webapp.MapControllers();
         webapp.Run();
     }
@@ -127,33 +137,6 @@ public class App
             Console.WriteLine("new day " + TimeStamp);
             date = date.AddDays(1d);
         }
-    }
-
-    public void Save()
-    {
-        // Write the user to a JSON file for persistence
-        var userJson = JsonConvert.SerializeObject(user);
-        File.WriteAllText(userPath, userJson);
-        
-        // Write the current date to a JSON file for persistence
-        var timeJson = JsonConvert.SerializeObject(new { date });
-        File.WriteAllText(datePath, timeJson);
-    }
-
-    public void Load()
-    {
-        // this will need to be re-done anyway, i've commented it out for now so it doesn't break the build -dan
-
-        // // Don't do anything if data files don't exist yet (e.g. first startup)
-        // if (!File.Exists(userPath) || !File.Exists(datePath))
-        //     return;
-
-        // // Read the user from a JSON file
-        // var json = File.ReadAllText(userPath);
-        // user = JsonConvert.DeserializeObject<User>(json);
-        
-        // // Read the date from a JSON file
-        // json = File.ReadAllText(datePath);
-        // date = JsonConvert.DeserializeObject<DateTime>(json);
+        return new None();
     }
 }
