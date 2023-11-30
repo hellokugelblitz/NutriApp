@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using NutriApp.Controllers.Middleware;
+using NutriApp.Notifications;
 using NutriApp.Save;
 
 namespace NutriApp;
@@ -29,6 +30,7 @@ public class App
     private GoalController goal;
     private WorkoutController workout;
     private FoodController food;
+    private UserController userCtrl;
     private DateTime date;
     private double dayLength;
     private Task<None> timerThread;
@@ -38,6 +40,8 @@ public class App
     public GoalController GoalControl => goal; 
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
+    public User User { get; set; }
+    public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
     
     public double DayLength { set => dayLength = value; }
@@ -53,8 +57,10 @@ public class App
         user = new UserController(saveSystem);
         workout = new WorkoutController();
         food = new FoodController(this);
-        history = new HistoryController(this, saveSystem);
-        goal = new GoalController(this, saveSystem);
+        history = new HistoryController(this);
+        goal = new GoalController(this);
+        userCtrl = new UserController(new SaveSystem());
+        NotificationController.Instance.AppInstance = this;
 
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
@@ -119,7 +125,7 @@ public class App
             date = date.AddDays(1d);
         }
     }
-
+    
     // public void Save()
     // {
     //     // Write the user to a JSON file for persistence
@@ -145,4 +151,3 @@ public class App
     //     json = File.ReadAllText(datePath);
     //     date = JsonConvert.DeserializeObject<DateTime>(json);
     // }
-}

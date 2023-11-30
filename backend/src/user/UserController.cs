@@ -35,8 +35,14 @@ public class UserController : ISaveableController
         return _users[sessionKey];
     }
 
+    /// <summary>
+    /// Get an instance of an online user by their username. Returns null if the user doesn't
+    /// exist or is currently offline.
+    /// </summary>
     public User GetUser(string username)
     {
+        if (!_usersFromUsername.ContainsKey(username)) return null;
+
         return _usersFromUsername[username];
     }
 
