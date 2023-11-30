@@ -6,7 +6,6 @@ namespace NutriApp.Food;
 public class Ingredient : Food
 {
     private string name;
-    private double stock = 0;
 
     private readonly double calories;
     private readonly double fat;
@@ -14,11 +13,6 @@ public class Ingredient : Food
     private readonly double fiber;
     private readonly double carbohydrates;
 
-    public double Stock
-    {
-        get => stock;
-        set => stock = value;
-    }
     public string Name => name;
     public double Calories => calories;
     public double Fat => fat;
