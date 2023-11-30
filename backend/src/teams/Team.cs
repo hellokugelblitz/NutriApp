@@ -8,7 +8,7 @@ public class Team : ISaveObject
 {
     private string name;
     private static readonly string memberSeperator = ",";
-    private List<User> members;
+    private List<string> members;  // stored as usernames
     private DateTime challengeStartDate;
 
     /// <summary>
@@ -17,9 +17,9 @@ public class Team : ISaveObject
     public string Name => name;
 
     /// <summary>
-    /// The users that are currently part of the team.
+    /// The usernames of users that are currently part of the team.
     /// </summary>
-    public User[] Members => members.ToArray();
+    public string[] Members => members.ToArray();
 
     /// <summary>
     /// The start date of the most recent weeklong challenge. Returns 1/1/1970 if no weeklong
@@ -36,25 +36,23 @@ public class Team : ISaveObject
     public Team(string name)
     {
         this.name = name;
-        this.members = new List<User>();
+        this.members = new List<string>();
     }
 
     /// <summary>
     /// Adds a new member to the team.
     /// </summary>
-    public void AddMember(User user)
+    public void AddMember(string username)
     {
-        members.Add(user);
-        user.TeamName = name;
+        members.Add(username);
     }
 
     /// <summary>
     /// Removes a user from the team if they are a member of the team.
     /// </summary>
-    public void RemoveMember(User user)
+    public void RemoveMember(string username)
     {
-        members.Remove(user);
-        user.TeamName = string.Empty;
+        members.Remove(username);
     }
     
     /// <summary>
@@ -67,7 +65,7 @@ public class Team : ISaveObject
         Dictionary<string, string> data = new();
         data["Name"] = name;
         string str = "";
-        members.ForEach((ele) => str += ele.Name + memberSeperator);
+        members.ForEach((ele) => str += ele + memberSeperator);
         str = str.Substring(0, str.Length - memberSeperator.Length);
         data["Members"] = str;
         return data;

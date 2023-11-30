@@ -85,7 +85,8 @@ public class TeamController : ISaveableController
         User user = app.UserControl.GetUser(username);
         Team team = inviteCodes[inviteCode];
 
-        team.AddMember(user);
+        user.TeamName = team.Name;
+        team.AddMember(username);
         inviteCodes.Remove(inviteCode);
     }
 
@@ -96,7 +97,9 @@ public class TeamController : ISaveableController
     {
         User user = app.UserControl.GetUser(username);
         Team team = GetTeam(teamName);
-        team.RemoveMember(user);
+
+        user.TeamName = "";
+        team.RemoveMember(username);
     }
 
     /// <summary>
@@ -110,19 +113,19 @@ public class TeamController : ISaveableController
 
         if (team is null) return null;
 
-        foreach (User user in team.Members)
+        foreach (string username in team.Members)
         {
-            Entry<Workout.Workout>[] workoutEntries = app.HistoryControl.GetWorkouts(user.UserName).ToArray();
+            Entry<Workout.Workout>[] workoutEntries = app.HistoryControl.GetWorkouts(username).ToArray();
             
             foreach (Entry<Workout.Workout> entry in workoutEntries)
             {
                 if (entry.TimeStamp < team.ChallengeStartDate || entry.TimeStamp > team.ChallengeEndDate)
                     continue;
 
-                if (!result.ContainsKey(user.UserName))
-                    result.Add(user.UserName, 0);
+                if (!result.ContainsKey(username))
+                    result.Add(username, 0);
                 
-                result[user.UserName] += entry.Value.Minutes;
+                result[username] += entry.Value.Minutes;
             }
         }
 
