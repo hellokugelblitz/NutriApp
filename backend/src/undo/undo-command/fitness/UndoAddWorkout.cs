@@ -6,23 +6,23 @@ namespace NutriApp.Undo;
 
 public class UndoAddWorkout : UndoCommand
 {
-    private HistoryController _historyController;
-    private Workout.Workout _workout;
+    private App _app;
+    private User _user;
     private DateTime _timestamp;
 
-    public UndoAddWorkout(HistoryController historyController, Workout.Workout workout, DateTime timestamp)
+    public UndoAddWorkout(App app, User user, DateTime timestamp)
     {
-        _historyController = historyController;
-        _workout = workout;
+        _app = app;
+        _user = user;
         _timestamp = timestamp;
     }
 
     public override void Execute()
     {
-        var workoutEntry = _historyController.Workouts
-            .FirstOrDefault(entry => entry.TimeStamp == _timestamp && entry.Value.Equals(_workout));
-        _historyController.Workouts.Remove(workoutEntry);
-        
+        var workoutEntry = _app.HistoryControl.GetWorkouts(_user.Name)
+            .FirstOrDefault(entry => entry.TimeStamp == _timestamp);
+        _app.HistoryControl.GetWorkouts(_user.Name).Remove(workoutEntry);
+
         onFinished?.Invoke();
     }
 }

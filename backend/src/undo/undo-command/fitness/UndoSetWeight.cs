@@ -6,22 +6,18 @@ namespace NutriApp.Undo;
 
 class UndoSetWeight : UndoCommand
 {
-    private HistoryController _historyController;
-    private double _weight;
+    private App _app;
+    private User _user;
     private DateTime _timestamp;
 
-    public UndoSetWeight(HistoryController historyController, double weight, DateTime timestamp)
+    public UndoSetWeight(App app, User user)
     {
-        _historyController = historyController;
-        _weight = weight;
-        _timestamp = timestamp;
+        _app = app;
+        _user = user;
     }
 
     public override void Execute()
     {
-        var weightEntry = _historyController.Weights
-            .FirstOrDefault(entry => entry.TimeStamp == _timestamp && entry.Value.Equals(_weight));
-        _historyController.Weights.Remove(weightEntry);
         
         onFinished?.Invoke();
     }
