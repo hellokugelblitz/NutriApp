@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using NutriApp.History;
+using NutriApp.Save;
 
 namespace NutriApp.Food;
 
@@ -35,5 +37,11 @@ public class Meal : PreparedFood<Recipe>
 
         output += ")";
         return output;
+    }
+
+    public override bool Equals(object obj)
+    {
+        Meal other = obj as Meal;
+        return other is not null && Name == other.Name;
     }
 }

@@ -40,8 +40,7 @@ public class TestUserController
         (Guid, User) data = UserControllerCreateUser(danny, "hii", ctl);   
 
         var adapter = new JSONAdapter();
-        saveSystem.SetFileType(new JSONAdapter());
-        saveSystem.SaveUser(saveSystem.CreateNewestFolderName(danny.UserName));
+        saveSystem.SetFileType(adapter);
         
         ctl.Logout(data.Item1, adapter.GetFileType());
 
@@ -58,7 +57,6 @@ public class TestUserController
 
         if (true)//scoping
         {
-            string path = SaveSystem.SavePath + "\\userLogins.json";
             ClearDirectory();//clear data of previous tests
 
             var saveSystem = new SaveSystem();
@@ -72,7 +70,7 @@ public class TestUserController
             saveSystem.SaveController();
         }
 
-        if (true)
+        if (true)//scoping
         {
             var saveSystem = new SaveSystem();
             UserController ctl = new UserController(saveSystem);
