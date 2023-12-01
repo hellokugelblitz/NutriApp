@@ -1,23 +1,19 @@
 using System;
-using NutriApp.Goal;
-
 namespace NutriApp.Undo;
 
 class UndoSetWeightGoal : UndoCommand
 {
-    private GoalController _goalController;
-    private Goal.Goal _goal;
+    private App _app;
+    private User _user;
 
-    public UndoSetWeightGoal(GoalController goalController, Goal.Goal goal)
+    public UndoSetWeightGoal(App app, User user)
     {
-        _goalController = goalController;
-        _goal = goal;
+        _app = app;
+        _user = user;
     }
 
     public override void Execute()
     {
-        _goalController.Goal = _goal;
-        
         onFinished?.Invoke();
     }
 }

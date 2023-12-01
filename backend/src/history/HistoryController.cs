@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NutriApp.Food;
 using NutriApp.Save;
 using NutriApp.Workout;
@@ -37,6 +38,14 @@ public class HistoryController : ISaveableController
     public void SetWeight(double weight, string username)
     {
         history[username].Weights.Add(new Entry<double>(_app.TimeStamp, weight));
+    }
+
+    public void RemoveLastestWeight(string username)
+    {
+        if (history[username].Weights.Any())
+        {
+            history[username].Weights.RemoveAt(history[username].Weights.Count - 1);
+        }
     }
 
     public void AddMeal(Meal meal, string username)

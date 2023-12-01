@@ -1,14 +1,11 @@
 using System;
 using System.Linq;
-using NutriApp.History;
-
 namespace NutriApp.Undo;
 
 class UndoSetWeight : UndoCommand
 {
     private App _app;
     private User _user;
-    private DateTime _timestamp;
 
     public UndoSetWeight(App app, User user)
     {
@@ -18,6 +15,7 @@ class UndoSetWeight : UndoCommand
 
     public override void Execute()
     {
+        _app.HistoryControl.RemoveLastestWeight(_user.Name);
         
         onFinished?.Invoke();
     }
