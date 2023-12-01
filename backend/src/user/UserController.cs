@@ -54,6 +54,7 @@ public class UserController : ISaveableController
 
     public (Guid, User) CreateUser(User user, string password)
     {
+        if (_userLoginInfo.ContainsKey(user.UserName)) throw new InvalidUsernameException();
         Guid userGuid = Guid.NewGuid();
         AddUserToDictionaries(userGuid, user, password);
         return (userGuid, user);

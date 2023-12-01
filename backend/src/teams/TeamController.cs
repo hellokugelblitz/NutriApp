@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using NutriApp.History;
 using NutriApp.Notifications;
 using System.Linq;
+using Newtonsoft.Json;
 using NutriApp.Save;
 
 namespace NutriApp.Teams;
@@ -139,13 +141,31 @@ public class TeamController : ISaveableController
 
     public void SaveController()
     {
+        string filePath = SaveSystem.SavePath + "\\teams.json";
+        using (var file = File.CreateText(filePath))
+        {
+            file.WriteLine(JsonConvert.SerializeObject(teams.Select((team) => team.ToDictionary()).ToArray()));
+        }
     }
 
     public void LoadController()
     {
+        string filePath = SaveSystem.SavePath + "\\teams.json";
+        if(!File.Exists(filePath))return;
+        
+        using (var file = File.OpenText(filePath))
+        {
+            teams = JsonConvert.DeserializeObject<Dictionary<string, string>[]>(
+                file.ReadLine()).Select(dict =>
+                {
+                    Team team = new Team("");
+                    team.FromDictionary(dict);
+                    return team;
+                })
+                .ToList();
+            
+        }
     }
 
-    public void AddNewUser(User user)
-    {
-    }
+    public void AddNewUser(User user) { }
 }

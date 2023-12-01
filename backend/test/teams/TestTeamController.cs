@@ -61,4 +61,44 @@ public class TestTeamController
         Assert.AreEqual(1, team.Members.Length);
         Assert.IsFalse(teamCtrl.ValidateInviteCode(inviteCode));  // invite codes should only work once
     }
+
+    [TestMethod]
+    public void TestSaveLoad()
+    {
+        Team t1;
+        Team t2;
+        if (true)//scoping
+        {
+            SaveSystem saveSystem = new SaveSystem();
+            saveSystem.SetFileType(new JSONAdapter());
+            TeamController ctl = new TeamController(null, saveSystem);
+            saveSystem.SubscribeSaveable(ctl);
+
+            ctl.CreateTeam("team1");
+            ctl.CreateTeam("team2");
+
+            t1 = ctl.GetTeam("team1");
+            t2 = ctl.GetTeam("team2");
+            
+            t1.AddMember("dannytga");
+            t1.AddMember("thatnoobles");
+            t1.AddMember("racer_aw_06");
+            t2.AddMember("crazyformccafe");
+            t2.AddMember("hellokugelblitz");
+
+            saveSystem.SaveController();
+        }
+        
+        if (true)//scoping
+        {
+            SaveSystem saveSystem = new SaveSystem();
+            saveSystem.SetFileType(new JSONAdapter());
+            TeamController ctl = new TeamController(null, saveSystem);
+            saveSystem.SubscribeSaveable(ctl);
+
+            saveSystem.LoadController();
+            Assert.AreEqual(t1, ctl.GetTeam("team1"));
+            Assert.AreEqual(t1, ctl.GetTeam("team1"));
+        }
+    }
 }
