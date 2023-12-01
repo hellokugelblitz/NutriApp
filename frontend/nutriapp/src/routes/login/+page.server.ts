@@ -19,8 +19,6 @@ const login : Action = async({ request, cookies }) => {
         password: password,
     };
 
-    console.log("things: ", username, password);
-
     //Attempt to login
     try {
         const response = await fetch('http://localhost:5072/api/Auth/login', {

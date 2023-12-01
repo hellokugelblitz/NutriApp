@@ -9,6 +9,7 @@ export default {
         xl: '1440px',
       },
       colors: {
+        'darkish-green': '#36633f',
         'dark-green': '#386641',
         'dark-dark-green': '#284a2f',
         'primary-green': '#6A994E',

@@ -4,53 +4,20 @@
   
     let username = '';
     let password = '';
-  
-    // const handleSubmit = async (event: SubmitEvent) => {
-    //   event.preventDefault();
-  
-    //   const credentials = {
-    //     userName: username,
-    //     password: password,
-    //   };
-  
-    //   try {
-    //     const response = await fetch('http://localhost:5072/api/Auth/login', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: JSON.stringify(credentials),
-    //     });
-  
-    //     if (response.ok) {
-    //       const data = await response.json();
-    //       const sessionKey = data.session;
-          
-    //         console.log("logging in...")
+</script>
 
-	// 	    cookies.set("auth", "regularusertoken", {
-	// 		    path: "/",
-	// 		    httpOnly: true,
-	// 		    sameSite: "strict",
-	// 		    secure: process.env.NODE_ENV === "production",
-	// 		    maxAge: 60 * 60 * 24 * 7, // 1 week
-	// 	    });
-
-	// 	throw redirect(303, "/")
-	    
-
-    //     // },
-    //     } else {
-    //       // Handle authentication failure
-    //       const errorData = await response.json();
-    //       console.error('Login failed:', errorData);
-    //     }
-    //   } catch (error) {
-    //     console.error('Error during login:', error);
-    //   }
-    // };
-  </script>
-
+<style>
+    .modal {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+</style>
 
 <div role="dialog" class="modal">
     <div class="contents">
@@ -88,17 +55,4 @@
         </div> 
     </div>
 </div> 
-
-<style>
-    .modal {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-</style>
 
