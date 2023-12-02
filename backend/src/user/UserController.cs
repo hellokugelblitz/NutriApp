@@ -45,6 +45,14 @@ public class UserController : ISaveableController
         return _usersFromUsername[username];
     }
     
+    // I would use GetUser to test for a user's existence, but
+    // _userFromUsername isn't populated correctly on start up (I think)
+    // while _userLoginInfo is.
+    /// <summary>
+    /// Returns whether or not a user exists in the system.
+    /// </summary>
+    /// <param name="username">The username of the user</param>
+    /// <returns>True if the user exists in the system, false if not.</returns>
     public bool UserExists(string username) => _userLoginInfo.ContainsKey(username);
 
     public (Guid, User) CreateUser(string username, string password, int height, DateTime birthday,
