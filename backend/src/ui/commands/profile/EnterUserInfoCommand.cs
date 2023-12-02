@@ -18,7 +18,7 @@ class EnterUserInfoCommand : Command<(User, double, double)>
         var userWeight = userinput.Item2;
         var targetWeight = userinput.Item3;
 
-        app.HistoryControl.SetWeight(userWeight);
-        app.GoalControl.SetGoalBasedOnWeightDifference(targetWeight);
+        app.HistoryControl.SetWeight(userWeight, userinput.Item1.UserName);
+        app.GoalControl.SetGoalBasedOnWeightDifference(targetWeight, userinput.Item1.UserName);
     }
 }

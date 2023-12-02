@@ -20,16 +20,26 @@ public class AuthController : ControllerBase
     
     // POST api/Auth/signup
     [HttpPost("signup")]
-    public async Task<ActionResult<AuthResult>> SignUp(Credentials creds)
+    public async Task<IActionResult> SignUp(SignUpInfo info)
     {
-        var user = _app.UserControl.GetUser(creds.Username);
-        if (user != null)
+        if (_app.UserControl.UserExists(info.Username))
         {
             return Conflict();
         }
         
-        var (sessionKey, newUser) = _app.UserControl.CreateUser(creds.Username, creds.Password, 0, new System.DateTime(), "", "");
-        return new AuthResult { Session = sessionKey.ToString() };
+        var (sessionKey, newUser) = _app.UserControl.CreateUser(
+            info.Username,
+            info.Password,
+            info.Height,
+            info.Birthday,
+            info.Name,
+            ""
+            );
+        
+        _app.HistoryControl.SetWeight(info.CurrentWeight, info.Username);
+        _app.GoalControl.SetGoalBasedOnWeightDifference(info.WeightGoal, info.Username);
+        _app.UserControl.Logout(sessionKey);
+        return Ok();
     }
     
     // POST api/Auth/login
@@ -41,9 +51,17 @@ public class AuthController : ControllerBase
             var (sessionKey, newUser) = _app.UserControl.Login(creds.Username, creds.Password);
             return new AuthResult { Session = sessionKey.ToString() };
         }
-        catch
+        catch (InvalidUsernameException e)
         {
-            return NotFound();
+            return NotFound("Username not found");
+        }
+        catch (InvalidPasswordException e)
+        {
+            return NotFound("Username and password combination not found");
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"{e.Message}\n{e.StackTrace}");
         }
     }
     

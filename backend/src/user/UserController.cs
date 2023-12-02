@@ -44,6 +44,8 @@ public class UserController : ISaveableController
 
         return _usersFromUsername[username];
     }
+    
+    public bool UserExists(string username) => _userLoginInfo.ContainsKey(username);
 
     public (Guid, User) CreateUser(string username, string password, int height, DateTime birthday,
         string name, string bio)

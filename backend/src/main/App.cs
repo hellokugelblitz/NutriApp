@@ -71,6 +71,9 @@ public class App
         saveSystem.SubscribeSaveable(goal);
         saveSystem.SubscribeSaveable(team);
         
+        
+        saveSystem.LoadController();
+        
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
     }
@@ -133,6 +136,16 @@ public class App
 
         webapp.UseCors("AllowSpecificOrigin");
         webapp.MapControllers();
+        
+        webapp.Services
+            .GetService<IHostApplicationLifetime>()?
+            .ApplicationStopping
+            .Register(() =>
+            {
+                var app = webapp.Services.GetService<App>();
+                app.saveSystem.SaveController();
+            });
+            
         webapp.Run();
     }
 
