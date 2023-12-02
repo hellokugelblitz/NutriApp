@@ -27,7 +27,6 @@ public class HistoryController : ISaveableController
     {
         _app = app;
         _saveSystem = saveSystem;
-        _saveSystem.SubscribeSaveable(this);
     }
 
     public void AddWorkout(Workout.Workout workout, string username)
@@ -127,7 +126,7 @@ public class HistoryController : ISaveableController
                                  workout.Value.Minutes + EntryValueSep + workout.Value.Intensity + EntrySep;
             }
 
-            if(workoutString.Length > 0) workoutString = workoutString.Substring(0, workoutString.Length - 3);
+            if(workoutString.Length > 0) workoutString = workoutString.Substring(0, workoutString.Length - EntrySep.Length);
             data["workouts"] = workoutString;
 
             string weightString = "";
@@ -136,7 +135,7 @@ public class HistoryController : ISaveableController
                 weightString += weight.TimeStamp + EntryValueSep + weight.Value + EntrySep;
             }
 
-            if(weightString.Length > 0) weightString = weightString.Substring(0, weightString.Length - 3);
+            if(weightString.Length > 0) weightString = weightString.Substring(0, weightString.Length - EntrySep.Length);
             data["weights"] = weightString;
             
             string mealString = "";
@@ -145,7 +144,7 @@ public class HistoryController : ISaveableController
                 mealString += meal.TimeStamp + EntryValueSep + meal.Value.Name + EntrySep;
             }
 
-            if(mealString.Length > 0)mealString = mealString.Substring(0, mealString.Length - 3);
+            if(mealString.Length > 0)mealString = mealString.Substring(0, mealString.Length - EntrySep.Length);
             data["meals"] = mealString;
             
             string calorieString = "";
@@ -155,7 +154,7 @@ public class HistoryController : ISaveableController
                                  calorie.Value.TargetCalories + EntrySep;
             }
 
-            if(calorieString.Length > 0) calorieString = calorieString.Substring(0, calorieString.Length - 3);
+            if(calorieString.Length > 0) calorieString = calorieString.Substring(0, calorieString.Length - EntrySep.Length);
             data["calories"] = calorieString;
 
             return data;

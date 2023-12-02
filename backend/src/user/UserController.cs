@@ -26,7 +26,6 @@ public class UserController : ISaveableController
     public UserController(ISaveSystem saveSystem)
     {
         _saveSystem = saveSystem;
-        _saveSystem.SubscribeSaveable(this);
     }
 
     public User GetUser(Guid sessionKey)

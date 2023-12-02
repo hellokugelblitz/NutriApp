@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using NutriApp.History;
 using NutriApp.Notifications;
 using System.Linq;
+using NutriApp.Save;
 
 namespace NutriApp.Teams;
 
-public class TeamController
+public class TeamController : ISaveableController
 {
     private const int INVITE_CODE_LENGTH = 8;
 
     private App app;
     private List<Team> teams;
     private Dictionary<string, Team> inviteCodes;
-
-    public TeamController(App app)
+    private ISaveSystem saveSystem;
+    
+    public TeamController(App app, ISaveSystem saveSystem)
     {
         this.app = app;
         teams = new List<Team>();
         inviteCodes = new Dictionary<string, Team>();
+        this.saveSystem = saveSystem;
     }
 
     /// <summary>
@@ -82,7 +85,8 @@ public class TeamController
         User user = app.UserControl.GetUser(username);
         Team team = inviteCodes[inviteCode];
 
-        team.AddMember(user);
+        user.TeamName = team.Name;
+        team.AddMember(username);
         inviteCodes.Remove(inviteCode);
     }
 
@@ -93,7 +97,9 @@ public class TeamController
     {
         User user = app.UserControl.GetUser(username);
         Team team = GetTeam(teamName);
-        team.RemoveMember(user);
+
+        user.TeamName = "";
+        team.RemoveMember(username);
     }
 
     /// <summary>
@@ -107,23 +113,39 @@ public class TeamController
 
         if (team is null) return null;
 
-        foreach (User user in team.Members)
+        foreach (string username in team.Members)
         {
-            Entry<Workout.Workout>[] workoutEntries = app.HistoryControl.GetWorkouts(user.UserName).ToArray();
+            Entry<Workout.Workout>[] workoutEntries = app.HistoryControl.GetWorkouts(username).ToArray();
             
             foreach (Entry<Workout.Workout> entry in workoutEntries)
             {
                 if (entry.TimeStamp < team.ChallengeStartDate || entry.TimeStamp > team.ChallengeEndDate)
                     continue;
 
-                if (!result.ContainsKey(user.UserName))
-                    result.Add(user.UserName, 0);
+                if (!result.ContainsKey(username))
+                    result.Add(username, 0);
                 
-                result[user.UserName] += entry.Value.Minutes;
+                result[username] += entry.Value.Minutes;
             }
         }
 
         result = result.OrderByDescending(d => d.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
         return result;
+    }
+
+    public void SaveUser(string folderName) { }
+
+    public void LoadUser(string folderName) { }
+
+    public void SaveController()
+    {
+    }
+
+    public void LoadController()
+    {
+    }
+
+    public void AddNewUser(User user)
+    {
     }
 }
