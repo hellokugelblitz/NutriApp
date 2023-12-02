@@ -71,6 +71,9 @@ public class App
         saveSystem.SubscribeSaveable(goal);
         saveSystem.SubscribeSaveable(team);
         
+        
+        saveSystem.LoadController();
+        
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
     }
@@ -112,6 +115,16 @@ public class App
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "NutriApp API", Version = "v1" });
             c.OperationFilter<AddHeaderOperationFilter>();
         });
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigin", builder =>
+            {
+                builder.WithOrigins("http://localhost:5173")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
 
         var webapp = builder.Build();
 
@@ -121,7 +134,18 @@ public class App
             webapp.UseSwaggerUI();
         }
 
+        webapp.UseCors("AllowSpecificOrigin");
         webapp.MapControllers();
+        
+        webapp.Services
+            .GetService<IHostApplicationLifetime>()?
+            .ApplicationStopping
+            .Register(() =>
+            {
+                var app = webapp.Services.GetService<App>();
+                app.saveSystem.SaveController();
+            });
+            
         webapp.Run();
     }
 
