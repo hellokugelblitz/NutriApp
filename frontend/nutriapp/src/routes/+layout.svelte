@@ -1,13 +1,11 @@
 
 <script>
-   //Important svelteKit stuff
    import "../app.css";
    import { onNavigate } from "$app/navigation";
-   // Svelte Toast import
    import { SvelteToast, toast } from '@zerodevx/svelte-toast'
    import { page } from '$app/stores';
 
-   //A little tester functions
+   //A little tester function
    function sendToast(){
       toast.push('Bottoms up!')
    }
@@ -31,8 +29,10 @@
   }
 </style>
 
-<!-- SIDEBAR -->
+<SvelteToast />
+
 <aside id="default-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full md:translate-x-0" aria-label="Sidebar">
+  
    <div class="h-full px-3 py-4 overflow-y-auto bg-dark-green">
 
       <div class="self-center content-center mt-4 mb-8">
@@ -46,7 +46,11 @@
       <ul class="space-y-1 font-extralight">
          <li>
             <a href="/" class="flex items-center p-2 rounded-lg text-white hover:bg-dark-dark-green group transition-all">          
-                <!-- Dashboard SVG -->
+                <!-- Food SVG -->
+                <!-- <svg class="flex-shrink-0 w-5 h-5 text-white transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white" fill="#FFFFFF" viewBox="0 -3.84 122.88 122.88">
+                     <path d="M29.03,100.46l20.79-25.21l9.51,12.13L41,110.69C33.98,119.61,20.99,110.21,29.03,100.46L29.03,100.46z M53.31,43.05 c1.98-6.46,1.07-11.98-6.37-20.18L28.76,1c-2.58-3.03-8.66,1.42-6.12,5.09L37.18,24c2.75,3.34-2.36,7.76-5.2,4.32L16.94,9.8 c-2.8-3.21-8.59,1.03-5.66,4.7c4.24,5.1,10.8,13.43,15.04,18.53c2.94,2.99-1.53,7.42-4.43,3.69L6.96,18.32 c-2.19-2.38-5.77-0.9-6.72,1.88c-1.02,2.97,1.49,5.14,3.2,7.34L20.1,49.06c5.17,5.99,10.95,9.54,17.67,7.53 c1.03-0.31,2.29-0.94,3.64-1.77l44.76,57.78c2.41,3.11,7.06,3.44,10.08,0.93l0.69-0.57c3.4-2.83,3.95-8,1.04-11.34L50.58,47.16 C51.96,45.62,52.97,44.16,53.31,43.05L53.31,43.05z M65.98,55.65l7.37-8.94C63.87,23.21,99-8.11,116.03,6.29 C136.72,23.8,105.97,66,84.36,55.57l-8.73,11.09L65.98,55.65L65.98,55.65z"/>
+               </svg> -->
+
                <svg class="flex-shrink-0 w-5 h-5 text-white transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white" fill="#FFFFFF" version="1.1" viewBox="0 0 495.398 495.398">
                            <path d="M487.083,225.514l-75.08-75.08V63.704c0-15.682-12.708-28.391-28.413-28.391c-15.669,0-28.377,12.709-28.377,28.391
                               v29.941L299.31,37.74c-27.639-27.624-75.694-27.575-103.27,0.05L8.312,225.514c-11.082,11.104-11.082,29.071,0,40.158
@@ -194,7 +198,91 @@
    </div>
 </aside>
 
-<!-- Page infromation -->
-<slot />
 
-<SvelteToast />
+<!-- NAVBAR -->
+<nav class="mt-0 h-20 bg-white">
+   <div class="absolute top-100 left-32 ml-8 transition-transform -translate-x-full md:translate-x-0 md:left-60">
+      <h1 class="font-extrabold text-2xl mt-6"> Dashboard </h1>
+  </div>
+
+  <div class="absolute float-right right-0 mt-5 mr-5">
+
+      <button type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
+         Undo Last Action
+
+         <svg class="flex-shrink-0 w-5 h-5 transition duration-75 ml-2 text-white group-hover:text-white" viewBox="0 0 20.298 20.298" xml:space="preserve">
+            <path d="M0.952,11.102c0-0.264,0.213-0.474,0.475-0.474h2.421c0.262,0,0.475,0.21,0.475,0.474
+               c0,3.211,2.615,5.826,5.827,5.826s5.827-2.615,5.827-5.826c0-3.214-2.614-5.826-5.827-5.826c-0.34,0-0.68,0.028-1.016,0.089
+               v1.647c0,0.193-0.116,0.367-0.291,0.439C8.662,7.524,8.46,7.482,8.322,7.347L3.49,4.074c-0.184-0.185-0.184-0.482,0-0.667
+               l4.833-3.268c0.136-0.136,0.338-0.176,0.519-0.104c0.175,0.074,0.291,0.246,0.291,0.438V1.96c0.34-0.038,0.68-0.057,1.016-0.057
+               c5.071,0,9.198,4.127,9.198,9.198c0,5.07-4.127,9.197-9.198,9.197C5.079,20.299,0.952,16.172,0.952,11.102z"/>
+         </svg>
+
+      </button>
+   </div>
+</nav>
+
+<!-- GRID -->
+<div class=" p-4 md:ml-64 mx-0 max-screen max-w-6xl">
+
+   <!-- TOP ROW -->
+   <div class="grid grid-cols-3 gap-5 mb-8 my-4 mx-4">
+           <!-- 1 -->
+           <div class="flex p-4 flex-col justify-center h-32 bg-primary-green border-4 border-gray-300 rounded-full font-semibold drop-shadow-sm">
+               <p class="relative top-0 mb-4">Calories Burned:</p>
+               <p class="text-4xl mx-4">100</p>
+           </div>
+
+           <!-- 2 -->
+           <div class="flex p-4 flex-col justify-center h-32 bg-light-green border-4 border-gray-300 rounded-full font-semibold drop-shadow-sm">
+               <p class="relative top-0 mb-4">Current Weight:</p>
+               <p class="text-4xl mx-4">230</p>
+           </div>
+
+           <!-- 3 -->
+           <div class="flex p-4 flex-col justify-center h-32 bg-nutri-red border-4 border-gray-300 rounded-full font-semibold drop-shadow-sm">                    
+               <p class="relative top-0 mb-4">Goal % Complete:</p>
+               <p class="text-4xl mx-4">27%</p>
+           </div>
+   </div>
+
+   <!-- SECOND ROW -->
+   <slot />
+
+   
+
+
+
+  <!-- MINI GRID -->
+  <!-- <div class="grid grid-cols-2 gap-4 mb-4">
+     <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+
+     </div>
+     <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+
+     </div>
+     <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+
+     </div>
+     <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+
+     </div>
+  </div> -->
+
+  <!-- <div class="grid grid-cols-2 gap-4">
+     <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+
+     </div>
+     <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+
+     </div>
+     <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+
+     </div>
+     <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+
+     </div>
+  </div> -->
+
+</div>
+
