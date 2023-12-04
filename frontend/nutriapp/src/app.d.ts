@@ -2,7 +2,7 @@
 // for information about these interfaces
 
 type User = {
-	id: number
+	session_key: string
 	username: string
 }
 

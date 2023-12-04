@@ -4,19 +4,20 @@ export const authenticateUser = (event: RequestEvent) => {
 	// get the cookies from the request
 	const { cookies } = event
 
-	// get the user token from the cookie
-	const userToken = cookies.get("auth")
+	// get the session key from the cookie
+	const sessionKey = cookies.get("auth");
 
-    //TODO -> This will need to be updated to work with our system. These are placeholder values.
-	if (userToken === "regularusertoken") {
-        
+	// If there's no session key, the user is not authenticated
+	if (!sessionKey) {
+		return null;
+	} else {
+		// TODO: Validate session key on the backend, here we will pass in the username as well.
 		const user = {
-			id: 1,
-            username: "hello"
+			session_key: sessionKey,
+            username: "current_user"
 		}
 
-        console.log("Authenicating user")
-		return user
+		return user;
 	}
 
 	return null

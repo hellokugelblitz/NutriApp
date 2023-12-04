@@ -1,5 +1,5 @@
-import { redirect } from '@sveltejs/kit'
 import type { Action, Actions, PageServerLoad } from './$types'
+import { redirect } from '@sveltejs/kit'
 
 export const load:PageServerLoad = async () => {
     // page load
@@ -31,24 +31,26 @@ const login : Action = async({ request, cookies }) => {
   
         if (response.ok) {
             console.log("Logging in: " + username);
+            const result = await response.json();
+            console.log(result)
+            console.log("Session key: " + result.session)
 
             //Here we establish our authentication cookie yay!
-            //regularusertoken IS A PLACEHOLDER VALUE.
-            //our session key will live here?
-            cookies.set("auth", "regularusertoken", {
+            cookies.set("auth", result.session, {
 			    path: "/",
 			    httpOnly: true,
 			    sameSite: "strict",
 			    secure: process.env.NODE_ENV === "production",
 			    maxAge: 60 * 60 * 24 * 7, // 1 week
 		    });
-
-            throw redirect(302, '/');
+        } else {
+            console.log("Credentials not recognized!")
         }
     } catch {
         //Handle any errors.
     }
 
+    throw redirect(302, '/');
 }
 
 

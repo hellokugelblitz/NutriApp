@@ -1,10 +1,14 @@
-<script>
+<script lang="ts">
     import { SvelteToast, toast } from '@zerodevx/svelte-toast'
+    import { page } from '$app/stores';
 
     //A little tester function
     function sendToast(){
         toast.push('You can do this action yet :(', { classes: ['custom'] })
     }
+
+    //Grab the data for the user.
+    export let data;
 
     let list_length = 14;
 </script>
@@ -38,12 +42,23 @@
     <div class="grid grid-cols-3 grid-rows-2 gap-4">
 
         <div class="flex-col justify-left col-start-1 col-span-3 row-start-1 row-span-3 p-6 max-h-fit mb-4 border-4 border-gray-225 rounded-full bg-white relative">
+            {#if !$page.data.user}
                 <p class="text-4xl text-gray-800 font-extrabold">
                     Hello, you are currently a <span class="font-bold text-primary-green">Guest<span>!
                 </p>
+            {/if}
 
+            {#if $page.data.user}
+                <p class="text-4xl text-gray-800 font-extrabold">
+                    Hello, <span class="font-bold text-primary-green">{data.user?.username}!</span>
+                </p>
+            {/if}
+
+            {#if !$page.data.user}
                 <p class="text-2xl text-gray-500 my-7">Feel free to browse our list of meals and recipes, but log in to gain access to the full features of Nutriapp!</p>
-
+            {:else}
+                <p class="text-2xl text-gray-500 my-7">Welcome to Nutriapp! Delve into our diverse selection of meals and recipes at your leisure. Enjoy the complete Nutriapp experience with enhanced features tailored just for you. Happy browsing! </p>
+            {/if}
                 <div class="">
                     <!-- Do this with Nutriapp section -->
                     <div class="flex flex-row space-x-10 items-center justify-center">
@@ -100,34 +115,36 @@
         </div> -->
 
         <!-- History view panel -->
-        <div class="hidden justify-left col-span-1 row-span-2 col-start-1 row-start-1 p-6 mb-4 h-96 w-full border-4 border-primary-green rounded-full bg-white md:col-span-2 md:flex flex-col">
-            <p class="text-xl text-gray-800 pb-8">
-                Your History
-            </p>
+        {#if $page.data.user}
+            <div class="hidden justify-left col-span-1 row-span-2 col-start-1 row-start-1 p-6 mb-4 h-96 w-full border-4 border-primary-green rounded-full bg-white md:col-span-2 md:flex flex-col">
+                <p class="text-xl text-gray-800 pb-8">
+                    Your History
+                </p>
 
-            <div class="bg-gray-200 w-full h-3/4 overflow-y-scroll rounded-full">
-                <!-- This is placeholder -->
-                <ul>
-                    {#each {length: list_length} as _, i} 
-                        <!-- Bottom of list -->
-                        {#if i > list_length-2}
-                            <li class="list-none list-inside">
-                                <div class="border-gray-500 w-full h-12 px-8 py-3">
-                                    <p>Added Meal: <span class="font-bold">GURL DINNER</span></p>
-                                </div>
-                            </li>
+                <div class="bg-gray-200 w-full h-3/4 overflow-y-scroll rounded-full">
+                    <!-- This is placeholder -->
+                    <ul>
+                        {#each {length: list_length} as _, i} 
+                            <!-- Bottom of list -->
+                            {#if i > list_length-2}
+                                <li class="list-none list-inside">
+                                    <div class="border-gray-500 w-full h-12 px-8 py-3">
+                                        <p>Added Meal: <span class="font-bold">GURL DINNER</span></p>
+                                    </div>
+                                </li>
 
-                        <!-- Other list items -->
-                        {:else}
-                            <li class="list-none list-inside">
-                                <div class="border-gray-500 border-b-2 w-full h-12 px-8 py-3">
-                                    <p>Added Meal: <span class="font-bold">Girl Dinner</span></p>
-                                </div>
-                            </li>
-                        {/if}
-                    {/each}
-                </ul>
+                            <!-- Other list items -->
+                            {:else}
+                                <li class="list-none list-inside">
+                                    <div class="border-gray-500 border-b-2 w-full h-12 px-8 py-3">
+                                        <p>Added Meal: <span class="font-bold">Girl Dinner</span></p>
+                                    </div>
+                                </li>
+                            {/if}
+                        {/each}
+                    </ul>
+                </div>
             </div>
-        </div>
+            {/if}
     </div>
 </div>
