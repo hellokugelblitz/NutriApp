@@ -46,38 +46,36 @@
                         <form class="space-y-4" action="?/register" method="POST">
                             <div>
                                 <label for="username" class="block mb-2 text-sm font-medium text-gray-900 ">Your username:</label>
-                                <input bind:value={username} type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="username" required>
+                                <input type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="username" required>
                             </div>
                             <div>
                                 <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Your password:</label>
-                                <input bind:value={password} type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " required>
+                                <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " required>
                             </div>
                             <div>
                                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Your name:</label>
-                                <input bind:value={name} type="name" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="John Smith" required>
+                                <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="John Smith" required>
                             </div>
                             <div class="flex flex-row w-full gap-4">
                                 <div>
-                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Your height:</label>
-                                    <input bind:value={name} type="name" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="5'11" required>
+                                    <label for="height" class="block mb-2 text-sm font-medium text-gray-900 ">Your Height:</label>
+                                    <input type="height" name="height" id="height" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="5'11" required>
                                 </div>
                                 <div>
-                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Birth Date:</label>
-                                    <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5" type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
+                                    <label for="birthday" class="block mb-2 text-sm font-medium text-gray-900 ">Birth Date:</label>
+                                    <input type="date" id="birthday" name="birthday" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5" placeholder="2000-01-01" min="1900-01-01" max="2024-12-31" />
                                 </div>
                             </div>
                             <div class="flex flex-row gap-4">
                                 <div>
                                     <label for="weight" class="block mb-2 text-sm font-medium text-gray-900 ">Current Weight:</label>
-                                    <input bind:value={currentWeight} type="number" name="weight" id="weight" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="200" max="500" required>
+                                    <input type="number" name="weight" id="weight" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="200" max="500" required>
                                 </div>
                                 <div>
                                     <label for="goal" class="block mb-2 text-sm font-medium text-gray-900 ">Current Goal:</label>
-                                    <input bind:value={weightGoal} type="number" name="goal" id="goal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="150" min="90" required>
+                                    <input type="number" name="goal" id="goal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " placeholder="150" min="90" required>
                                 </div>
                             </div>
-
-         
 
                             <button type="submit" class="w-full text-white bg-dark-green mt-6 hover:bg-primary-green focus:ring-4 focus:outline-none focus:ring-light-green font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all">Create your account</button>
                             <div class="text-sm font-medium text-gray-500 ">

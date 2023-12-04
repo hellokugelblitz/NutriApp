@@ -32,8 +32,6 @@ const login : Action = async({ request, cookies }) => {
         if (response.ok) {
             console.log("Logging in: " + username);
             const result = await response.json();
-            console.log(result)
-            console.log("Session key: " + result.session)
 
             //Here we establish our authentication cookie yay!
             cookies.set("auth", result.session, {

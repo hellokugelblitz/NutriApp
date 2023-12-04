@@ -11,16 +11,23 @@ const register: Action = async ({ request }) => {
     try {
       // We grab the data we need from the form.
       const data = await request.formData();
-  
+
+      // Sanitize the user input for our fetch request.
       const username = data.get('username');
       const password = data.get('password');
-      const height = 30
-      const birthday = "2017-11-01T00:00:00"; // Need to pass a string that is able to be converted to datetime property
-      const name = "Jack";
-      const currentWeight = 20.00; // Convert to float
-      const weightGoal = 40.00;
+      const birthday = `${data.get('birthday')}T00:00:00`; // translate given input 2023-12-13 to "2023-12-13T00:00:00"
 
-      console.log("Generating account: " + username);
+      const heightString = String(data.get('height')); // We must parse the height of the user into inches.
+      let height = 0;
+      if(heightString != null){
+        const [feet, inches] = heightString.split("'").map(part => parseInt(part, 10));
+        height = feet * 12 + inches; // Calculate the height in inches
+      }
+
+      const name = data.get('name');
+      const currentWeight = parseFloat(String(data.get('weight'))); // Convert to float
+      const weightGoal = parseFloat(String(data.get('goal')));
+
   
       // Consolidate so that we can pass into the body of the request.
       const credentials = {
@@ -32,6 +39,9 @@ const register: Action = async ({ request }) => {
         CurrentWeight: currentWeight,
         WeightGoal: weightGoal,
       };
+
+
+      console.log("Generating account: " + credentials);
   
     // Does the user already exist?
     const response = await fetch('http://localhost:5072/api/Auth/signup', {
@@ -57,6 +67,8 @@ const register: Action = async ({ request }) => {
     // Handle any errors.
     console.error(error);
   }
+
+  throw redirect(302, '/login');
 };
 
 export const actions: Actions = { register }
