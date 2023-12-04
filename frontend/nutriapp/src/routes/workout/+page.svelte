@@ -14,7 +14,7 @@
 <div class="grid grid-cols-3 gap-4 mx-4">
   <div class="justify-left col-span-3 row-span-2 p-6 h-max mb-4 border-4 border-gray-225 rounded-full bg-white md:col-span-2">
           <p class="text-4xl text-gray-800">
-              Food Page
+              Workout Page
           </p>
 
           <div class="mt-14">
@@ -33,3 +33,5 @@
       </p>
   </div>
 </div>
+<!-- //lily is so pretty and she has a huge ass -->
+

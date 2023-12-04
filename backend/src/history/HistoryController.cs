@@ -172,16 +172,24 @@ public class HistoryController : ISaveableController
         public void FromDictionary(Dictionary<string, string> data)
         {
             string[] wrktStrs = data["workouts"].Split(EntrySep);
-            foreach (var str in wrktStrs)
-            {
-                string[] split = str.Split(EntryValueSep);
-                Workout.Workout workout = new Workout.Workout(split[1], Int32.Parse(split[2]),
-                        Enum.Parse<WorkoutIntensity>(split[3]));
-                Entry<Workout.Workout> entry = new Entry<Workout.Workout>(DateTime.Parse(split[0]), workout);
-                Workouts.Add(entry);
-            }
             
+            // .Split will return an array with one empty string if the string is empty
+            // so we need to check for that. `data["workouts"]` will be empty if the user
+            // has no workouts.
+            if (wrktStrs[0] != String.Empty)
+                foreach (var str in wrktStrs)
+                {
+                    string[] split = str.Split(EntryValueSep);
+                    Workout.Workout workout = new Workout.Workout(split[1], Int32.Parse(split[2]),
+                            Enum.Parse<WorkoutIntensity>(split[3]));
+                    Entry<Workout.Workout> entry = new Entry<Workout.Workout>(DateTime.Parse(split[0]), workout);
+                    Workouts.Add(entry);
+                }
+                
             string[] wtStrs = data["weights"].Split(EntrySep);
+            
+            // The user will always have at least one weight entry, so we don't need to check
+            // for an empty string.
             foreach (var str in wtStrs)
             {
                 string[] split = str.Split(EntryValueSep);
@@ -190,21 +198,27 @@ public class HistoryController : ISaveableController
             }
             
             string[] mealsStrs = data["meals"].Split(EntrySep);
-            foreach (var str in mealsStrs)
-            {
-                string[] split = str.Split(EntryValueSep);
-                Entry<Meal> entry = new Entry<Meal>(DateTime.Parse(split[0]), _foodController.GetMeal(split[1]));
-                Meals.Add(entry);
-            }
+            
+            // Same as with workouts, we need to check for an empty string.
+            if (mealsStrs[0] != String.Empty)
+                foreach (var str in mealsStrs)
+                {
+                    string[] split = str.Split(EntryValueSep);
+                    Entry<Meal> entry = new Entry<Meal>(DateTime.Parse(split[0]), _foodController.GetMeal(split[1]));
+                    Meals.Add(entry);
+                }
             
             string[] calStrs = data["calories"].Split(EntrySep);
-            foreach (var str in calStrs)
-            {
-                string[] split = str.Split(EntryValueSep);
-                CalorieTracker calorieTracker = new CalorieTracker(double.Parse(split[1]), double.Parse(split[2]));
-                Entry<CalorieTracker> entry = new Entry<CalorieTracker>(DateTime.Parse(split[0]), calorieTracker);
-                Calories.Add(entry);
-            }
+            
+            // Same as with workouts, we need to check for an empty string.
+            if (calStrs[0] != String.Empty)
+                foreach (var str in calStrs)
+                {
+                    string[] split = str.Split(EntryValueSep);
+                    CalorieTracker calorieTracker = new CalorieTracker(double.Parse(split[1]), double.Parse(split[2]));
+                    Entry<CalorieTracker> entry = new Entry<CalorieTracker>(DateTime.Parse(split[0]), calorieTracker);
+                    Calories.Add(entry);
+                }
         }
 
         public override bool Equals(object obj)

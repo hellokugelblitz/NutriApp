@@ -55,19 +55,23 @@ public class App
 
         workout = new WorkoutController();
         food = new FoodController(this);
-        history = new HistoryController(this);
-        goal = new GoalController(this);
+        history = new HistoryController(this, saveSystem);
+        goal = new GoalController(this, saveSystem);
+        team = new TeamController(this, saveSystem);
+        NotificationController.Instance.AppInstance = this;
 
+        saveSystem.SubscribeSaveable(userCtrl);
+        saveSystem.SubscribeSaveable(history);
+        saveSystem.SubscribeSaveable(goal);
+        saveSystem.SubscribeSaveable(team);
+        
+        
+        saveSystem.LoadController();
+        
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
-        
-        // ui = new UIController(this);
     }
-
-    public void KillTimer()
-    {
-        timerThread.Dispose();
-    }
+    
 
     public List<Workout.Workout> GetRecommendedWorkouts() 
         => workout.GenerateRecommendedWorkouts(history.Workouts);
@@ -121,6 +125,16 @@ public class App
 
         webapp.UseCors("AllowSpecificOrigin");
         webapp.MapControllers();
+        
+        webapp.Services
+            .GetService<IHostApplicationLifetime>()?
+            .ApplicationStopping
+            .Register(() =>
+            {
+                var app = webapp.Services.GetService<App>();
+                app.saveSystem.SaveController();
+            });
+            
         webapp.Run();
     }
 
