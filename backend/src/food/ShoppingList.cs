@@ -20,6 +20,8 @@ namespace NutriApp.Food
             this.shoppingLists = lists;
         }
 
+        public void AddUser(string username) => shoppingLists.Add(username, new ShoppingList());
+
         public ShoppingList GetShoppingList(string username) => shoppingLists[username];
 
         /// <summary>

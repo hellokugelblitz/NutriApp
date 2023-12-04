@@ -45,6 +45,7 @@ public class App
     public WorkoutController WorkoutControl => workout;
     public TeamController TeamControl => team;
     public FoodController FoodControl => food;
+    public TeamController TeamControl => team;
     public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
 
