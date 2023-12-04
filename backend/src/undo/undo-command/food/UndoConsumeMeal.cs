@@ -7,27 +7,26 @@ namespace NutriApp.Undo;
 class UndoConsumeMeal : UndoCommand
 {
     private App _app;
+    private User _user;
     private string _mealName;
-    private DateTime _timestamp;
 
-    public UndoConsumeMeal(App app, string mealName, DateTime timestamp)
+    public UndoConsumeMeal(App app, User user, string mealName)
     {
-        _mealName = mealName;
-        _timestamp = timestamp;
         _app = app;
+        _user = user;
+        _mealName = mealName;
     }
 
     public override void Execute()
     {
-        var mealEntry = _app.HistoryControl.Meals
-            .FirstOrDefault(entry => entry.TimeStamp == _timestamp && entry.Value.Equals(_mealName));
-        _app.HistoryControl.Meals.Remove(mealEntry);
+        var meals = _app.HistoryControl.GetMeals(_user.Name);
+        meals.RemoveAt(meals.Count - 1);
 
-        var mealIngredients = mealEntry.Value.Ingredients;
-
+        var mealIngredients = _app.FoodControl.GetMeal(_mealName).Ingredients;
+        
         foreach (KeyValuePair<Food.Ingredient, double> kvp in mealIngredients)
         {
-            _app.FoodControl.AddIngredientStock(kvp.Key.Name, kvp.Value);
+            _app.FoodControl.EditIngredientStock(kvp.Key.Name, +kvp.Value, _user.Name);
         }
 
         onFinished?.Invoke();

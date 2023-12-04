@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 namespace NutriApp.Food;
 
@@ -50,18 +51,26 @@ public class FoodController
         meals = new List<Meal>();
 
         shoppingList.SetCriteria(recipeCriteria);
-        
+
         foreach (string username in ingredientStocks.Keys)
             shoppingList.Update(Recipes, username);
     }
-    
+
     /// <summary>
     /// Adds a recipe with some pre-configured attributes to the user's saved recipes.
     /// </summary>
     public void AddRecipe(Recipe recipe)
     {
         recipes.Add(recipe);
-        
+
+        foreach (string username in ingredientStocks.Keys)
+            shoppingList.Update(Recipes, username);
+    }
+
+    public void RemoveRecipe(Recipe recipe)
+    {
+        recipes.Remove(recipe);
+
         foreach (string username in ingredientStocks.Keys)
             shoppingList.Update(Recipes, username);
     }
@@ -78,7 +87,7 @@ public class FoodController
 
         return null;
     }
-    
+
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
     /// </summary>
@@ -140,7 +149,7 @@ public class FoodController
 
         return true;
     }
-    
+
     /// <summary>
     /// Consumes a meal if there is enough ingredient stock. Returns true if meal consumption
     /// was successful, false otherwise.
@@ -186,7 +195,7 @@ public class FoodController
 
 public class IngredientStocks
 {
-    private Dictionary<string, double> stocks;
+    public Dictionary<string, double> stocks { get; private set; }
 
     public IngredientStocks()
     {

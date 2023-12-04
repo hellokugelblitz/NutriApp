@@ -5,18 +5,18 @@ namespace NutriApp.Undo;
 
 class UndoCreateMeal : UndoCommand
 {
-    private FoodController _foodController;
+    private App _app;
     private Meal _meal;
 
-    public UndoCreateMeal(FoodController foodController, Meal meal) 
+    public UndoCreateMeal(App app, Meal meal) 
     {
-        _foodController = foodController;
+        _app = app;
         _meal = meal;
     }
 
     public override void Execute()
     {
-        _foodController.RemoveMeal(_meal);
+        _app.FoodControl.RemoveMeal(_meal);
 
         onFinished?.Invoke();
     }
