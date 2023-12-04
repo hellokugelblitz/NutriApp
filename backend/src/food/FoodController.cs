@@ -4,17 +4,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System;
 using System.Linq;
+using NutriApp.Save;
 
 namespace NutriApp.Food;
 
 /// <summary>
 /// High-level controller responsible for food-related operations.
 /// </summary>
-public class FoodController
+public class FoodController : ISaveableController
 {
     private readonly string ingredientStockPath = $"{Persistence.FoodDataPath}\\ingredient_stock.json";
-    private readonly string recipePath = $"{Persistence.FoodDataPath}\\recipes.json";
-    private readonly string mealPath = $"{Persistence.FoodDataPath}\\meals.json";
+    private readonly string recipePath = SaveSystem.SavePath + "\\recipes.json";
+    private readonly string mealPath = SaveSystem.SavePath + "\\meals.json";
 
     private List<Recipe> recipes;
     private List<Meal> meals;
@@ -27,6 +28,7 @@ public class FoodController
     private ShoppingListCriteria recipeCriteria;
     private App app;
     private IngredientDatabase ingredientDatabase;
+    private ISaveSystem saveSystem;
 
     /// <summary>
     /// Retrieves all recipes any user has created.
@@ -38,9 +40,10 @@ public class FoodController
     /// </summary>
     public Meal[] Meals => meals.ToArray();
 
-    public FoodController(App app)
+    public FoodController(App app, ISaveSystem saveSystem)
     {
         this.app = app;
+        this.saveSystem = saveSystem;
         ingredientDatabase = new InMemoryIngredientDatabase();
         shoppingList = new ShoppingListController();
         recipeCriteria = new SpecificRecipeCriteria(shoppingList, this);
@@ -174,12 +177,191 @@ public class FoodController
         else
             ingredientStocks[username].SetEntry(ingredientName, newStock);
     }
+    
+    public void SaveUser(string folderName)
+    {
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"food"), ingredientStocks[username].ToDictionary());
+    }
 
+    public void LoadUser(string folderName)
+    {
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        Dictionary<string, string> data = saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "food"));
+        IngredientStocks stock = new IngredientStocks();
+        stock.FromDictionary(data);
+        ingredientStocks[username] = stock;
+    }
+
+    /// <summary>
+    /// Write ingredient stock, recipes, and meals to a persistent JSON file.
+    /// </summary>
+    /*public void Save()
+    {
+        // Write each ingredient stock to a JSON file for persistence, since it isn't stored with
+        // the other ingredient info. Also just store the ingredient name because it serializes better.
+        Dictionary<string, double> ingredientStocks = new Dictionary<string, double>();
+
+        foreach (Recipe recipe in recipes)
+            foreach (Ingredient ingredient in recipe.Ingredients.Keys)
+                if (!ingredientStocks.ContainsKey(ingredient.Name))
+                    ingredientStocks.Add(ingredient.Name, ingredient.Stock);
+
+        string ingredientJson = JsonConvert.SerializeObject(ingredientStocks);
+        File.WriteAllText(ingredientStockPath, ingredientJson);
+        // Serialize each recipe
+        List<SerializableRecipe> recipesToWrite = new List<SerializableRecipe>();
+        foreach (Recipe recipe in recipes)
+        {
+            SerializableRecipe recipeToWrite = new SerializableRecipe(recipe.Name, recipe.Instructions);
+            Dictionary<Ingredient, double>.KeyCollection ingredients = recipe.Children.Keys;
+            foreach (Ingredient ingredient in ingredients)
+                recipeToWrite.AddChild(ingredient.Name, recipe.Children[ingredient]);
+            recipesToWrite.Add(recipeToWrite);
+        }
+        string recipeJson = JsonConvert.SerializeObject(recipesToWrite);
+        File.WriteAllText(recipePath, recipeJson);
+        // Serialize each meal
+        List<SerializablePreparedFood> mealsToWrite = new List<SerializablePreparedFood>();
+        foreach (Meal meal in meals)
+        {
+            SerializablePreparedFood mealToWrite = new SerializablePreparedFood(meal.Name);
+            Dictionary<Recipe, double>.KeyCollection ingredients = meal.Children.Keys;
+            foreach (Recipe recipe in ingredients)
+                mealToWrite.AddChild(recipe.Name, meal.Children[recipe]);
+            mealsToWrite.Add(mealToWrite);
+        }
+        string mealJson = JsonConvert.SerializeObject(mealsToWrite);
+        File.WriteAllText(mealPath, mealJson);
+    }
+    
+    private void Load()
+    {
+        // Don't do anything if data files don't exist yet (e.g. first startup)
+        if (!File.Exists(ingredientStockPath) || !File.Exists(recipePath) || !File.Exists(mealPath))
+            return;
+        // Update ingredient stock
+        string ingredientJson = File.ReadAllText(ingredientStockPath);
+        Dictionary<string, double> ingredientStocks = JsonConvert.DeserializeObject<Dictionary<string, double>>(ingredientJson);
+        
+        foreach (KeyValuePair<string, double> ingredientStock in ingredientStocks)
+        {
+            string name = ingredientStock.Key;
+            double stock = ingredientStock.Value;
+            ingredientDatabase.Get(name).Stock = stock;
+        }
+        // Load recipes
+        string recipeJson = File.ReadAllText(recipePath);
+        SerializableRecipe[] loadedRecipes = JsonConvert.DeserializeObject<SerializableRecipe[]>(recipeJson);
+        foreach (SerializableRecipe loadedRecipe in loadedRecipes)
+        {
+            Recipe recipe = new Recipe(loadedRecipe.Name);
+            
+            foreach (string step in loadedRecipe.Instructions)
+                recipe.AddInstruction(step);
+            foreach (KeyValuePair<string, double> ingredient in loadedRecipe.Children)
+            {
+                string name = ingredient.Key;
+                double quantity = ingredient.Value;
+                recipe.AddChild(ingredientDatabase.Get(name), quantity);
+            }
+            recipes.Add(recipe);
+        }
+        // Load meals
+        string mealJson = File.ReadAllText(mealPath);
+        SerializablePreparedFood[] loadedMeals = JsonConvert.DeserializeObject<SerializablePreparedFood[]>(mealJson);
+        foreach (SerializablePreparedFood loadedMeal in loadedMeals)
+        {
+            Meal meal = new Meal(loadedMeal.Name);
+            
+            foreach (KeyValuePair<string, double> recipe in loadedMeal.Children)
+            {
+                string name = recipe.Key;
+                double quantity = recipe.Value;
+                meal.AddChild(GetRecipe(name), quantity);
+            }
+            meals.Add(meal);
+        }
+    }*/
+    
+    public void SaveController()
+    {
+        // Serialize each recipe
+        List<SerializableRecipe> recipesToWrite = new List<SerializableRecipe>();
+        foreach (Recipe recipe in recipes)
+        {
+            SerializableRecipe recipeToWrite = new SerializableRecipe(recipe.Name, recipe.Instructions);
+            Dictionary<Ingredient, double>.KeyCollection ingredients = recipe.Children.Keys;
+            foreach (Ingredient ingredient in ingredients)
+                recipeToWrite.AddChild(ingredient.Name, recipe.Children[ingredient]);
+            recipesToWrite.Add(recipeToWrite);
+        }
+        string recipeJson = JsonConvert.SerializeObject(recipesToWrite);
+        File.WriteAllText(recipePath, recipeJson);
+        // Serialize each meal
+        List<SerializablePreparedFood> mealsToWrite = new List<SerializablePreparedFood>();
+        foreach (Meal meal in meals)
+        {
+            SerializablePreparedFood mealToWrite = new SerializablePreparedFood(meal.Name);
+            Dictionary<Recipe, double>.KeyCollection ingredients = meal.Children.Keys;
+            foreach (Recipe recipe in ingredients)
+                mealToWrite.AddChild(recipe.Name, meal.Children[recipe]);
+            mealsToWrite.Add(mealToWrite);
+        }
+        string mealJson = JsonConvert.SerializeObject(mealsToWrite);
+        File.WriteAllText(mealPath, mealJson);
+    }
+
+    public void LoadController()
+    {
+        if (!File.Exists(recipePath) || !File.Exists(mealPath))
+            return;
+        
+        // Load recipes
+        string recipeJson = File.ReadAllText(recipePath);
+        SerializableRecipe[] loadedRecipes = JsonConvert.DeserializeObject<SerializableRecipe[]>(recipeJson);
+        foreach (SerializableRecipe loadedRecipe in loadedRecipes)
+        {
+            Recipe recipe = new Recipe(loadedRecipe.Name);
+            
+            foreach (string step in loadedRecipe.Instructions)
+                recipe.AddInstruction(step);
+            foreach (KeyValuePair<string, double> ingredient in loadedRecipe.Children)
+            {
+                string name = ingredient.Key;
+                double quantity = ingredient.Value;
+                recipe.AddChild(ingredientDatabase.Get(name), quantity);
+            }
+            recipes.Add(recipe);
+        }
+        
+        // Load meals
+        string mealJson = File.ReadAllText(mealPath);
+        SerializablePreparedFood[] loadedMeals = JsonConvert.DeserializeObject<SerializablePreparedFood[]>(mealJson);
+        foreach (SerializablePreparedFood loadedMeal in loadedMeals)
+        {
+            Meal meal = new Meal(loadedMeal.Name);
+            
+            foreach (KeyValuePair<string, double> recipe in loadedMeal.Children)
+            {
+                string name = recipe.Key;
+                double quantity = recipe.Value;
+                meal.AddChild(GetRecipe(name), quantity);
+            }
+            meals.Add(meal);
+        }
+    }
+
+    public void AddNewUser(User user)
+    {
+        ingredientStocks[user.UserName] = new IngredientStocks();
+    }
+    
     public delegate void MealEventHandler(Meal meal, string username);
     public event MealEventHandler MealConsumeEvent;
 }
 
-public class IngredientStocks
+public class IngredientStocks: ISaveObject
 {
     private Dictionary<string, double> stocks;
 
@@ -218,5 +400,15 @@ public class IngredientStocks
         if (!stocks.ContainsKey(ingredientName)) return 0;
 
         return stocks[ingredientName];
+    }
+
+    public Dictionary<string, string> ToDictionary()
+    {
+        return stocks.ToDictionary(x => x.Key, x => x.Value.ToString());
+    }
+
+    public void FromDictionary(Dictionary<string, string> data)
+    {
+        stocks = data.ToDictionary(x => x.Key, x => double.Parse(x.Value));
     }
 }
