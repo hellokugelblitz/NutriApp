@@ -18,7 +18,7 @@ public class TestFoodController
     private User testUser = new User("dannytga", "danny", 72, DateTime.Now, "imm tallll");
     private Guid dannyGuid;
     [TestMethod]
-    public void TestSaveLoad()
+    public void TestSaveLoadController()
     {
         ClearDirectory();
         Setup();
@@ -35,10 +35,12 @@ public class TestFoodController
         Assert.IsTrue(meals.SequenceEqual(food.Meals));
     }
 
-     public void Setup()
+    public void Setup()
     {
         _app = new App(1/150f);//1/90
         food = _app.FoodControl;
+        _app.SaveSyst.SubscribeSaveable(_app.UserControl);
+        _app.SaveSyst.SubscribeSaveable(food);
         var data = _app.UserControl.CreateUser(testUser, "hi");
         dannyGuid = data.Item1;
         _app.GoalControl.SetGoal(new MaintainWeightGoal(_app.GoalControl, 155, testUser.UserName), testUser.UserName);
@@ -52,6 +54,8 @@ public class TestFoodController
         Meal meal = new Meal("mac");
         meal.AddChild(recipe, 2);
         food.AddMeal(meal);
+        
+        food.EditIngredientStock("CHEESE,BRICK", 3, testUser.UserName);
     }
      
      /// <summary>
