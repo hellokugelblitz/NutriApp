@@ -24,8 +24,7 @@ public class AuthController : ControllerBase
     [Authorize]
     public ActionResult<User> GetUser()
     {
-        var sessionKey = Request.Headers[NutriAppAuthHandler.SessionHeaderName][0]!;
-        return _app.UserControl.GetUser(Guid.Parse(sessionKey));
+        return HttpContext.GetUser();
     }
     
     // POST api/Auth/signup
