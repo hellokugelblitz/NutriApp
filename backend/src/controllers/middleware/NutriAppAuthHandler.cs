@@ -10,12 +10,13 @@ using Microsoft.Extensions.Options;
 
 namespace NutriApp.Controllers.Middleware;
 
-public class NutriAppAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public class NutriAppAuthHandler : AuthenticationHandler<NutriAppAuthSchemeOptions>
 {
     private readonly App _app;
+    public const string SCHEME_NAME = "NutriAppAuthScheme";
     
     public NutriAppAuthHandler(
-        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        IOptionsMonitor<NutriAppAuthSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
         ISystemClock clock,

@@ -106,8 +106,10 @@ public class App
 
         builder.Services.AddSingleton(_ => new App(1));
 
-        builder.Services.AddAuthentication("NutriAppScheme")
-            .AddScheme<AuthenticationSchemeOptions, NutriAppAuthHandler>("NutriAppScheme", _ => { });
+        builder.Services.AddAuthentication(
+                options => options.DefaultScheme = NutriAppAuthHandler.SCHEME_NAME)
+            .AddScheme<NutriAppAuthSchemeOptions, NutriAppAuthHandler>(
+                NutriAppAuthHandler.SCHEME_NAME, _ => { });
         builder.Services.AddAuthorization();
 
         builder.Services.AddSwaggerGen(c =>
