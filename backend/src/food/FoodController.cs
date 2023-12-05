@@ -182,6 +182,7 @@ public class FoodController : ISaveableController
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);
         saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"food"), ingredientStocks[username].ToDictionary());
+        ingredientStocks.Remove(username);
     }
 
     public void LoadUser(string folderName)
