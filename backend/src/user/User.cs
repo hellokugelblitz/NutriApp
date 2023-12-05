@@ -19,7 +19,7 @@ public class User : ISaveObject
     public string Bio { get; private set; }
     public string TeamName { get; set; }
     
-    public Notification[] Notifications => notifications.ToArray();
+    public Notification[] Notifications => notifications?.ToArray() ?? Array.Empty<Notification>();
 
     public User()
     {
