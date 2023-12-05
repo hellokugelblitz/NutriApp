@@ -7,6 +7,10 @@ export const authenticateUser = async (event: RequestEvent) => {
 	// get the session key from the cookie
 	const sessionKey = cookies.get("auth");
 
+    const key = {
+        sessionKey: sessionKey,
+    };
+
 	// If there's no session key, the user is not authenticated
 	if (!sessionKey) {
 		return null;
@@ -14,11 +18,11 @@ export const authenticateUser = async (event: RequestEvent) => {
 		try{
 			// Does the user already exist?
 			const response = await fetch('http://localhost:5072/api/Auth', {
-				method: 'POST',
+				method: 'GET',
 				headers: {
 				'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(sessionKey),
+				'sessionKey': sessionKey
+				}
 			});
 
 			if (response.ok) {
