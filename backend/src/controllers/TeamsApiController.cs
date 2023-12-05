@@ -3,8 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NutriApp.Controllers.Models;
 using NutriApp;
+using System.IO;
+using NutriApp.Controllers.Middleware;
 
 namespace NutriApp.Controllers;
 
@@ -22,35 +25,67 @@ public class TeamsApiController : ControllerBase
     
     // POST api/Teams
     [HttpPost]
-    public async Task<ActionResult<Team>> CreateTeam(Team team)
+    public ActionResult<Team> CreateTeam()
     {
-        return team;
+        string requestString;
+
+        using (StreamReader reader = new StreamReader(Request.Body))
+            requestString = reader.ReadToEndAsync().Result;
+
+        Dictionary<string, string> request = JsonConvert.DeserializeObject<Dictionary<string, string>>(requestString);
+        Teams.Team team = _app.TeamControl.CreateTeam(request["teamName"]);
+
+        if (team is null) return Conflict();
+
+        return Ok(new Team()
+        {
+            Name = team.Name,
+            Members = team.Members,
+            ChallengeStartDate = team.ChallengeStartDate,
+            ChallengeEndDate = team.ChallengeEndDate
+        });
+    }
+
+    // GET api/Teams
+    [HttpGet]
+    public ActionResult<Team> GetTeam()
+    {
+        User user = HttpContext.GetUser();
+        Teams.Team team = _app.TeamControl.GetTeam(user.TeamName);
+
+        return team is null ? NoContent() : Ok(new Team()
+        {
+            Name = team.Name,
+            Members = team.Members,
+            ChallengeStartDate = team.ChallengeStartDate,
+            ChallengeEndDate = team.ChallengeEndDate
+        });
     }
     
     // POST api/Teams/invite/{username}
     [HttpPost("invite/{username}")]
-    public async Task<ActionResult<TeamInvite>> InviteUser(string username)
+    public ActionResult<TeamInvite> InviteUser(string username)
     {
         return new TeamInvite { Code = "nutricode" };
     }
     
     // PUT api/Teams/invite/accept/{inviteCode}
     [HttpPut("invite/accept/{inviteCode}")]
-    public async Task<ActionResult<Team>> AcceptInvite(string inviteCode)
+    public ActionResult<Team> AcceptInvite(string inviteCode)
     {
         return new Team { Name = "NutriTeam" };
     }
     
     // PUT api/Teams/leave
     [HttpPut("leave")]
-    public async Task<IActionResult> LeaveTeam()
+    public IActionResult LeaveTeam()
     {
         return Ok();
     }
     
     // GET api/Teams/workouts/{username}
     [HttpGet("workouts/{username}")]
-    public async Task<ActionResult<IEnumerable<Entry<Models.Workout>>>> GetWorkouts(string username)
+    public ActionResult<IEnumerable<Entry<Models.Workout>>> GetWorkouts(string username)
     {
         // Some dummy workout structs
         Entry<Models.Workout>[] workouts =
@@ -68,14 +103,14 @@ public class TeamsApiController : ControllerBase
     
     // POST api/Teams/challenge
     [HttpPost("challenge")]
-    public async Task<IActionResult> CreateChallenge()
+    public IActionResult CreateChallenge()
     {
         return Ok();
     }
     
     // GET api/Teams/challenge
     [HttpGet("challenge")]
-    public async Task<ActionResult<List<UserProfile>>> GetChallengeRanking()
+    public ActionResult<List<UserProfile>> GetChallengeRanking()
     {
         // Some dummy user profile structs
         UserProfile[] users =

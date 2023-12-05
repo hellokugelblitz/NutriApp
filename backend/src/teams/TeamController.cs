@@ -42,12 +42,14 @@ public class TeamController : ISaveableController
     /// Creates a new team with the given name. Returns true if successfully created, false otherwise
     /// (typically if name is already taken).
     /// </summary>
-    public bool CreateTeam(string name)
+    public Team CreateTeam(string name)
     {
-        if (GetTeam(name) != null) return false;
+        if (GetTeam(name) != null) return null;
 
-        teams.Add(new Team(name));
-        return true;
+        Team team = new Team(name);
+
+        teams.Add(team);
+        return team;
     }
 
     /// <summary>
