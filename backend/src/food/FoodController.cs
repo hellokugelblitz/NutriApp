@@ -298,6 +298,7 @@ public class FoodController : ISaveableController
         }
         string recipeJson = JsonConvert.SerializeObject(recipesToWrite);
         File.WriteAllText(recipePath, recipeJson);
+        
         // Serialize each meal
         List<SerializablePreparedFood> mealsToWrite = new List<SerializablePreparedFood>();
         foreach (Meal meal in meals)

@@ -61,7 +61,7 @@ public class App
         saveSystem = new SaveSystem();
         userCtrl = new UserController(saveSystem);
         workout = new WorkoutController();
-        food = new FoodController(this);
+        food = new FoodController(this, saveSystem);
         history = new HistoryController(this, saveSystem);
         goal = new GoalController(this, saveSystem);
         team = new TeamController(this, saveSystem);
