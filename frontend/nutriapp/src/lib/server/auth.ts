@@ -32,6 +32,7 @@ export const authenticateUser = async (event: RequestEvent) => {
 					username: username
 				}
 				return user;
+				
 			} else if (response.status === 401) {
 				return null;
 			} else {
