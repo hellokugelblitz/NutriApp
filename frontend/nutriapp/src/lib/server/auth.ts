@@ -21,12 +21,12 @@ export const authenticateUser = async (event: RequestEvent) => {
 				body: JSON.stringify(sessionKey),
 			});
 
-
 			if (response.ok) {
-				//The user has been authenticated, now we save the username and session key and return
-				//For use in locals.
+				// The user has been authenticated, now we save the username and 
+				// session key and return for use in locals.
 				const responseData = await response.json();
-				const username = responseData.userName;
+				const username: string = responseData.userName;
+
 				const user = {
 					session_key: sessionKey,
 					username: username
