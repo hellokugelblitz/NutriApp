@@ -61,6 +61,12 @@ public class FoodController : ISaveableController
     /// </summary>
     public void AddRecipe(Recipe recipe)
     {
+        foreach (var item in recipes)
+        {
+            if (item.Name.Equals(recipe.Name))
+                throw new Exception("Recipe already exist");
+        }
+
         recipes.Add(recipe);
         
         foreach (string username in ingredientStocks.Keys)
