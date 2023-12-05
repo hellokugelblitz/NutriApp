@@ -23,14 +23,12 @@ public class NutriAppAuthHandler : AuthenticationHandler<AuthenticationSchemeOpt
         _app = app;
     }
 
+    public const string SessionHeaderName = "sessionKey";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        // Session header name
-        const string sessionHeaderName = "sessionKey";
-        
         // Get the session header value
-        if (!Request.Headers.TryGetValue(sessionHeaderName, out var sessionHeaderValues))
+        if (!Request.Headers.TryGetValue(SessionHeaderName, out var sessionHeaderValues))
         {
             return Task.FromResult(AuthenticateResult.Fail("Missing session header"));
         }

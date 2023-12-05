@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
+using NutriApp.Controllers.Middleware;
 
 namespace NutriApp.Controllers;
 
@@ -16,6 +17,17 @@ public class AuthController : ControllerBase
     public AuthController(App app)
     {
         _app = app;
+    }
+    
+    // GET api/Auth
+    [HttpGet]
+    [Authorize]
+    public ActionResult<User> GetUser()
+    {
+        var sessionKey = Request.Headers[NutriAppAuthHandler.SessionHeaderName][0]!;
+        var user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
+        Console.WriteLine(user);
+        return user;
     }
     
     // POST api/Auth/signup
