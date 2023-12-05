@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualBasic;
 using NutriApp.History;
 using NutriApp.Save;
 
@@ -39,9 +40,9 @@ public class Meal : PreparedFood<Recipe>
         return output;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object other)
     {
-        Meal other = obj as Meal;
-        return other is not null && Name == other.Name;
+        Meal obj = other as Meal;
+        return obj is not null && Name == obj.Name && Children.SequenceEqual(obj.Children);
     }
 }

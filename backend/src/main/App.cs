@@ -42,6 +42,7 @@ public class App
     public GoalController GoalControl => goal;
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
+    public TeamController TeamControl => team;
     public UserController UserControl => userCtrl;
     public DateTime TimeStamp => date;
 
@@ -60,7 +61,7 @@ public class App
         saveSystem = new SaveSystem();
         userCtrl = new UserController(saveSystem);
         workout = new WorkoutController();
-        food = new FoodController(this);
+        food = new FoodController(this, saveSystem);
         history = new HistoryController(this, saveSystem);
         goal = new GoalController(this, saveSystem);
         team = new TeamController(this, saveSystem);
