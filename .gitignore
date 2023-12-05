@@ -13,3 +13,4 @@ vite.config.ts.timestamp-*
 .svelte-kit
 .idea
 TestResults
+data
