@@ -1,6 +1,6 @@
 import type { RequestEvent } from "@sveltejs/kit"
 
-export const authenticateUser = (event: RequestEvent) => {
+export const authenticateUser = async (event: RequestEvent) => {
 	// get the cookies from the request
 	const { cookies } = event
 
@@ -11,13 +11,37 @@ export const authenticateUser = (event: RequestEvent) => {
 	if (!sessionKey) {
 		return null;
 	} else {
-		// TODO: Validate session key on the backend, here we will pass in the username as well.
-		const user = {
-			session_key: sessionKey,
-            username: "current_user"
-		}
+		try{
+			// Does the user already exist?
+			const response = await fetch('http://localhost:5072/api/Auth', {
+				method: 'POST',
+				headers: {
+				'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(sessionKey),
+			});
 
-		return user;
+
+			if (response.ok) {
+				//The user has been authenticated, now we save the username and session key and return
+				//For use in locals.
+				const responseData = await response.json();
+				const username = responseData.userName;
+				const user = {
+					session_key: sessionKey,
+					username: username
+				}
+				return user;
+			} else if (response.status === 401) {
+				return null;
+			} else {
+				console.log(response);
+				return null;
+			}
+
+		} catch {
+
+		}
 	}
 
 	return null
