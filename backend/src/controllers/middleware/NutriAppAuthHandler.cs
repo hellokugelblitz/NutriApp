@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -27,6 +29,15 @@ public class NutriAppAuthHandler : AuthenticationHandler<AuthenticationSchemeOpt
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        // Check that the endpoint that is being called
+        // requires authorization.
+        // It should be noted that normally this would be done automatically by the framework,
+        // but for some reason it isn't
+        if (Context.GetEndpoint()?.Metadata.GetMetadata<IAuthorizeData>() == null)
+        {
+            return Task.FromResult(AuthenticateResult.NoResult());
+        }
+        
         // Get the session header value
         if (!Request.Headers.TryGetValue(SESSION_HEADER_NAME, out var sessionHeaderValues))
         {

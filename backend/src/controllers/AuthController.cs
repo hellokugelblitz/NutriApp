@@ -29,7 +29,7 @@ public class AuthController : ControllerBase
     
     // POST api/Auth/signup
     [HttpPost("signup")]
-    public async Task<IActionResult> SignUp(SignUpInfo info)
+    public IActionResult SignUp(SignUpInfo info)
     {
         if (_app.UserControl.UserExists(info.Username))
         {
@@ -53,7 +53,7 @@ public class AuthController : ControllerBase
     
     // POST api/Auth/login
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResult>> Login(Credentials creds)
+    public ActionResult<AuthResult> Login(Credentials creds)
     {
         try
         {
@@ -77,7 +77,7 @@ public class AuthController : ControllerBase
     // POST api/Auth/logout
     [HttpPost("logout")]
     [Authorize]
-    public async Task<IActionResult> Logout()
+    public IActionResult Logout()
     {
         var sessionKey = User.FindFirst("SessionKey")!.Value;
         _app.UserControl.Logout(Guid.Parse(sessionKey));
@@ -86,7 +86,7 @@ public class AuthController : ControllerBase
     
     // POST api/Auth/change-password
     [HttpPost("change-password")]
-    public async Task<IActionResult> ChangePassword(Credentials creds)
+    public IActionResult ChangePassword(Credentials creds)
     {
         return NoContent();
     }
