@@ -17,6 +17,7 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
             }
     
             const data = await res.json();
+            console.log(data);
             return data;
         } catch (error: any) {
             console.error(`Error fetching user for ${username},`, error.message);

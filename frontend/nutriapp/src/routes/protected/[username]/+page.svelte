@@ -1,6 +1,7 @@
 <script lang="ts">
     import Nav from '$lib/ui/Nav.svelte';
     import { page } from '$app/stores';
+    import profilepic from '$lib/assets/profilepic.jpg';
 
     //Grabbing information.
     export let data;
@@ -40,17 +41,32 @@
     </div>
 
 {:else}
-    <Nav title='{data.visiting_user.userName} User Profile' current_data={$page.data}/>
+    <Nav title='User Profile: {data.visiting_user.userName} ' current_data={$page.data}/>
 
     <!-- GRID -->
-    <div class=" p-4 md:ml-64 mx-0 max-screen max-w-6xl">
-            <h1> Username: <span class="font-bold">{data.visiting_user.userName} </span></h1>
-            <h2> Name: <span class="font-bold">{data.visiting_user.name}</span> </h2>
+    <div class=" p-4 md:ml-64 mx-0 max-screen max-w-6xl relative">
+        <div class="absolute content-center justify-center items-center border-4 border-gray-225 rounded-full bg-white p-8 w-96 h-96">
+            <div class="relative flex flex-col justify-center items-center">
+                <img class="w-28 h-28 p-1 rounded-max ring-2 ring-primary-green" alt="The project logo" src={profilepic} />
+                <h1><span class="font-bold text-lg">{data.visiting_user.userName} </span></h1>
+                <h2><span class="italic text-gray-300">{data.visiting_user.name}</span> </h2>
+            </div>
             {#if data.visiting_user.bio == ""}
-                <h2> <span class="font-bold"> This user has no BIO </span></h2>
+                <div class="relative pt-8 h-32">
+                    <h2> <span class="absolute font-bold left-4 top-2"> User Bio: </span></h2>
+                    <div class="absolute bg-gray-100 rounded-full p-4 top-8 w-full h-full">
+                        <h2><span class="font-bold italic text-gray-300">This user has no Bio</span> </h2>
+                    </div>
+                </div>
             {:else}
-                <h2> User bio: {data.visiting_user.bio} </h2>
+                <div class="relative pt-8 h-32">
+                    <h2> <span class="absolute font-bold left-4 top-2"> User Bio: </span></h2>
+                    <div class="absolute bg-gray-100 rounded-full p-4 top-8 w-full h-full">
+                        <h2><span class="text-black">{data.visiting_user.bio}</span> </h2>
+                    </div>
+                </div>
             {/if}
+        </div>
     </div>
 
 {/if}
