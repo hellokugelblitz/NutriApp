@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
+using NutriApp.Controllers.Middleware;
 
 namespace NutriApp.Controllers;
 
@@ -26,28 +27,18 @@ public class WorkoutsApiController : ControllerBase
     [HttpPost]
     public IActionResult CreateWorkout(WorkoutModel workoutModel)
     {
-        var sessionKey = User.FindFirst("SessionKey")!.Value;
-        User user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
+        var user = HttpContext.GetUser();
         _app.HistoryControl.AddWorkout(workoutModel.ToWorkout(), user.UserName);
         return Ok();
     }
     
     // GET api/Workouts/recommended
     [HttpGet("recommended")]
-    public async Task<ActionResult<IEnumerable<WorkoutModel>>> GetRecommendedWorkouts()
+    public ActionResult<IEnumerable<WorkoutModel>> GetRecommendedWorkouts()
     {
-        var sessionKey = User.FindFirst("SessionKey")!.Value;
-        User user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
-        WorkoutModel[] workouts =
-        {
-            // Some dummy workout structs
-            new() { Name = "Running", Minutes = 30, Intensity = 7.5 },
-            new() { Name = "Weightlifting", Minutes = 45, Intensity = 10 },
-            new() { Name = "Yoga", Minutes = 60, Intensity = 5 },
-        };
-        return _app.WorkoutControl.GenerateRecommendedWorkouts(_app.HistoryControl.GetWorkouts(user.UserName)).Select(ele =>
-        {
-            return new WorkoutModel(ele);
-        }).ToArray();
+        var user = HttpContext.GetUser();
+        return _app.WorkoutControl
+            .GenerateRecommendedWorkouts(_app.HistoryControl.GetWorkouts(user.UserName))
+            .Select(workout => new WorkoutModel(workout)).ToArray();
     }
 }
