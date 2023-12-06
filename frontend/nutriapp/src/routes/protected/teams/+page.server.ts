@@ -9,6 +9,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		members: [],
 		challengeStartDate: new Date(),
 		challengeEndDate: new Date(),
+		dataExists: false
 	};
 
 	if (!locals.user) return { user: {}, team: team };
@@ -18,13 +19,14 @@ export const load: PageServerLoad = async ({ locals }) => {
 		headers: { "sessionKey": locals.user.session_key }
 	});
 
-	if (response.ok) {
+	if (response.status === 200) {
 		const responseData = await response.json();
 		team = {
 			name: responseData.name,
 			members: responseData.members,
 			challengeStartDate: new Date(responseData.challengeStartDate),
-			challengeEndDate: new Date(responseData.challengeEndDate)
+			challengeEndDate: new Date(responseData.challengeEndDate),
+			dataExists: true
 		}
 	}
 	else {
