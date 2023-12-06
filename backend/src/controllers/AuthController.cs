@@ -53,12 +53,12 @@ public class AuthController : ControllerBase
     
     // POST api/Auth/login
     [HttpPost("login")]
-    public ActionResult<AuthResult> Login(Credentials creds)
+    public ActionResult<AuthResultModel> Login(CredentialsModel creds)
     {
         try
         {
             var (sessionKey, newUser) = _app.UserControl.Login(creds.Username, creds.Password);
-            return new AuthResult { Session = sessionKey.ToString() };
+            return new AuthResultModel { Session = sessionKey.ToString() };
         }
         catch (InvalidUsernameException e)
         {
@@ -86,7 +86,7 @@ public class AuthController : ControllerBase
     
     // POST api/Auth/change-password
     [HttpPost("change-password")]
-    public IActionResult ChangePassword(Credentials creds)
+    public IActionResult ChangePassword(CredentialsModel creds)
     {
         return NoContent();
     }

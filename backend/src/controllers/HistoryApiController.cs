@@ -20,9 +20,9 @@ public class HistoryApiController : ControllerBase
     
     // GET api/History/workouts
     [HttpGet("workouts")]
-    public ActionResult<IEnumerable<Entry<Models.Workout>>> GetWorkouts()
+    public ActionResult<IEnumerable<EntryModel<Models.WorkoutModel>>> GetWorkouts()
     {
-        Entry<Models.Workout>[] workouts =
+        EntryModel<Models.WorkoutModel>[] workouts =
         {
             new() { Value = new() { Name = "Pushups", Minutes = 60, Intensity = 7.5 } },
             new() { Value = new() { Name = "Pullups", Minutes = 30, Intensity = 5.0 } },
@@ -37,9 +37,9 @@ public class HistoryApiController : ControllerBase
     
     // GET api/History/weights
     [HttpGet("weights")]
-    public ActionResult<IEnumerable<Entry<double>>> GetWeights()
+    public ActionResult<IEnumerable<EntryModel<double>>> GetWeights()
     {
-        Entry<double>[] weights =
+        EntryModel<double>[] weights =
         {
             new() { Value = 100 },
             new() { Value = 99.5 },
@@ -55,9 +55,9 @@ public class HistoryApiController : ControllerBase
     
     // GET api/History/calories
     [HttpGet("calories")]
-    public ActionResult<IEnumerable<Entry<CalorieProgress>>> GetCalories()
+    public ActionResult<IEnumerable<EntryModel<CalorieProgressModel>>> GetCalories()
     {
-        Entry<CalorieProgress>[] calories =
+        EntryModel<CalorieProgressModel>[] calories =
         {
             new() { Value = new() { ActualCalories = 2000, GoalCalories = 2500 } },
             new() { Value = new() { ActualCalories = 2100, GoalCalories = 2500 } },
@@ -73,9 +73,9 @@ public class HistoryApiController : ControllerBase
     
     // GET api/History/meals
     [HttpGet("meals")]
-    public ActionResult<IEnumerable<Entry<Meal>>> GetMeals()
+    public ActionResult<IEnumerable<EntryModel<MealModel>>> GetMeals()
     {
-        Entry<Meal>[] meals =
+        EntryModel<MealModel>[] meals =
         {
             new() { Value = new() { Name = "Breakfast" } },
             new() { Value = new() { Name = "Lunch" } },
