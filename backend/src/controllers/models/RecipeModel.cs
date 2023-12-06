@@ -3,10 +3,10 @@ using System.Linq;
 
 namespace NutriApp.Controllers.Models;
 
-public struct Recipe
+public struct RecipeModel
 {
     public string Name { get; set; }
-    public List<Ingredient> Ingredients { get; set; }
+    public List<IngredientModel> Ingredients { get; set; }
     public List<string> Instructions { get; set; }
     public double Calories { get; set; }
     public double Fat { get; set; }
@@ -14,10 +14,10 @@ public struct Recipe
     public double Fiber { get; set; }
     public double Carbs { get; set; }
 
-    public Recipe(Food.Recipe recipe)
+    public RecipeModel(Food.Recipe recipe)
     {
         Name = recipe.Name;
-        Ingredients = recipe.Ingredients.Keys.Select(re => { return new Ingredient(re); }).ToList();
+        Ingredients = recipe.Ingredients.Keys.Select(re => { return new IngredientModel(re); }).ToList();
         Instructions = recipe.Instructions.ToList();
         Calories = recipe.Calories;
         Fat = recipe.Fat;

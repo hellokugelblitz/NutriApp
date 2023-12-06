@@ -22,15 +22,15 @@ public class RecipesApiController : ControllerBase
     
     // GET api/Recipes
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
+    public async Task<ActionResult<IEnumerable<RecipeModel>>> GetRecipes()
     {
-        Recipe[] recipes =
+        RecipeModel[] recipes =
         {
             // Some dummy recipe structs
             new()
             {
                 Name = "Apple Pie",
-                Ingredients = new List<Ingredient>
+                Ingredients = new List<IngredientModel>
                 {
                     new()
                     {
@@ -79,7 +79,7 @@ public class RecipesApiController : ControllerBase
             new()
             {
                 Name = "Banana Bread",
-                Ingredients = new List<Ingredient>
+                Ingredients = new List<IngredientModel>
                 {
                     new()
                     {
@@ -128,7 +128,7 @@ public class RecipesApiController : ControllerBase
             new()
             {
                 Name = "Orange Juice",
-                Ingredients = new List<Ingredient>
+                Ingredients = new List<IngredientModel>
                 {
                     new()
                     {
@@ -171,12 +171,12 @@ public class RecipesApiController : ControllerBase
     
     // GET api/Recipes/{name}
     [HttpGet("{name}")]
-    public async Task<ActionResult<Recipe>> GetRecipe(string name)
+    public async Task<ActionResult<RecipeModel>> GetRecipe(string name)
     {
-        Recipe recipe = new()
+        RecipeModel recipeModel = new()
         {
             Name = name,
-            Ingredients = new List<Ingredient>
+            Ingredients = new List<IngredientModel>
             {
                 new()
                 {
@@ -222,19 +222,19 @@ public class RecipesApiController : ControllerBase
                 "Bake 15 minutes in the preheated oven. Reduce the temperature to 350 degrees F (175 degrees C). Continue baking for 35 to 45 minutes, until apples are soft."
             },
         };
-        return recipe;
+        return recipeModel;
     }
     
     // GET api/Recipes/search/{name}
     [HttpGet("search/{name}")]
-    public async Task<ActionResult<IEnumerable<Recipe>>> SearchRecipes(string name)
+    public async Task<ActionResult<IEnumerable<RecipeModel>>> SearchRecipes(string name)
     {
-        Recipe[] recipes =
+        RecipeModel[] recipes =
         {
             new()
             {
                 Name = "Apple Pie",
-                Ingredients = new List<Ingredient>
+                Ingredients = new List<IngredientModel>
                 {
                     new()
                     {
@@ -283,7 +283,7 @@ public class RecipesApiController : ControllerBase
             new()
             {
                 Name = "Banana Bread",
-                Ingredients = new List<Ingredient>
+                Ingredients = new List<IngredientModel>
                 {
                     new()
                     {
@@ -336,10 +336,10 @@ public class RecipesApiController : ControllerBase
     // POST api/Recipes
     [HttpPost]
     [Authorize]
-    public async Task<ActionResult<Recipe>> CreateRecipe(CreateRecipeInfo info)
+    public async Task<ActionResult<RecipeModel>> CreateRecipe(CreateRecipeInfo info)
     {
-        Recipe recipe = new() { Name = info.Name };
-        return CreatedAtAction("GetRecipe", new { name = recipe.Name }, recipe);
+        RecipeModel recipeModel = new() { Name = info.Name };
+        return CreatedAtAction("GetRecipe", new { name = recipeModel.Name }, recipeModel);
     }
     
     // PUT api/Recipes/{name}

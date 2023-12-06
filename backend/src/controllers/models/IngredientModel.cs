@@ -1,6 +1,6 @@
 ﻿namespace NutriApp.Controllers.Models;
 
-public struct Ingredient
+public struct IngredientModel
 {
     public string Name { get; set; }
     public double Calories { get; set; }
@@ -9,7 +9,7 @@ public struct Ingredient
     public double Fiber { get; set; }
     public double Carbs { get; set; }
 
-    public Ingredient(Food.Ingredient ingredient)
+    public IngredientModel(Food.Ingredient ingredient)
     {
         Name = ingredient.Name;
         Calories = ingredient.Calories;

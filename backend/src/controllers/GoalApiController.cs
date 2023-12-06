@@ -21,10 +21,10 @@ public class GoalApiController : ControllerBase
     
     // GET api/Goal
     [HttpGet]
-    public async Task<ActionResult<Models.Goal>> GetGoal()
+    public async Task<ActionResult<Models.GoalModel>> GetGoal()
     {
         // Create a dummy goal
-        var goal = new Models.Goal
+        var goal = new Models.GoalModel
         {
             Type = "lose",
             WeightGoal = 150,
