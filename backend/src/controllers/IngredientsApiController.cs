@@ -9,7 +9,7 @@ using NutriApp.Controllers.Models;
 using NutriApp;
 using NutriApp.Controllers.Middleware;
 using NutriApp.Food;
-using Ingredient = NutriApp.Controllers.Models.Ingredient;
+using Ingredient = NutriApp.Controllers.Models.IngredientModel;
 
 namespace NutriApp.Controllers;
 
@@ -26,18 +26,18 @@ public class IngredientsApiController : ControllerBase
     
     // GET api/Ingredients/{name}
     [HttpGet("{name}")]
-    public ActionResult<Ingredient> GetIngredient(string name)
+    public ActionResult<IngredientModel> GetIngredient(string name)
     {
         var ing = _app.FoodControl.GetIngredient(name);
-        return ing != null ? Ingredient.FromIngredient(ing) : new Ingredient();
+        return ing != null ? IngredientModel.FromIngredient(ing) : new IngredientModel();
     }
     
     // GET api/Ingredients/search/{name}
     [HttpGet("search/{name}")]
-    public ActionResult<IEnumerable<Ingredient>> SearchIngredients(string name)
+    public ActionResult<IEnumerable<IngredientModel>> SearchIngredients(string name)
     {
         var ings = _app.FoodControl.SearchIngredients(name);
-        return ings.Select(Ingredient.FromIngredient).ToList();
+        return ings.Select(IngredientModel.FromIngredient).ToList();
     }
     
     // Get api/Ingredients/stock
