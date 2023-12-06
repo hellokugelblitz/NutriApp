@@ -19,27 +19,9 @@ public class UserApiController : ControllerBase
         _app = app;
     }
 
-    // GET api/User
-    // [HttpGet]
-    // public ActionResult<User> GetUser(UserProfile user)
-    // {
-    //     var username = user.Name;
-    //     return _app.UserControl.GetUser(username);
-    // }
-    
-
-    // [HttpGet]
-    // public ActionResult<User> GetUser(string username)
-    // {
-    //     return _app.UserControl.GetUser(username);
-    // }
-
-
     [HttpGet("{username}")]
     public ActionResult<User> GetUser(string username)
     {
-        Console.WriteLine($"Debugging: Retrieving user for username '{username}'");
-        Console.WriteLine($"What will be returned: '{_app.UserControl.GetUser(username)}'");
         return _app.UserControl.GetUser(username);
     }
 }
