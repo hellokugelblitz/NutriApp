@@ -175,7 +175,7 @@ public class MealsApiController : ControllerBase
     [Authorize]
     public ActionResult<MealModel> CreateMeal(CreateMealInfo info)
     {
-        if (_app.FoodControl.GetMeal(info.Name) == null)
+        if (_app.FoodControl.GetMeal(info.Name) != null)
             return BadRequest("Meal already exists; use PUT to edit");
 
         var meal = new Meal(info.Name);
