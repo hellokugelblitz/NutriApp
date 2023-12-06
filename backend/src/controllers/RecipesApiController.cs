@@ -210,7 +210,7 @@ public class RecipesApiController : ControllerBase
         }
         
         if (badIngredients.Count > 0)
-            return BadRequest(new { message = "Some ingredients don't exist", BadIngredients = badIngredients });
+            return BadRequest(new { message = "Some ingredients don't exist", badIngredients });
         
         _app.FoodControl.AddRecipe(recipe);
         return NoContent();
