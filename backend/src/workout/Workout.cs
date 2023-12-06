@@ -15,6 +15,23 @@ public class Workout {
         Minutes = minutes;
         Intensity = intensity;
     }
+    
+    public Workout(string name, int minutes, double intensity) {
+        Name = name;
+        Minutes = minutes;
+        switch (intensity)
+        {
+            case 5:
+                Intensity = WorkoutIntensity.LOW;
+                break;
+            case 10:
+                Intensity = WorkoutIntensity.MEDIUM;
+                break;
+            case 15:
+                Intensity = WorkoutIntensity.HIGH;
+                break;
+        }
+    }
 
     public Workout() { }
 
