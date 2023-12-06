@@ -1,8 +1,9 @@
-
+/** @type {import('./$types').Actions} */
 import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
+import type { Actions, PageServerLoad } from "./$types"
 
-export const load: PageLoad = async ({ fetch, params }) => {
+
+export const load: PageServerLoad = async ({ locals, fetch, params }) => {
     // Ask back end for the user.
     const fetchUser = async (username: string) => {
         try {
@@ -25,6 +26,22 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
     //Return the user we have grabbed to the front
     return {
-        user: fetchUser(params.username)
+        visiting_user: fetchUser(params.username),
+		user: locals.user,
     }
 };
+
+export const actions = {
+	updateUsername: async (event) => {
+		// TODO 
+	},
+    updatePassword: async (event) => {
+		// TODO 
+	},
+    updateName: async (event) => {
+		// TODO
+	},
+    updateBio: async (event) => {
+		// TODO
+	}
+} satisfies Actions;
