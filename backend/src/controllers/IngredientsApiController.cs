@@ -29,7 +29,7 @@ public class IngredientsApiController : ControllerBase
     public ActionResult<Ingredient> GetIngredient(string name)
     {
         var ing = _app.FoodControl.GetIngredient(name);
-        return Ingredient.FromIngredient(ing);
+        return ing != null ? Ingredient.FromIngredient(ing) : new Ingredient();
     }
     
     // GET api/Ingredients/search/{name}
@@ -43,10 +43,12 @@ public class IngredientsApiController : ControllerBase
     // Get api/Ingredients/stock
     [HttpGet("stock")]
     [Authorize]
-    public ActionResult<IngredientStocks> GetStock()
+    public ActionResult<IEnumerable<IngredientStockModel>> GetStock()
     {
         var user = HttpContext.GetUser();
-        return _app.FoodControl.GetAllIngredientStocks(user.UserName);
+        return _app.FoodControl.GetAllIngredientStocks(user.UserName)?.ToDictionary()
+            .Select(pair => new IngredientStockModel { Name = pair.Key, Quantity = double.Parse(pair.Value) })
+            .ToList() ?? new List<IngredientStockModel>();
     }
     
     // PUT api/Ingredients/purchase

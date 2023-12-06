@@ -116,7 +116,6 @@ public class FoodController : ISaveableController
     public IngredientStocks GetAllIngredientStocks(string username)
     {
         ingredientStocks.TryGetValue(username, out var stocks);
-        Console.WriteLine(stocks);
         return stocks;
     }
 
@@ -182,6 +181,7 @@ public class FoodController : ISaveableController
         if (!ingredientStocks.TryGetValue(username, out var stocks))
         {
             stocks = new IngredientStocks();
+            ingredientStocks[username] = stocks;
         }
         
         var newStock = stocks.GetIngredientStock(ingredientName) + change;
