@@ -63,6 +63,7 @@ public class TestHistoryController
 
     public void TestSaveLoad()
     {
+        
         Setup();
         ClearDirectory();
         var saveSystem = _app.SaveSyst;
@@ -84,6 +85,23 @@ public class TestHistoryController
         Assert.IsTrue(previousData.Item2.SequenceEqual(newData.Item2));
         Assert.IsTrue(previousData.Item3.SequenceEqual(newData.Item3));
         Assert.IsTrue(previousData.Item4.SequenceEqual(newData.Item4));
+    }
+
+    [TestMethod]
+    public void TestSaveLoadController()
+    {
+        ClearDirectory();
+        Setup();
+        
+        var saveSystem = _app.SaveSyst;
+
+        var adapter = new JSONAdapter();
+        saveSystem.SetFileType(adapter);
+        var data = _app.HistoryControl.GetPersistentWorkouts(testUser.UserName).ToArray();
+        saveSystem.SaveController();
+
+        _app = new App(1);
+        Assert.IsTrue(data.SequenceEqual(_app.HistoryControl.GetPersistentWorkouts(testUser.UserName).ToArray()));
     }
     
     /// <summary>
