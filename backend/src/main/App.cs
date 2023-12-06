@@ -44,6 +44,7 @@ public class App
     public FoodController FoodControl => food;
     public TeamController TeamControl => team;
     public UserController UserControl => userCtrl;
+    public TeamController TeamControl => team;
     public DateTime TimeStamp => date;
 
     public double DayLength

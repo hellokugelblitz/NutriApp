@@ -44,6 +44,14 @@ public class HistoryController : ISaveableController
         history[username].Weights.Add(new Entry<double>(_app.TimeStamp, weight));
     }
 
+    public void RemoveLastestWeight(string username)
+    {
+        if (history[username].Weights.Any())
+        {
+            history[username].Weights.RemoveAt(history[username].Weights.Count - 1);
+        }
+    }
+
     public void AddMeal(Meal meal, string username)
     {
         history[username].Meals.Add(new Entry<Meal>(_app.TimeStamp, meal));

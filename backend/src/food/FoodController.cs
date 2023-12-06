@@ -53,18 +53,26 @@ public class FoodController : ISaveableController
         meals = new List<Meal>();
 
         shoppingList.SetCriteria(recipeCriteria);
-        
+
         foreach (string username in ingredientStocks.Keys)
             shoppingList.Update(Recipes, username);
     }
-    
+
     /// <summary>
     /// Adds a recipe with some pre-configured attributes to the user's saved recipes.
     /// </summary>
     public void AddRecipe(Recipe recipe)
     {
         recipes.Add(recipe);
-        
+
+        foreach (string username in ingredientStocks.Keys)
+            shoppingList.Update(Recipes, username);
+    }
+
+    public void RemoveRecipe(Recipe recipe)
+    {
+        recipes.Remove(recipe);
+
         foreach (string username in ingredientStocks.Keys)
             shoppingList.Update(Recipes, username);
     }
@@ -81,11 +89,16 @@ public class FoodController : ISaveableController
 
         return null;
     }
-    
+
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
     /// </summary>
     public void AddMeal(Meal meal) => meals.Add(meal);
+
+    /// <summary>
+    /// Removes a meal
+    /// </summary>
+    public void RemoveMeal(Meal meal) => meals.Remove(meal);
 
     /// <summary>
     /// Retrieves a meal given its unique name. Returns null if there is no
@@ -138,7 +151,7 @@ public class FoodController : ISaveableController
 
         return true;
     }
-    
+
     /// <summary>
     /// Consumes a meal if there is enough ingredient stock. Returns true if meal consumption
     /// was successful, false otherwise.
@@ -275,7 +288,7 @@ public class FoodController : ISaveableController
 
 public class IngredientStocks: ISaveObject
 {
-    private Dictionary<string, double> stocks;
+    public Dictionary<string, double> stocks { get; private set; }
 
     public IngredientStocks()
     {
