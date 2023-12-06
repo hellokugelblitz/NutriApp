@@ -82,7 +82,7 @@ public class HistoryController : ISaveableController
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);
         _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"history"), history[username].ToDictionary());
-        
+        history.Remove(username);
     }
 
     public void LoadUser(string folderName)

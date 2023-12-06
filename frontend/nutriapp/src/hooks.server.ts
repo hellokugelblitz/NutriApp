@@ -3,7 +3,7 @@ import { redirect, type Handle } from "@sveltejs/kit"
 
 export const handle: Handle = async ({ event, resolve }) => {	
     
-    event.locals.user = authenticateUser(event)
+    event.locals.user = await authenticateUser(event);
 
     //If the user is trying to access a protected route they must be signed in.
 	if (event.url.pathname.startsWith("/protected")) {

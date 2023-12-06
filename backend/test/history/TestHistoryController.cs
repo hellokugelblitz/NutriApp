@@ -33,8 +33,8 @@ public class TestHistoryController
         
         Recipe recipe = new Recipe("mac and cheese");
         recipe.AddInstruction("bake them kids");
-        recipe.AddChild(new Ingredient("cheese", 150, 1.5d, 1.5d, 1.5d, 1.5d), 3);
-        recipe.AddChild(new Ingredient("noodles", 75, 1, 1, 1, 1), 1);
+        recipe.AddChild(_app.FoodControl.GetIngredient("CHEESE,BRICK"), 3);
+        recipe.AddChild(_app.FoodControl.GetIngredient("PASTA,DRY,ENR"), 1);
         _app.FoodControl.AddRecipe(recipe);
         
         Meal meal = new Meal("mac");
@@ -56,7 +56,7 @@ public class TestHistoryController
     {
         Setup();
     
-        Assert.AreEqual(history.GetCalorieCount(testUser.UserName), 450);
+        Assert.AreEqual(history.GetCalorieCount(testUser.UserName), 1484);
     }
 
     [TestMethod]
