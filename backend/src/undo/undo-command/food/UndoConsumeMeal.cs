@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NutriApp.Undo;
 
-class UndoConsumeMeal : UndoCommand
+public class UndoConsumeMeal : UndoCommand
 {
     private App _app;
     private User _user;

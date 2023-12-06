@@ -3,7 +3,7 @@ using NutriApp.Food;
 
 namespace NutriApp.Undo;
 
-class UndoCreateMeal : UndoCommand
+public class UndoCreateMeal : UndoCommand
 {
     private App _app;
     private Meal _meal;

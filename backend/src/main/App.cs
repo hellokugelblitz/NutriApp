@@ -43,6 +43,7 @@ public class App
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
     public UserController UserControl => userCtrl;
+    public TeamController TeamControl => team;
     public DateTime TimeStamp => date;
 
     public double DayLength

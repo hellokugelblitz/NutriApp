@@ -1,7 +1,7 @@
 using System;
 namespace NutriApp.Undo;
 
-class UndoSetWeightGoal : UndoCommand
+public class UndoSetWeightGoal : UndoCommand
 {
     private App _app;
     private User _user;

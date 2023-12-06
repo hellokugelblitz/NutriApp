@@ -48,7 +48,7 @@ public class UserController : ISaveableController
 
         return _usersFromUsername[username];
     }
-    
+
     // I would use GetUser to test for a user's existence, but
     // _userFromUsername isn't populated correctly on start up (I think)
     // while _userLoginInfo is.
@@ -86,7 +86,7 @@ public class UserController : ISaveableController
     {
         if (!_userLoginInfo.ContainsKey(username)) throw new InvalidUsernameException();
         if (_userLoginInfo[username] != HashPassword(password)) throw new InvalidPasswordException();
-        
+
         _saveSystem.LoadUser(_saveSystem.GetNewestFolder(username));
         Guid userGuid = Guid.NewGuid();
         _loadedUsers.Remove(username, out User user);
@@ -109,7 +109,7 @@ public class UserController : ISaveableController
     {
         var split = SaveSystem.SplitFileName(folderName);
         string username = split[0];
-        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"user"), _usersFromUsername[username].ToDictionary());
+        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName, "user"), _usersFromUsername[username].ToDictionary());
     }
 
     public void LoadUser(string folderName)
@@ -150,7 +150,7 @@ public class UserController : ISaveableController
 
     public void AddNewUser(User user)
     {
-        _usersFromUsername[user.UserName] = user;    
+        _usersFromUsername[user.UserName] = user;
     }
 
     public string HashPassword(string password)
@@ -177,12 +177,19 @@ public class UserController : ISaveableController
         _saveSystem.AddNewUser(user);
     }
 
+    // Get the userUndoCOntrollerStack
+    public UndoController<UndoCommand> GetUndoStack(Guid sessionKey)
+    {
+        return _userUndoControllerStacks[sessionKey];
+    }
+
     public void AddUndoCommand(Guid sessionKey, UndoCommand undoCommand)
     {
         if (!_userUndoControllerStacks.ContainsKey(sessionKey))
         {
             _userUndoControllerStacks[sessionKey] = new UndoController<UndoCommand>();
         }
+
         _userUndoControllerStacks[sessionKey].Add(undoCommand);
     }
 

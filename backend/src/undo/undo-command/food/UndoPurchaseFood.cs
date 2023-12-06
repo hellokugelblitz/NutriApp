@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp.Undo;
 
-class UndoPurchaseFood : UndoCommand
+public class UndoPurchaseFood : UndoCommand
 {
     private App _app;
     private User _user;

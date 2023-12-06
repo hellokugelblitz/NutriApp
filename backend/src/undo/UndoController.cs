@@ -1,12 +1,18 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.SignalR;
 
 namespace NutriApp.Undo;
 
-class UndoController<T> where T : UndoCommand
+public class UndoController<T> where T : UndoCommand
 {
-    private Stack<T> _undoStack { get; }
+    private Stack<T> _undoStack;
+
+    public Stack<T> UndoStack => _undoStack;
+
+    public UndoController()
+    {
+        _undoStack = new Stack<T>();
+    }
 
     public void Add(T command)
     {

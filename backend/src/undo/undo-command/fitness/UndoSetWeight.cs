@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 namespace NutriApp.Undo;
 
-class UndoSetWeight : UndoCommand
+public class UndoSetWeight : UndoCommand
 {
     private App _app;
     private User _user;
