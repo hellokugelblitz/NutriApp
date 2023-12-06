@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace NutriApp.Controllers.Models;
 
@@ -12,4 +13,16 @@ public struct Recipe
     public double Protein { get; set; }
     public double Fiber { get; set; }
     public double Carbs { get; set; }
+
+    public Recipe(Food.Recipe recipe)
+    {
+        Name = recipe.Name;
+        Ingredients = recipe.Ingredients.Keys.Select(re => { return new Ingredient(re); }).ToList();
+        Instructions = recipe.Instructions.ToList();
+        Calories = recipe.Calories;
+        Fat = recipe.Fat;
+        Fiber = recipe.Fiber;
+        Protein = recipe.Protein;
+        Carbs = recipe.Carbohydrates;
+    }
 }
