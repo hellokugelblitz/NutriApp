@@ -53,7 +53,7 @@ public class AuthController : ControllerBase
     
     // POST api/Auth/login
     [HttpPost("login")]
-    public ActionResult<AuthResultModel> Login(CredentialsModel creds)
+    public ActionResult<AuthResultModel> Login(CredentialsInfo creds)
     {
         try
         {
@@ -86,7 +86,7 @@ public class AuthController : ControllerBase
     
     // POST api/Auth/change-password
     [HttpPost("change-password")]
-    public IActionResult ChangePassword(CredentialsModel creds)
+    public IActionResult ChangePassword(CredentialsInfo creds)
     {
         return NoContent();
     }
