@@ -164,8 +164,20 @@ public class TestUserController
         //test if it loads the user correctly
         Assert.AreEqual(danny, ctl.Login("dannytga", "hii").Item2);
     }
-    
-    
+
+    [TestMethod]
+    public void TestChangePassword()
+    {
+        ClearDirectory();
+        var ctl = CreateController();
+        User danny = new User("dannytga", "danny", 72, DateTime.Now, "I am realllllllly tallll");
+
+        var data = UserControllerCreateUser(danny, "hi", ctl);
+        ctl.ChangePassword(danny.UserName, "hiiii");
+        ctl.Logout(data.Item1);
+        var data2 = ctl.Login(danny.UserName, "hiiii");
+        Assert.AreEqual(data.Item2, data2.Item2);
+    }
     
     private UserController CreateController()
     {

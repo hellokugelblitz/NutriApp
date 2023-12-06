@@ -70,6 +70,11 @@ public class UserController : ISaveableController
         return (userGuid, user);
     }
 
+    public void ChangePassword(string username, string newPassword)
+    {
+        _userLoginInfo[username] = HashPassword(newPassword);
+    }
+
     /// <summary>
     /// logs the user in if they have a file in the system already
     /// </summary>

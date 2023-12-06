@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.Save;
 using NutriApp.Workout;
@@ -11,11 +14,12 @@ public class HistoryController : ISaveableController
     private App _app;
     private ISaveSystem _saveSystem;
     private Dictionary<string, HistoryObject> history = new(); //username to history data
-
+    private Dictionary<string, List<Entry<Workout.Workout>>> workouts = new();
     private const string EntryValueSep = ","; //seperator between values of the entrie and generic(datetime,weight)
     private const string EntrySep = " | "; //seperator between entries
 
     public List<Entry<Workout.Workout>> GetWorkouts(string username) => history[username].Workouts;
+    public List<Entry<Workout.Workout>> GetPersistentWorkouts(string username) => workouts[username];
     public List<Entry<Meal>> GetMeals(string username) => history[username].Meals;
     public List<Entry<CalorieTracker>> GetCalories(string username) => history[username].Calories;
     public double CurrentWeight(string username) => history[username].Weights[^1].Value;
@@ -32,6 +36,7 @@ public class HistoryController : ISaveableController
     public void AddWorkout(Workout.Workout workout, string username)
     {
         history[username].Workouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
+        workouts[username].Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
     }
 
     public void SetWeight(double weight, string username)
@@ -73,7 +78,7 @@ public class HistoryController : ISaveableController
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);
         _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"history"), history[username].ToDictionary());
-        
+        history.Remove(username);
     }
 
     public void LoadUser(string folderName)
@@ -84,21 +89,66 @@ public class HistoryController : ISaveableController
         obj.FromDictionary(data);
         history[username] = obj;
     }
+    
+    public void SaveController()
+    {
+        string filePath = SaveSystem.SavePath + "\\workoutHistories.json";
+        using (var file = File.CreateText(filePath))
+        {
+            file.WriteLine(JsonConvert.SerializeObject(workouts.ToDictionary(
+                x=>x.Key,
+                x =>
+                {
+                    string workoutString = "";
 
-    /// <summary>
-    /// satisfy ISaveableController requirments
-    /// </summary>
-    public void SaveController() { }
+                    foreach (var workout in x.Value)
+                    {
+                        workoutString += workout.TimeStamp + EntryValueSep + workout.Value.Name + EntryValueSep +
+                                         workout.Value.Minutes + EntryValueSep + workout.Value.Intensity + EntrySep;
+                    }
+                    if(workoutString.Length > 0) workoutString = workoutString.Substring(0, workoutString.Length - EntrySep.Length);
+                    return workoutString;
+                })
+            ));
+        }
+    }
 
-    /// <summary>
-    /// satisfy ISaveableController requirments
-    /// </summary>
-    public void LoadController() { }
+    public void LoadController()
+    {
+        string filePath = SaveSystem.SavePath + "\\workoutHistories.json";
+        if (!File.Exists(filePath)) return;
+
+        Dictionary<string, string> data =
+            JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                File.ReadAllText(filePath));
+
+        
+        foreach (var pair in data)
+        {
+            string[] wrktStrs = pair.Value.Split(EntrySep);
+            
+            // .Split will return an array with one empty string if the string is empty
+            // so we need to check for that. `data["workouts"]` will be empty if the user
+            // has no workouts.
+            if (wrktStrs[0] == String.Empty) return;
+            workouts[pair.Key] = new List<Entry<Workout.Workout>>();
+            foreach (var str in wrktStrs)
+            {
+                string[] split = str.Split(EntryValueSep);
+                Workout.Workout workout = new Workout.Workout(split[1], Int32.Parse(split[2]),
+                    Enum.Parse<WorkoutIntensity>(split[3]));
+                Entry<Workout.Workout> entry = new Entry<Workout.Workout>(DateTime.Parse(split[0]), workout);
+                workouts[pair.Key].Add(entry);
+            }
+        }
+    }
+
 
     public void AddNewUser(User user)
     {
         if(history.ContainsKey(user.UserName)) return;
         history[user.UserName] = new HistoryObject(_app.FoodControl);
+        workouts[user.UserName] = new List<Entry<Workout.Workout>>();
     }
 
 
