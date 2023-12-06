@@ -24,4 +24,12 @@ public class UserApiController : ControllerBase
     {
         return _app.UserControl.GetUser(username);
     }
+
+    // POST api/User/update
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateUser(UpdateInfo info)
+    {
+        //Placeholder return value doesnt cause errors :)
+        return Ok();
+    }
 }
