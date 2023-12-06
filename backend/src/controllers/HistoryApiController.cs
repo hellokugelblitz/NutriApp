@@ -23,17 +23,17 @@ public class HistoryApiController : ControllerBase
     
     // GET api/History/workouts
     [HttpGet("workouts")]
-    public ActionResult<IEnumerable<Entry<Models.Workout>>> GetWorkouts()
+    public ActionResult<IEnumerable<EntryModel<Models.WorkoutModel>>> GetWorkouts()
     {
         var sessionKey = User.FindFirst("SessionKey")!.Value;
         User user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
         return _app.HistoryControl.GetWorkouts(user.UserName).Select(ele =>
         {
-            Models.Workout wrk = new Models.Workout();//{ele.Value.Name, ele.Value.Minutes, ele.Value.Intensity};
+            WorkoutModel wrk = new WorkoutModel();//{ele.Value.Name, ele.Value.Minutes, ele.Value.Intensity};
             wrk.Name = ele.Value.Name;
             wrk.Minutes = ele.Value.Minutes;
             wrk.Intensity = ele.Value.Intensity.Value();
-            Models.Entry<Models.Workout> entry = new Models.Entry<Models.Workout>();
+            EntryModel<WorkoutModel> entry = new Models.EntryModel<WorkoutModel>();
             entry.Value = wrk;
             entry.TimeStamp = ele.TimeStamp;
             return entry;
@@ -42,14 +42,14 @@ public class HistoryApiController : ControllerBase
     
     // GET api/History/weights
     [HttpGet("weights")]
-    public ActionResult<IEnumerable<Entry<double>>> GetWeights()
+    public ActionResult<IEnumerable<EntryModel<double>>> GetWeights()
     {
         var sessionKey = User.FindFirst("SessionKey")!.Value;
         User user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
 
         return _app.HistoryControl.Weights(user.UserName).Select(ele =>
         {
-            Models.Entry<double> entry = new Models.Entry<double>();
+            EntryModel<double> entry = new EntryModel<double>();
             entry.Value = ele.Value;
             entry.TimeStamp = ele.TimeStamp;
             return entry;
@@ -58,15 +58,15 @@ public class HistoryApiController : ControllerBase
     
     // GET api/History/calories
     [HttpGet("calories")]
-    public ActionResult<IEnumerable<Entry<CalorieProgress>>> GetCalories()
+    public ActionResult<IEnumerable<EntryModel<CalorieProgressModel>>> GetCalories()
     {
         var sessionKey = User.FindFirst("SessionKey")!.Value;
         User user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
 
         return _app.HistoryControl.GetCalories(user.UserName).Select(ele =>
         {
-            Models.Entry<CalorieProgress> entry = new Models.Entry<CalorieProgress>();
-            CalorieProgress cal = new CalorieProgress();
+            Models.EntryModel<CalorieProgressModel> entry = new Models.EntryModel<CalorieProgressModel>();
+            CalorieProgressModel cal = new CalorieProgressModel();
             cal.GoalCalories = (int) ele.Value.TargetCalories;
             cal.ActualCalories = (int) ele.Value.ActualCalories;
             entry.Value = cal;
@@ -77,16 +77,16 @@ public class HistoryApiController : ControllerBase
     
     // GET api/History/meals
     [HttpGet("meals")]
-    public ActionResult<IEnumerable<Entry<Meal>>> GetMeals()
+    public ActionResult<IEnumerable<EntryModel<MealModel>>> GetMeals()
     {
         var sessionKey = User.FindFirst("SessionKey")!.Value;
         User user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
 
         return _app.HistoryControl.GetMeals(user.UserName).Select(ele =>
         {
-            Models.Entry<Meal> entry = new Models.Entry<Meal>();
+            Models.EntryModel<MealModel> entry = new Models.EntryModel<MealModel>();
             Food.Meal tempMeal = _app.FoodControl.GetMeal(ele.Value.Name);
-            Meal meal = new Meal(tempMeal);
+            MealModel meal = new MealModel(tempMeal);
             entry.Value = meal;
             entry.TimeStamp = ele.TimeStamp;
             return entry;

@@ -1,6 +1,6 @@
 namespace NutriApp.Controllers.Models;
 
-public struct Workout
+public struct WorkoutModel
 {
     public string Name { get; set; }
     public int Minutes { get; set; }
