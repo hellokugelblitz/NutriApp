@@ -113,12 +113,21 @@ public class FoodController : ISaveableController
     /// <summary>
     /// Returns stocks for all ingredients that the given user has more than zero of.
     /// </summary>
-    public IngredientStocks GetAllIngredientStocks(string username) => ingredientStocks[username];
+    public IngredientStocks GetAllIngredientStocks(string username)
+    {
+        ingredientStocks.TryGetValue(username, out var stocks);
+        Console.WriteLine(stocks);
+        return stocks;
+    }
 
     /// <summary>
     /// Returns how much of an ingredient the given user has.
     /// </summary>
-    public double GetSingleIngredientStock(string ingredientName, string username) => ingredientStocks[username].GetIngredientStock(ingredientName);
+    public double GetSingleIngredientStock(string ingredientName, string username)
+    {
+        ingredientStocks.TryGetValue(username, out var stocks);
+        return stocks?.GetIngredientStock(ingredientName) ?? 0.0;
+    }
 
     /// <summary>
     /// Checks if the given user has enough ingredients in stock for a given meal
@@ -170,12 +179,17 @@ public class FoodController : ISaveableController
     /// </summary>
     public void EditIngredientStock(string ingredientName, double change, string username)
     {
-        double newStock = ingredientStocks[username].GetIngredientStock(ingredientName) + change;
+        if (!ingredientStocks.TryGetValue(username, out var stocks))
+        {
+            stocks = new IngredientStocks();
+        }
+        
+        var newStock = stocks.GetIngredientStock(ingredientName) + change;
 
         if (newStock <= 0)
-            ingredientStocks[username].RemoveEntry(ingredientName);
+            stocks.RemoveEntry(ingredientName);
         else
-            ingredientStocks[username].SetEntry(ingredientName, newStock);
+            stocks.SetEntry(ingredientName, newStock);
     }
     
     public void SaveUser(string folderName)
