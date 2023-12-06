@@ -88,6 +88,7 @@ public class AuthController : ControllerBase
     [HttpPost("change-password")]
     public IActionResult ChangePassword(Credentials creds)
     {
+        _app.UserControl.ChangePassword(creds.Username, creds.Password);
         return NoContent();
     }
 }
