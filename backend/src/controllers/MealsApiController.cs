@@ -20,15 +20,15 @@ public class MealsApiController : ControllerBase
     
     // GET api/Meals
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Meal>>> GetMeals()
+    public async Task<ActionResult<IEnumerable<MealModel>>> GetMeals()
     {
-        Meal[] meals =
+        MealModel[] meals =
         {
             // Some dummy meals
             new()
             {
                 Name = "Breakfast",
-                Recipes = new List<Recipe>
+                Recipes = new List<RecipeModel>
                 {
                     new()
                     {
@@ -67,7 +67,7 @@ public class MealsApiController : ControllerBase
             new()
             {
                 Name = "Lunch",
-                Recipes = new List<Recipe>
+                Recipes = new List<RecipeModel>
                 {
                     new()
                     {
@@ -106,7 +106,7 @@ public class MealsApiController : ControllerBase
             new()
             {
                 Name = "Dinner",
-                Recipes = new List<Recipe>
+                Recipes = new List<RecipeModel>
                 {
                     new()
                     {
@@ -149,12 +149,12 @@ public class MealsApiController : ControllerBase
     
     // GET api/Meals/{name}
     [HttpGet("{name}")]
-    public async Task<ActionResult<Meal>> GetMeal(string name)
+    public async Task<ActionResult<MealModel>> GetMeal(string name)
     {
-        Meal meal = new()
+        MealModel mealModel = new()
         {
             Name = name,
-            Recipes = new List<Recipe>
+            Recipes = new List<RecipeModel>
             {
                 new()
                 {
@@ -191,20 +191,20 @@ public class MealsApiController : ControllerBase
             Carbs = 63
         };
         
-        return meal;
+        return mealModel;
     }
     
     // GET api/Meals/search/{name}
     [HttpGet("search/{name}")]
-    public async Task<ActionResult<Meal[]>> SearchMeals(string name)
+    public async Task<ActionResult<MealModel[]>> SearchMeals(string name)
     {
-        Meal[] meals =
+        MealModel[] meals =
         {
             // Some dummy meals
             new()
             {
                 Name = "Breakfast",
-                Recipes = new List<Recipe>
+                Recipes = new List<RecipeModel>
                 {
                     new()
                     {
@@ -243,7 +243,7 @@ public class MealsApiController : ControllerBase
             new()
             {
                 Name = "Lunch",
-                Recipes = new List<Recipe>
+                Recipes = new List<RecipeModel>
                 {
                     new()
                     {
@@ -282,7 +282,7 @@ public class MealsApiController : ControllerBase
             new()
             {
                 Name = "Dinner",
-                Recipes = new List<Recipe>
+                Recipes = new List<RecipeModel>
                 {
                     new()
                     {
@@ -326,10 +326,10 @@ public class MealsApiController : ControllerBase
     // POST api/Meals
     [HttpPost]
     [Authorize]
-    public async Task<ActionResult<Meal>> CreateMeal(CreateMealInfo info)
+    public async Task<ActionResult<MealModel>> CreateMeal(CreateMealInfo info)
     {
-        Meal meal = new () { Name = info.Name };
-        return CreatedAtAction(nameof(GetMeal), new { name = meal.Name }, meal);
+        MealModel mealModel = new () { Name = info.Name };
+        return CreatedAtAction(nameof(GetMeal), new { name = mealModel.Name }, mealModel);
     }
     
     // PUT api/Meals/{name}

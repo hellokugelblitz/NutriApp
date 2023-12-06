@@ -22,16 +22,16 @@ public class WorkoutsApiController : ControllerBase
     
     // POST api/Workouts
     [HttpPost]
-    public async Task<ActionResult<Models.Workout>> CreateWorkout(Models.Workout workout)
+    public async Task<ActionResult<Models.WorkoutModel>> CreateWorkout(Models.WorkoutModel workoutModel)
     {
-        return workout;
+        return workoutModel;
     }
     
     // GET api/Workouts/recommended
     [HttpGet("recommended")]
-    public async Task<ActionResult<IEnumerable<Models.Workout>>> GetRecommendedWorkouts()
+    public async Task<ActionResult<IEnumerable<Models.WorkoutModel>>> GetRecommendedWorkouts()
     {
-        Models.Workout[] workouts =
+        Models.WorkoutModel[] workouts =
         {
             // Some dummy workout structs
             new() { Name = "Running", Minutes = 30, Intensity = 7.5 },
