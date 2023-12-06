@@ -32,16 +32,7 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
 };
 
 export const actions = {
-	updateUsername: async (event) => {
-		// TODO 
-	},
-    updatePassword: async (event) => {
-		// TODO 
-	},
-    updateName: async (event) => {
-		// TODO
-	},
-    updateBio: async (event) => {
-		// TODO
+	default: async (event) => {
+		// TODO: This will submit all of the information passed into the form and update it on the serverside. 
 	}
 } satisfies Actions;
