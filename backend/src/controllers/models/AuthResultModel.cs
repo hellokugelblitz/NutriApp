@@ -1,6 +1,6 @@
 namespace NutriApp.Controllers.Models;
 
-public struct AuthResult
+public struct AuthResultModel
 {
     public string Session { get; set; }
 }
