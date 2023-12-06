@@ -119,15 +119,15 @@ public class TeamController : ISaveableController
 
         foreach (string username in team.Members)
         {
+            if (!result.ContainsKey(username))
+                    result.Add(username, 0);
+
             Entry<Workout.Workout>[] workoutEntries = app.HistoryControl.GetWorkouts(username).ToArray();
             
             foreach (Entry<Workout.Workout> entry in workoutEntries)
             {
                 if (entry.TimeStamp < team.ChallengeStartDate || entry.TimeStamp > team.ChallengeEndDate)
                     continue;
-
-                if (!result.ContainsKey(username))
-                    result.Add(username, 0);
                 
                 result[username] += entry.Value.Minutes;
             }

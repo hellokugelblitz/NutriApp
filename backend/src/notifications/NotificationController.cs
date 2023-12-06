@@ -63,14 +63,14 @@ public class NotificationController
     /// </summary>
     public void SendPendingNotifications(User user)
     {
-        if (!pendingNotifications.ContainsKey(user.UserName)) return;
+        // if (!pendingNotifications.ContainsKey(user.UserName)) return;
 
-        Notification[] notifications = pendingNotifications[user.UserName].ToArray();
+        // Notification[] notifications = pendingNotifications[user.UserName].ToArray();
         
-        foreach (Notification notification in notifications)
-            user.ReceiveNotification(notification);
+        // foreach (Notification notification in notifications)
+        //     user.ReceiveNotification(notification);
 
-        pendingNotifications[user.UserName].Clear();
+        // pendingNotifications[user.UserName].Clear();
 
         // TODO: also send server-side event to notify client in real time
     }
