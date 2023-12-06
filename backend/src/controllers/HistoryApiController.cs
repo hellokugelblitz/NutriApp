@@ -27,7 +27,6 @@ public class HistoryApiController : ControllerBase
     {
         var sessionKey = User.FindFirst("SessionKey")!.Value;
         User user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
-
         return _app.HistoryControl.GetWorkouts(user.UserName).Select(ele =>
         {
             Models.Workout wrk = new Models.Workout();//{ele.Value.Name, ele.Value.Minutes, ele.Value.Intensity};
