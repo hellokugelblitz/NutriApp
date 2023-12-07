@@ -42,6 +42,7 @@ public class App
     public GoalController GoalControl => goal;
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
+    public ShoppingListController ShoppingListControl => food.ShoppingListController;
     public UserController UserControl => userCtrl;
     public TeamController TeamControl => team;
     public DateTime TimeStamp => date;
@@ -71,7 +72,7 @@ public class App
         saveSystem.SubscribeSaveable(history);
         saveSystem.SubscribeSaveable(goal);
         saveSystem.SubscribeSaveable(team);
-        
+        saveSystem.SubscribeSaveable(food);
         
         saveSystem.LoadController();
         

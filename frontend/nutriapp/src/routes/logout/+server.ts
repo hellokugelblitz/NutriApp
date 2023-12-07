@@ -22,8 +22,11 @@ export const POST: RequestHandler = async ({ cookies, locals, request }) => {
 				console.log(response);
 				console.log("Strange server response during logout: " + response.status);
 			}
-		} catch {
-			console.log("Something went wrong during logout");
+		} catch (error) {
+			if(error.status != 303){
+				console.error("Error during logout:", error);
+			}
 		}
+
 	throw redirect(303, "/");
 }

@@ -7,6 +7,7 @@ using NutriApp.Controllers.Models;
 using NutriApp;
 using NutriApp.Controllers.Middleware;
 using NutriApp.Food;
+using System;
 
 namespace NutriApp.Controllers;
 
@@ -88,6 +89,9 @@ public class MealsApiController : ControllerBase
     [Authorize]
     public IActionResult ConsumeMeal(string name)
     {
+
+        Console.WriteLine(_app.FoodControl.SearchMeals(name).Length);
+
         if (_app.FoodControl.GetMeal(name) == null)
             return BadRequest("Meal does not exist");
         
