@@ -39,6 +39,11 @@ public class FoodController : ISaveableController
     /// Retrieves all meals any user has created.
     /// </summary>
     public Meal[] Meals => meals.ToArray();
+    
+    /// <summary>
+    /// Retrieves the shopping list controller.
+    /// </summary>
+    public ShoppingListController ShoppingListController => shoppingList;
 
     public FoodController(App app, ISaveSystem saveSystem)
     {
@@ -172,7 +177,8 @@ public class FoodController : ISaveableController
     public double GetSingleIngredientStock(string ingredientName, string username)
     {
         ingredientStocks.TryGetValue(username, out var stocks);
-        return stocks?.GetIngredientStock(ingredientName) ?? 0.0;
+        var stock = stocks?.GetIngredientStock(ingredientName) ?? 0.0;
+        return stock;
     }
 
     /// <summary>
@@ -218,7 +224,6 @@ public class FoodController : ISaveableController
             EditIngredientStock(ingredient.Name, -requiredStock, username);
         }
 
-        shoppingList.Update(Recipes, username);
         return true;
     }
 
@@ -235,11 +240,13 @@ public class FoodController : ISaveableController
         }
         
         var newStock = stocks.GetIngredientStock(ingredientName) + change;
-
+        
         if (newStock <= 0)
             stocks.RemoveEntry(ingredientName);
         else
             stocks.SetEntry(ingredientName, newStock);
+        
+        shoppingList.Update(Recipes, username);
     }
     
     public void SaveUser(string folderName)
@@ -247,6 +254,7 @@ public class FoodController : ISaveableController
         string username = SaveSystem.GetUsernameFromFile(folderName);
         saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"food"), ingredientStocks[username].ToDictionary());
         ingredientStocks.Remove(username);
+        shoppingList.RemoveUser(username);
     }
 
     public void LoadUser(string folderName)
@@ -331,6 +339,7 @@ public class FoodController : ISaveableController
     {
         ingredientStocks[user.UserName] = new IngredientStocks();
         shoppingList.AddUser(user.UserName);
+        shoppingList.Update(Recipes, user.UserName);
     }
     
     public delegate void MealEventHandler(Meal meal, string username);
