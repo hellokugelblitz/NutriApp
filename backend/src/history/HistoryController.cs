@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.Save;
 using NutriApp.Workout;
+using NutriApp.Notifications;
 
 namespace NutriApp.History;
 
@@ -18,7 +19,18 @@ public class HistoryController : ISaveableController
     private const string EntryValueSep = ","; //seperator between values of the entrie and generic(datetime,weight)
     private const string EntrySep = " | "; //seperator between entries
 
-    public List<Entry<Workout.Workout>> GetWorkouts(string username) => history[username].Workouts;
+    public List<Entry<Workout.Workout>> GetWorkouts(string username)
+    {
+        history.TryGetValue(username, out var userHistory);
+        if (userHistory == null)
+        {
+            userHistory = new HistoryObject(_app.FoodControl);
+            history[username] = userHistory;
+            return new List<Entry<Workout.Workout>>();
+        }
+        
+        return userHistory.Workouts;
+    }
     public List<Entry<Workout.Workout>> GetPersistentWorkouts(string username) => workouts[username];
     public List<Entry<Meal>> GetMeals(string username) => history[username].Meals;
     public List<Entry<CalorieTracker>> GetCalories(string username) => history[username].Calories;
@@ -51,6 +63,19 @@ public class HistoryController : ISaveableController
         
         userHistory.Workouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
         userWorkouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
+        
+        // Get list of team members, but remove the active user from it - should not send notification to yourself
+        User user = _app.UserControl.GetUser(username);
+        List<string> teamMembers = _app.TeamControl.GetTeam(user.TeamName).Members.ToList();
+        teamMembers.Remove(username);
+        User[] teammates = teamMembers.Select(_app.UserControl.GetUser).ToArray();
+
+        NotificationController.Instance.CreateNotification(
+            $"{username} logged a workout: {workout.Name}",
+            $"/protected/{username}",
+            "View profile",
+            teammates
+        );
     }
 
     public delegate void WeightChanged(double weight, string username);
