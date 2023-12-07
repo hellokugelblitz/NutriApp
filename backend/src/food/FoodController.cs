@@ -255,7 +255,99 @@ public class FoodController : ISaveableController
         
         shoppingList.Update(Recipes, username);
     }
+
+    public void ImportMeals(string filename) {
+        char entrySep = ':';
+        char ingredientSep = '^';
+
+        var data = app.SaveSyst.GetFileSaver().Load(filename);
+        foreach(var key in data.Keys) {
+            if(GetRecipe(key) != null) continue; //skip if recipe already in system;
+            Meal meal = new Meal(key);            
+            var ingredientPair = data[key].Split(ingredientSep);
+            foreach(var pair in ingredientPair) {
+                var split = pair.Split(entrySep);
+                meal.AddChild(GetRecipe(split[0]), Int32.Parse(split[1]));
+            }
+
+            AddMeal(meal);
+        }
+    }
+
+    public void ExportMeals(string filename) {
+        char entrySep = ':';
+        char ingredientSep = '^';
+
+        Dictionary<string, string> data = new ();
+        foreach (Meal recipe in meals)
+        {
+            //{recipeName: {instructions:}|{ingredientName:amount}}
+            string str = "";
+            
+            if(str.Length != 0) str = str.Substring(0, str.Length - 1);
+
+            Dictionary<Recipe, double>.KeyCollection recipes = recipe.Children.Keys;
+            foreach (Recipe ingredient in recipes){
+                str += ingredient.Name + entrySep + recipe.Children[ingredient] + ingredientSep;
+            }
+            if(str.Length != 0) str = str.Substring(0, str.Length - 1);
+            Console.WriteLine(str);
+            data[recipe.Name] = str;
+        }
+        app.SaveSyst.GetFileSaver().Save(filename, data);
+    }
     
+    public void ImportRecipes(string filename) {
+        char entrySep = ':';
+        char valueSep = '|';
+        char ingredientSep = '^';
+
+        var data = app.SaveSyst.GetFileSaver().Load(filename);
+        foreach(var key in data.Keys) {
+            if(GetRecipe(key) != null) continue; //skip if recipe already in system;
+            Recipe recipe = new Recipe(key);
+            var splitValues = data[key].Split(valueSep);
+            var instructions = splitValues[0].Split(entrySep);
+            foreach(var instruction in instructions) {
+                recipe.AddInstruction(instruction);
+            }
+            var ingredientPair = splitValues[1].Split(ingredientSep);
+            foreach(var pair in ingredientPair) {
+                var split = pair.Split(entrySep);
+                recipe.AddChild(GetIngredient(split[0]), Int32.Parse(split[1]));
+            }
+
+            AddRecipe(recipe);
+        }
+    }
+
+    public void ExportRecipes(string filename) {
+        char entrySep = ':';
+        char valueSep = '|';
+        char ingredientSep = '^';
+
+        Dictionary<string, string> data = new ();
+        foreach (Recipe recipe in recipes)
+        {
+            //{recipeName: {instructions:}|{ingredientName:amount}}
+            string str = "";
+            foreach(string instruction in recipe.Instructions) {
+                str += instruction + entrySep;
+            }
+            if(str.Length != 0) str = str.Substring(0, str.Length - 1);
+
+            str += valueSep;
+            Dictionary<Ingredient, double>.KeyCollection ingredients = recipe.Children.Keys;
+            foreach (Ingredient ingredient in ingredients){
+                str += ingredient.Name + entrySep + recipe.Children[ingredient] + ingredientSep;
+            }
+            if(str.Length != 0) str = str.Substring(0, str.Length - 1);
+            Console.WriteLine(str);
+            data[recipe.Name] = str;
+        }
+        app.SaveSyst.GetFileSaver().Save(filename, data);
+    }
+
     public void SaveUser(string folderName)
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);
