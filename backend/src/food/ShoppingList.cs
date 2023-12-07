@@ -21,6 +21,7 @@ namespace NutriApp.Food
         }
 
         public void AddUser(string username) => shoppingLists.Add(username, new ShoppingList());
+        public void RemoveUser(string username) => shoppingLists.Remove(username);
 
         public ShoppingList GetShoppingList(string username)
         {
@@ -112,7 +113,7 @@ namespace NutriApp.Food
         public void Update(Recipe[] recipes, string username) 
         { 
             //Here I am making a copy of the original shoppingList class list so that we can set it later.
-            Dictionary<Ingredient, double> newList = shoppingList.GetShoppingList(username).Entries;
+            Dictionary<Ingredient, double> newList = new ();
             Dictionary<Ingredient, double> minimumIngredientRequirements = new Dictionary<Ingredient, double>();
 
             foreach (Recipe recipe in recipes)
@@ -130,7 +131,8 @@ namespace NutriApp.Food
                         else continue;
                     }
 
-                    if (foodController.GetSingleIngredientStock(ingredient.Name, username) >= recipeRequirement)
+                    var amountInStock = foodController.GetSingleIngredientStock(ingredient.Name, username);
+                    if (amountInStock >= recipeRequirement)
                         continue;
 
                     if(!newList.ContainsKey(ingredient))
