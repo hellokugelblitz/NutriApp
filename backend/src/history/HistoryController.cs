@@ -68,13 +68,12 @@ public class HistoryController : ISaveableController
         User user = _app.UserControl.GetUser(username);
         List<string> teamMembers = _app.TeamControl.GetTeam(user.TeamName).Members.ToList();
         teamMembers.Remove(username);
-        User[] teammates = teamMembers.Select(_app.UserControl.GetUser).ToArray();
 
         NotificationController.Instance.CreateNotification(
             $"{username} logged a workout: {workout.Name}",
             $"/protected/{username}",
             "View profile",
-            teammates
+            teamMembers.ToArray()
         );
     }
 

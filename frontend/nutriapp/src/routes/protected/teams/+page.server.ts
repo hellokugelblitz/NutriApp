@@ -59,9 +59,9 @@ export const actions: Actions = {
 
 		await fetch("http://localhost:5072/api/teams/invite", {
 			method: "POST",
-			headers: { "sessionKey": cookies.get("auth") },
+			headers: { "sessionKey": cookies.get("auth"), "Content-Type": "application/json" },
 			body: JSON.stringify({ "username": username })
-		}).then(() => {
+		}).then(res => {
 			throw redirect(303, "/protected/teams");
 		});
 	},
@@ -72,7 +72,7 @@ export const actions: Actions = {
 
 		await fetch("http://localhost:5072/api/teams", {
 			method: "POST",
-			headers: { "sessionKey": cookies.get("auth") },
+			headers: { "sessionKey": cookies.get("auth"), "Content-Type": "application/json" },
 			body: JSON.stringify({ "teamName": teamName })
 		}).then(() => {
 			throw redirect(303, "/protected/teams");
@@ -85,7 +85,7 @@ export const actions: Actions = {
 
 		await fetch("http://localhost:5072/api/teams/challenge", {
 			method: "POST",
-			headers: { "sessionKey": cookies.get("auth") },
+			headers: { "sessionKey": cookies.get("auth"), "Content-Type": "application/json" },
 			body: JSON.stringify({ "startDate": startDate })
 		}).then(() => {
 			throw redirect(303, "/protected/teams");
