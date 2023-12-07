@@ -161,8 +161,10 @@ public class TeamController : ISaveableController
         
         using (var file = File.OpenText(filePath))
         {
+            var read = file.ReadLine();
+            if(read == null) return;
             teams = JsonConvert.DeserializeObject<Dictionary<string, string>[]>(
-                file.ReadLine()).Select(dict =>
+                read).Select(dict =>
                 {
                     Team team = new Team("");
                     team.FromDictionary(dict);
