@@ -22,7 +22,13 @@ namespace NutriApp.Food
 
         public void AddUser(string username) => shoppingLists.Add(username, new ShoppingList());
 
-        public ShoppingList GetShoppingList(string username) => shoppingLists[username];
+        public ShoppingList GetShoppingList(string username)
+        {
+            if (!shoppingLists.ContainsKey(username))
+                AddUser(username);
+
+            return shoppingLists[username];
+        }
 
         /// <summary>
         /// Update function is utilized by the food controller to initiate an update on the shopping list

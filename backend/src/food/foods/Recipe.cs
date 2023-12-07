@@ -50,6 +50,11 @@ public class Recipe : PreparedFood<Ingredient>
         
         return obj is not null && Name == obj.Name && instructions.SequenceEqual(obj.instructions);
     }
+
+    public void SetInstructions(List<string> newInstructiosns)
+    {
+        instructions = newInstructiosns;
+    }
 }
 
 public class SerializableRecipe : SerializablePreparedFood
