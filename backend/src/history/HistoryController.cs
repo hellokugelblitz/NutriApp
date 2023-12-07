@@ -35,13 +35,39 @@ public class HistoryController : ISaveableController
 
     public void AddWorkout(Workout.Workout workout, string username)
     {
-        history[username].Workouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
-        workouts[username].Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
+        history.TryGetValue(username, out var userHistory);
+        if (userHistory is null)
+        {
+            userHistory = new HistoryObject(_app.FoodControl);
+            history[username] = userHistory;
+        }
+        
+        workouts.TryGetValue(username, out var userWorkouts);
+        if (userWorkouts is null)
+        {
+            userWorkouts = new List<Entry<Workout.Workout>>();
+            workouts[username] = userWorkouts;
+        }
+        
+        userHistory.Workouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
+        userWorkouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
     }
 
+    public delegate void WeightChanged(double weight, string username);
+    public event WeightChanged WeightChangedEvent;
+    
     public void SetWeight(double weight, string username)
     {
         history[username].Weights.Add(new Entry<double>(_app.TimeStamp, weight));
+        WeightChangedEvent?.Invoke(weight, username);
+    }
+
+    public void RemoveLastestWeight(string username)
+    {
+        if (history[username].Weights.Any())
+        {
+            history[username].Weights.RemoveAt(history[username].Weights.Count - 1);
+        }
     }
 
     public void AddMeal(Meal meal, string username)

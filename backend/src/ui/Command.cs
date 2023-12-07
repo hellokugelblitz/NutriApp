@@ -31,4 +31,4 @@ abstract class Command<T>
 /// <summary>
 /// Delegate representing the event handler for command finishing.
 /// </summary>
-delegate void CommandFinished();
+public delegate void CommandFinished();

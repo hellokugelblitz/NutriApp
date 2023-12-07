@@ -42,8 +42,8 @@ public class App
     public GoalController GoalControl => goal;
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
-    public TeamController TeamControl => team;
     public UserController UserControl => userCtrl;
+    public TeamController TeamControl => team;
     public DateTime TimeStamp => date;
 
     public double DayLength
@@ -77,6 +77,7 @@ public class App
         
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
+        history.WeightChangedEvent += goal.WeightChangedHandler;
     }
     
 

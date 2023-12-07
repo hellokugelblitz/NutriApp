@@ -8,7 +8,7 @@ public abstract class GoalDecorator : Goal
     protected Goal goal;
 
     public double WeightGoal => goal.WeightGoal;
-    public double DailyCalorieGoal => goal.DailyCalorieGoal;
+    public virtual double DailyCalorieGoal => goal.DailyCalorieGoal;
 
     public GoalDecorator(Goal goal)
     {

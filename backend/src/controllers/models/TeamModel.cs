@@ -2,7 +2,7 @@ using System;
 
 namespace NutriApp.Controllers.Models;
 
-public struct Team
+public struct TeamModel
 {
     public string Name { get; set; }
     public string[] Members { get; set; }
