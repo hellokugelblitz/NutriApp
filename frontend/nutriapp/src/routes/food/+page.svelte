@@ -4,12 +4,13 @@
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
 
     let activeButton = "";
-    let exit = false;
     let mealName = "";
     let recipeName = "";
 
     let recipeInstructions = [""];
     let recipeIngredients = [{ name: "", quantity: 0 }];
+
+    let mealRecipes = [{ name: "", quantity: 0 }];
 
     function addInstruction() {
         recipeInstructions = [...recipeInstructions, ""];
@@ -27,6 +28,14 @@
         recipeIngredients = recipeIngredients.filter((_, i) => i !== index);
     }
 
+    function addMealRecipe() {
+        mealRecipes = [...mealRecipes, { name: "", quantity: 0 }];
+    }
+
+    function removeMealRecipe(index: number) {
+        mealRecipes = mealRecipes.filter((_, i) => i !== index);
+    }
+
     function sendToast(message: string) {
         toast.push(message);
         resetAfterDelay();
@@ -34,10 +43,22 @@
 
     function resetAfterDelay() {
         setTimeout(() => {
-            exit = false;
             activeButton = "";
             mealName = "";
         }, 1000);
+    }
+
+    let isModalOpen = false;
+    let selectedItem = null;
+
+    function openModal(item: any) {
+        selectedItem = item;
+        isModalOpen = true;
+    }
+
+    function closeModal() {
+        isModalOpen = false;
+        selectedItem = null;
     }
 </script>
 
@@ -164,57 +185,55 @@
             </div>
         {/if}
     {:else if activeButton == "consume"}
-        {#if (exit = true)}
-            <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 shadow-lg rounded-lg bg-white">
-                    <h1 class="text-2xl font-bold mb-4">Consume a Meal</h1>
+        <div class="grid md:grid-cols-2 gap-4">
+            <div class="p-4 shadow-lg rounded-lg bg-white">
+                <h1 class="text-2xl font-bold mb-4">Consume a Meal</h1>
 
-                    <form action="?/consume" method="POST">
-                        <div>
-                            <label for="meal" class="text-gray-700 font-bold"
-                                >Meal Name</label
-                            >
-                            <input
-                                bind:value={mealName}
-                                type="text"
-                                name="mealName"
-                                id="mealName"
-                                class="border-2 border-black rounded-md p-2 ml-2"
-                                placeholder="Meal Name"
-                                required
-                            />
-                        </div>
-
-                        <button
-                            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded float-right"
-                            on:click={() => {
-                                if (mealName != "") {
-                                    sendToast("Consumed Meal: " + mealName);
-                                }
-                            }}>Submit</button
+                <form action="?/consume" method="POST">
+                    <div>
+                        <label for="meal" class="text-gray-700 font-bold"
+                            >Meal Name</label
                         >
-                    </form>
-                </div>
-                <div class="p-4 shadow-lg rounded-lg bg-white">
-                    <h1 class="text-2xl font-bold mb-4">Meals</h1>
-                    <ul>
-                        {#each $page.data.meals as meal}
-                            <li>
-                                <button
-                                    class="text-left w-full hover:bg-gray-100 p-2 rounded transition duration-200 ease-in-out"
-                                >
-                                    {meal.name}
-                                </button>
-                            </li>
-                        {/each}
-                    </ul>
-                </div>
+                        <input
+                            bind:value={mealName}
+                            type="text"
+                            name="mealName"
+                            id="mealName"
+                            class="border-2 border-black rounded-md p-2 ml-2"
+                            placeholder="Meal Name"
+                            required
+                        />
+                    </div>
+
+                    <button
+                        class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded float-right"
+                        on:click={() => {
+                            if (mealName != "") {
+                                sendToast("Consumed Meal: " + mealName);
+                            }
+                        }}>Submit</button
+                    >
+                </form>
             </div>
-            <button
-                class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded mt-4 float-right"
-                on:click={() => (activeButton = "")}>Back</button
-            >
-        {/if}
+            <div class="p-4 shadow-lg rounded-lg bg-white">
+                <h1 class="text-2xl font-bold mb-4">Meals</h1>
+                <ul>
+                    {#each $page.data.meals as meal}
+                        <li>
+                            <button
+                                class="text-left w-full hover:bg-gray-100 p-2 rounded transition duration-200 ease-in-out"
+                            >
+                                {meal.name}
+                            </button>
+                        </li>
+                    {/each}
+                </ul>
+            </div>
+        </div>
+        <button
+            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded mt-4 float-right"
+            on:click={() => (activeButton = "")}>Back</button
+        >
     {:else if activeButton == "recipe"}
         <div class="grid md:grid-cols-2 gap-4 text-center">
             <div class="p-4 shadow-lg rounded-lg bg-white">
@@ -241,6 +260,7 @@
                             <input
                                 type="text"
                                 bind:value={instruction}
+                                name={`instruction${index}`}
                                 placeholder="Instruction"
                                 class="border-2 border-black rounded-md p-2 ml-2"
                             />
@@ -266,12 +286,14 @@
                             <input
                                 type="text"
                                 bind:value={ingredient.name}
+                                name={`ingredientName${index}`}
                                 placeholder="Ingredient Name"
                                 class="border-2 border-black rounded-md p-2 ml-2"
                             />
                             <input
                                 type="number"
                                 bind:value={ingredient.quantity}
+                                name={`ingredientQuantity${index}`}
                                 placeholder="Quantity"
                                 class="border-2 border-black rounded-md p-2 ml-2"
                             />
@@ -301,14 +323,14 @@
                 </form>
             </div>
             <div class="p-4 shadow-lg rounded-lg bg-white">
-                <h1 class="text-2xl font-bold mb-4">Recipes</h1>
+                <h1 class="text-2xl font-bold mb-4">Ingredients</h1>
                 <ul>
-                    {#each $page.data.recipes as recipe}
+                    {#each $page.data.ingredients as ingredient}
                         <li>
                             <button
                                 class="text-left w-full hover:bg-gray-100 p-2 rounded transition duration-200 ease-in-out"
                             >
-                                {recipe.name}
+                                {ingredient.name}
                             </button>
                         </li>
                     {/each}
@@ -339,37 +361,58 @@
                         />
                     </div>
 
-                    <div>
-                        <label for="mealRecipes" class="text-gray-700 font-bold"
-                            >Recipe Name</label
-                        >
-                        <input
-                            type="text"
-                            name="mealRecipes"
-                            id="mealRecipes"
-                            class="border-2 border-black rounded-md p-2 ml-2"
-                            placeholder="Recipe Name"
-                            required
-                        />
+                    {#each mealRecipes as mealRecipe, index}
+                        <div class="flex items-center mb-2">
+                            <input
+                                type="text"
+                                bind:value={mealRecipe.name}
+                                name={`recipeName${index}`}
+                                placeholder="Recipe Name"
+                                class="border-2 border-black rounded-md p-2 ml-2"
+                                required
+                            />
+                            <input
+                                type="number"
+                                bind:value={mealRecipe.quantity}
+                                name={`recipeQuantity${index}`}
+                                placeholder="Quantity"
+                                class="border-2 border-black rounded-md p-2 ml-2"
+                                required
+                            />
+                            {#if index !== 0}
+                                <button
+                                    type="button"
+                                    class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
+                                    on:click={() => removeMealRecipe(index)}
+                                    >Remove</button
+                                >
+                            {/if}
+                        </div>
+                    {/each}
 
-                        <button
-                            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded float-right"
-                            on:click={() => {
-                                sendToast("Created Meal: " + mealName);
-                            }}>Submit</button
-                        >
-                    </div>
+                    <button
+                        type="button"
+                        class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
+                        on:click={addMealRecipe}>Add Recipe</button
+                    >
+
+                    <button
+                        class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded float-right"
+                        on:click={() => {
+                            sendToast("Created Meal: " + mealName);
+                        }}>Submit</button
+                    >
                 </form>
             </div>
             <div class="p-4 shadow-lg rounded-lg bg-white">
-                <h1 class="text-2xl font-bold mb-4">Meals</h1>
+                <h1 class="text-2xl font-bold mb-4">Recipes</h1>
                 <ul>
-                    {#each $page.data.meals as meal}
+                    {#each $page.data.recipes as recipe}
                         <li>
                             <button
                                 class="text-left w-full hover:bg-gray-100 p-2 rounded transition duration-200 ease-in-out"
                             >
-                                {meal.name}
+                                {recipe.name}
                             </button>
                         </li>
                     {/each}
@@ -381,6 +424,10 @@
             on:click={() => (activeButton = "")}>Back</button
         >
     {:else if activeButton == "shopping"}
-        <div></div>
+        <div class="p-4 shadow-lg rounded-lg bg-white">
+            <h1 class="text-2xl font-bold mb-4 text-center">Shopping Cart</h1>
+
+            <div></div>
+        </div>
     {/if}
 </div>
