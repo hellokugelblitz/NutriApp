@@ -5,6 +5,37 @@ export const load:PageServerLoad = async () => {
     // page load
 }
 
+// const exportUser : Action =async ({locals}) => {
+//     console.log('export');
+//     const sessionKey = locals.user?.session_key || ""
+//     const response = await fetch('http://localhost:5072/api/Save/export/user', {
+//     method: 'GET',
+//     headers: {
+//         sessionKey: sessionKey
+//     }
+//     });
+//     console.log(response)
+    
+//     const blob = await response.blob();
+//     const url = URL.createObjectURL(blob);
+
+//     // Create a link element
+//     const link = document.createElement('a');
+//     link.href = url;
+//     link.download = 'exported_user_data.csv'; // You can set the desired filename
+
+//     // Append the link to the body
+//     document.body.appendChild(link);
+
+//     // Trigger a click on the link to start the download
+//     link.click();
+
+//     // Remove the link from the DOM
+//     document.body.removeChild(link);
+
+//     // Revoke the URL to free up resources
+//     URL.revokeObjectURL(url);
+// }
 //The register action
 const login : Action = async({ request, cookies }) => {
     //We grab the data we need from the form.
@@ -53,4 +84,34 @@ const login : Action = async({ request, cookies }) => {
 
 
 
-export const actions: Actions = { login }
+export const actions: Actions = { login, exportUser: async ({locals}) => {
+    console.log('export');
+    const sessionKey = locals.user?.session_key || ""
+    const response = await fetch('http://localhost:5072/api/Save/export/user', {
+    method: 'GET',
+    headers: {
+        sessionKey: sessionKey
+    }
+    });
+    console.log(response)
+    
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'exported_user_data.csv'; // You can set the desired filename
+
+    // Append the link to the body
+    document.body.appendChild(link);
+
+    // Trigger a click on the link to start the download
+    link.click();
+
+    // Remove the link from the DOM
+    document.body.removeChild(link);
+
+    // Revoke the URL to free up resources
+    URL.revokeObjectURL(url);
+} }
