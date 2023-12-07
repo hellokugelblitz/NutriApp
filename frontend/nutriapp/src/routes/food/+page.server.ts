@@ -37,12 +37,11 @@ export const actions: Actions = {
 		const mealName = data.get('mealName');
 
 		try {
-			if (locals.user) {
-				const response = await fetch(`http://localhost:5072/api/Meals/consume/${mealName}`, {
+			const response = await fetch(`http://localhost:5072/api/Meals/consume/${mealName}`, {
 					method: 'POST',
 					headers: {
 						'Content-type': 'application/json',
-						"sessionKey": locals.user.session_key,
+						"sessionKey": locals.user?.session_key || '',
 					}
 				});
 
@@ -52,10 +51,43 @@ export const actions: Actions = {
 				} else {
 					console.log("The meal you have provided does not exist: " + mealName);
 				}
-			}
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error("Error consuming meal:", error);
+			}
+		}
+	},
+
+	recipe: async ({ request, locals }) => {
+		const data = await request.formData();
+
+		const recipeName = data.get('recipeName');
+		const recipeIngredients = data.get('recipeIngredients');
+		const recipeInstructions = data.get('recipeInstructions');
+
+		try {
+			const response = await fetch(`http://localhost:5072/api/Recipes/`, {
+					method: 'POST',
+					headers: {
+						'Content-type': 'application/json',
+						"sessionKey": locals.user?.session_key || '',
+					},
+					body: JSON.stringify({
+						name: recipeName,
+						ingredients: recipeIngredients,
+						instructions: recipeInstructions
+					})
+				});
+
+				if (response.status === 204) {
+					console.log("Recipe added successfully: " + recipeName);
+					throw redirect(302, "/food");
+				} else {
+					console.log("The ingredients you added doesn't exist: " + recipeIngredients);
+				}
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error("Error adding recipe:", error);
 			}
 		}
 	}
