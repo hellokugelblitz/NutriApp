@@ -87,6 +87,7 @@ public class App
         
         history.WorkoutLoggedEvent += goal.WorkoutLoggedHandler;
         DayEndEvent += goal.DayEndHandler;
+        DayEndEvent += history.DayEndHandler;
     }
     
 

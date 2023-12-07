@@ -92,4 +92,12 @@ public class GoalApiController : ControllerBase
         _app.GoalControl.SetGoalBasedOnWeightDifference(currentGoal.WeightGoal, HttpContext.GetUser().UserName);
         return NoContent();
     }
+    
+    // GET api/Goal/dailyCalories
+    [HttpGet("dailyCalories")]
+    public ActionResult<double> GetDailyCalories()
+    {
+        var user = HttpContext.GetUser();
+        return  _app.HistoryControl.GetCalorieCount(user.UserName);
+    }
 }

@@ -109,6 +109,14 @@ public class HistoryController : ISaveableController
         history[username].Calories.Add(new Entry<CalorieTracker>(_app.TimeStamp,
             new CalorieTracker(GetCalorieCount(username), _app.GoalControl.GetGoal(username).DailyCalorieGoal)));
     }
+    
+    public void DayEndHandler(DateTime date)
+    {
+        foreach (var (username, _) in history)
+        {
+            AddCalories(username);
+        }
+    }
 
     /// <summary>
     /// calculates the calories eaten that day
