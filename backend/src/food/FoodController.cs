@@ -145,6 +145,8 @@ public class FoodController : ISaveableController
         return matches.ToArray();
     }
 
+    public Ingredient[] GetAllIngredients() => ingredientDatabase.GetAll();
+
     /// <summary>
     /// Gets a single ingredient by its unique name.
     /// </summary>

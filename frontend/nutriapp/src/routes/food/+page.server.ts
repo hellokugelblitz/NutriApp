@@ -64,7 +64,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const recipeName = data.get('recipeName') as string;
 		const recipeInstructions = [];
-		const recipeIngredients = {} as { [key: string]: number};
+		const recipeIngredients = {} as { [key: string]: number };
 
 		for (let i = 0; data.has(`instruction${i}`); i++) {
 			const instruction = data.get(`instruction${i}`) as string;
