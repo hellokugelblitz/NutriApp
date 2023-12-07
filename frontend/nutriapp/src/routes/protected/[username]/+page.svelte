@@ -21,7 +21,7 @@
                 <form class="space-y-4" method="POST">
                     <div>
                         <label for="username" class="block mb-2 text-sm font-medium text-gray-900 ">Your username:</label>
-                        <input type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " value="{$page.data.user.username}" required>
+                        <h1 class="font-bold mx-2">{data.visiting_user.userName}</h1>
                     </div>
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Your password:</label>
