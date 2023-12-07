@@ -39,9 +39,9 @@ public class GoalController : ISaveableController
     /// May switch the goal if the user has reached certain conditions, like
     /// completing a goal or deviating from the goal.
     /// </summary>
-    public void CompareUserWeightToGoal(string username)
+    public void WeightChangedHandler(double weight, string username)
     {
-        goals[username] = GetGoal(username).CheckWeight(app.HistoryControl.CurrentWeight(username));
+        goals[username] = GetGoal(username).CheckWeight(weight);
     }
 
     /// <summary>

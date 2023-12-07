@@ -7,6 +7,7 @@ using NutriApp.Workout;
 public class FitnessGoal : GoalDecorator
 {
     public List<Workout> RecommendedWorkouts { get; }
+    public override double DailyCalorieGoal => goal.DailyCalorieGoal + GetAdditionalCalories();
 
     public FitnessGoal(Goal goal, List<Workout> recommendedWorkouts) : base(goal)
     {
