@@ -1,11 +1,10 @@
 import { redirect } from "@sveltejs/kit";
 import type { Action, Actions, PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ url, locals }) => {
-	const pageSize = 10;
+let ingredientsPage = 1;
 
-	const urlParams = new URLSearchParams(url.search);
-	const ingredientsPage = parseInt(urlParams.get('ingredientsPage') || '1');
+export const load: PageServerLoad = async ({ locals }) => {
+	const pageSize = 10;
 
 	try {
 		const [ingredientsResponse, recipesResponse, mealsResponse] = await Promise.all([
@@ -38,10 +37,6 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		};
 	}
 }
-
-
-
-
 
 export const actions: Actions = {
 	consume: async ({ request, locals }) => {
@@ -110,7 +105,7 @@ export const actions: Actions = {
 				body: JSON.stringify(recipeData)
 			});
 
-			if (response.status === 201) {
+			if (response.status === 204) {
 				console.log("Recipe added successfully: " + recipeName);
 				throw redirect(302, "/food");
 			} else {
@@ -155,7 +150,7 @@ export const actions: Actions = {
 				body: JSON.stringify(mealData)
 			});
 
-			if (response.status === 201) {
+			if (response.status === 204) {
 				console.log("Meal added successfully: " + mealName);
 				throw redirect(302, "/food");
 			} else {
@@ -167,4 +162,8 @@ export const actions: Actions = {
 			}
 		}
 	}
+}
+
+export function _changePage(page: number) {
+	ingredientsPage = page;
 }
