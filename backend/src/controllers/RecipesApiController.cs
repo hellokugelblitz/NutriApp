@@ -78,12 +78,14 @@ public class RecipesApiController : ControllerBase
     [Authorize]
     public IActionResult EditRecipe(string name, CreateRecipeInfo info)
     {
-        Recipe meal = _app.FoodControl.GetRecipe(name);
-        foreach (var recipe in info.Ingredients.Keys)
+        Recipe recipe = _app.FoodControl.GetRecipe(name);
+        recipe.SetInstructions(info.Instructions);
+        recipe.Children.Clear();
+        foreach (var recipeName in info.Ingredients.Keys)
         {
-            meal.AddChild(_app.FoodControl.GetIngredient(recipe), info.Ingredients[recipe]);
+            recipe.AddChild(_app.FoodControl.GetIngredient(recipeName), info.Ingredients[recipeName]);
         }
-        
+
         return NoContent();
     }
 }

@@ -74,6 +74,7 @@ public class MealsApiController : ControllerBase
     {
 
         Meal meal = _app.FoodControl.GetMeal(name);
+        meal.Children.Clear();
         foreach (var recipe in info.Recipes.Keys)
         {
             meal.AddChild(_app.FoodControl.GetRecipe(recipe), info.Recipes[recipe]);
