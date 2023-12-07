@@ -15,9 +15,9 @@ public class TestTeamController
         TeamController teamCtrl = new TeamController(mockApp.Object, null);
         string teamName = "cool team";
 
-        Assert.IsTrue(teamCtrl.CreateTeam(teamName));   // create team
+        Assert.IsTrue(teamCtrl.CreateTeam(teamName) is not null);   // create team
         Assert.IsNotNull(teamCtrl.GetTeam(teamName));   // get that team
-        Assert.IsFalse(teamCtrl.CreateTeam(teamName));  // disallow duplicate team
+        Assert.IsFalse(teamCtrl.CreateTeam(teamName) is not null);  // disallow duplicate team
 
         Team team = teamCtrl.GetTeam(teamName);
         User user = new User("thatnoobles", "dan", 70, new System.DateTime(2004, 04, 25), "bio");

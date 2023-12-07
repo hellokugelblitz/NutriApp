@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
 using NutriApp.Controllers.Middleware;
+using NutriApp.Undo;
 
 namespace NutriApp.Controllers;
 
@@ -29,6 +30,11 @@ public class WorkoutsApiController : ControllerBase
     {
         var user = HttpContext.GetUser();
         _app.HistoryControl.AddWorkout(workoutModel.ToWorkout(), user.UserName);
+        
+        var sessionKey = HttpContext.GetSessionKey();
+        var timestamp = _app.HistoryControl.GetWorkouts(user.UserName).Last().TimeStamp;  
+        _app.UserControl.AddUndoCommand(sessionKey, new UndoAddWorkout(_app, user, timestamp));
+        
         return Ok();
     }
     
