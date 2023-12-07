@@ -42,6 +42,7 @@ public class App
     public GoalController GoalControl => goal;
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
+    public ShoppingListController ShoppingListControl => food.ShoppingListController;
     public UserController UserControl => userCtrl;
     public TeamController TeamControl => team;
     public DateTime TimeStamp => date;
@@ -71,13 +72,18 @@ public class App
         saveSystem.SubscribeSaveable(history);
         saveSystem.SubscribeSaveable(goal);
         saveSystem.SubscribeSaveable(team);
-        
+        saveSystem.SubscribeSaveable(food);
         
         saveSystem.LoadController();
         
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
         history.WeightChangedEvent += goal.WeightChangedHandler;
+
+        Recipe recipe = new Recipe("mac and cheese");
+        recipe.AddInstruction("bake them kids");
+        recipe.AddChild(FoodControl.GetIngredient("CHEESE,BRICK"), 3);
+        recipe.AddChild(FoodControl.GetIngredient("PASTA,DRY,ENR"), 1);
     }
     
 
@@ -153,6 +159,7 @@ public class App
                 app.saveSystem.SaveController();
             });
             
+        
         webapp.Run();
     }
 

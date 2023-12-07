@@ -57,6 +57,29 @@ public class TestFoodController
         
         food.EditIngredientStock("CHEESE,BRICK", 3, testUser.UserName);
     }
+
+    [TestMethod]
+    public void TestExport() {
+        var app = new App(1);
+        char entrySep = ':';
+        char valueSep = '|';
+        char ingredientSep = '^';
+
+        var key = "bake them kids|CHEESE,BRICK:3^PASTA,DRY,ENR:1";
+
+        Recipe recipe = new Recipe(key);
+        var splitValues = key.Split(valueSep);
+        var instructions = splitValues[0].Split(entrySep);
+        foreach(var instruction in instructions) {
+            recipe.AddInstruction(instruction);
+        }
+        var ingredientPair = splitValues[1].Split(ingredientSep);
+        foreach(var pair in ingredientPair) {
+            var split = pair.Split(entrySep);
+            recipe.AddChild(app.FoodControl.GetIngredient(split[0]), Int32.Parse(split[1]));
+        }
+
+    }
      
      /// <summary>
      /// clears the directory and creates a new one at the PATH constant
