@@ -1,10 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
+using NutriApp.Controllers.Middleware;
+using NutriApp.Food;
+using Ingredient = NutriApp.Controllers.Models.IngredientModel;
 
 namespace NutriApp.Controllers;
 
@@ -19,95 +24,43 @@ public class IngredientsApiController : ControllerBase
         _app = app;
     }
     
-    // GET api/Ingredients
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<IngredientModel>>> GetIngredients()
-    {
-        IngredientModel[] ings =
-        {
-            // Some dummy ingredient structs
-            new()
-            {
-                Name = "Apple",
-                Calories = 95,
-                Fat = 0.3,
-                Protein = 0.5,
-                Fiber = 4.4,
-                Carbs = 25
-            },
-            new()
-            {
-                Name = "Banana",
-                Calories = 105,
-                Fat = 0.4,
-                Protein = 1.3,
-                Fiber = 3.1,
-                Carbs = 27
-            },
-            new()
-            {
-                Name = "Orange",
-                Calories = 45,
-                Fat = 0.1,
-                Protein = 0.9,
-                Fiber = 2.3,
-                Carbs = 11
-            }
-        };
-        return ings;
-    }
-    
     // GET api/Ingredients/{name}
     [HttpGet("{name}")]
-    public async Task<ActionResult<IngredientModel>> GetIngredient(string name)
+    public ActionResult<IngredientModel> GetIngredient(string name)
     {
-        IngredientModel ing = new()
-        {
-            Name = name,
-            Calories = 95,
-            Fat = 0.3,
-            Protein = 0.5,
-            Fiber = 4.4,
-            Carbs = 25
-        };
-        return ing;
+        var ing = _app.FoodControl.GetIngredient(name);
+        return ing != null ? IngredientModel.FromIngredient(ing) : new IngredientModel();
     }
     
     // GET api/Ingredients/search/{name}
     [HttpGet("search/{name}")]
-    public async Task<ActionResult<IEnumerable<IngredientModel>>> SearchIngredients(string name)
+    public ActionResult<IEnumerable<IngredientModel>> SearchIngredients(string name)
     {
-        IngredientModel[] ings =
-        {
-            // Some dummy ingredient structs that share similar names
-            new()
-            {
-                Name = "Apple",
-                Calories = 95,
-                Fat = 0.3,
-                Protein = 0.5,
-                Fiber = 4.4,
-                Carbs = 25
-            },
-            new()
-            {
-                Name = "Apple Cinnamon",
-                Calories = 105,
-                Fat = 0.4,
-                Protein = 1.3,
-                Fiber = 3.1,
-                Carbs = 27
-            },
-        };
-
-        return ings;
+        var ings = _app.FoodControl.SearchIngredients(name);
+        return ings.Select(IngredientModel.FromIngredient).ToList();
+    }
+    
+    // Get api/Ingredients/stock
+    [HttpGet("stock")]
+    [Authorize]
+    public ActionResult<IEnumerable<IngredientStockModel>> GetStock()
+    {
+        var user = HttpContext.GetUser();
+        return _app.FoodControl.GetAllIngredientStocks(user.UserName)?.ToDictionary()
+            .Select(pair => new IngredientStockModel { Name = pair.Key, Quantity = double.Parse(pair.Value) })
+            .ToList() ?? new List<IngredientStockModel>();
     }
     
     // PUT api/Ingredients/purchase
     [HttpPut("purchase")]
     [Authorize]
-    public async Task<IActionResult> PurchaseIngredients(string name, PurchaseIngredientInfo[] info)
+    public IActionResult PurchaseIngredients(PurchaseIngredientInfo[] info)
     {
+        var user = HttpContext.GetUser();
+        foreach (var purchase in info)
+        {
+            _app.FoodControl.EditIngredientStock(purchase.Name, purchase.Quantity, user.UserName);
+        }
         return NoContent();
     }
 }

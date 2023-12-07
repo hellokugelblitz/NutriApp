@@ -27,9 +27,13 @@ public class UserApiController : ControllerBase
 
     // POST api/User/update
     [HttpPost("update")]
-    public async Task<IActionResult> UpdateUser(UpdateInfo info)
+    public IActionResult UpdateUser(UpdateInfo info)
     {
-        //Placeholder return value doesnt cause errors :)
+        var user = HttpContext.GetUser();
+
+        if(info.Password != "") _app.UserControl.ChangePassword(user.UserName, info.Password);
+        user.UpdateUser(info);
+
         return Ok();
     }
 }

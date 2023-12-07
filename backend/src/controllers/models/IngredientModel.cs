@@ -1,4 +1,6 @@
-﻿namespace NutriApp.Controllers.Models;
+﻿using NutriApp.Food;
+
+namespace NutriApp.Controllers.Models;
 
 public struct IngredientModel
 {
@@ -9,13 +11,19 @@ public struct IngredientModel
     public double Fiber { get; set; }
     public double Carbs { get; set; }
 
-    public IngredientModel(Food.Ingredient ingredient)
+    /// <summary>
+    /// Takes an <see cref="Ingredient"/> from the backend and
+    /// converts it to an <see cref="Ingredient"/> for the frontend.
+    /// </summary>
+    /// <param name="ing">The ingredient to convert</param>
+    /// <returns>Ingredient</returns>
+    public static IngredientModel FromIngredient(Ingredient ing) => new()
     {
-        Name = ingredient.Name;
-        Calories = ingredient.Calories;
-        Carbs = ingredient.Carbohydrates;
-        Protein = ingredient.Protein;
-        Fat = ingredient.Fat;
-        Fiber = ingredient.Fiber;
-    }
+        Name = ing.Name,
+        Calories = ing.Calories,
+        Fat = ing.Fat,
+        Protein = ing.Protein,
+        Fiber = ing.Fiber,
+        Carbs = ing.Carbohydrates
+    };
 }
