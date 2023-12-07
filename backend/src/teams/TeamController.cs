@@ -66,14 +66,11 @@ public class TeamController : ISaveableController
 
         inviteCodes.Add(code, team);
 
-        User recipient = app.UserControl.GetUser(username);
-
-        // TODO: actually incorporate invite code into notification
         NotificationController.Instance.CreateNotification(
             $"Team invite: {teamName}",
             $"/protected/teams/join/{code}",
             "Accept",
-            new User[] { recipient });
+            new string[] { username });
         return code;
     }
 

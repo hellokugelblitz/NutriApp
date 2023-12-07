@@ -26,9 +26,9 @@ public class TeamsApiController : ControllerBase
     
     // POST api/teams
     [HttpPost]
-    public ActionResult<TeamModel> CreateTeam()
+    public ActionResult<TeamModel> CreateTeam(CreateTeamInfo info)
     {
-        Team team = _app.TeamControl.CreateTeam(GetRequestBody(Request.Body)["teamName"]);
+        Team team = _app.TeamControl.CreateTeam(info.TeamName);
         User user = HttpContext.GetUser();
 
         if (team is null) return Conflict();
@@ -36,7 +36,7 @@ public class TeamsApiController : ControllerBase
         team.AddMember(user.UserName);
         user.TeamName = team.Name;
 
-        return Ok(new TeamModel()
+        return Ok(new TeamModel
         {
             Name = team.Name,
             Members = team.Members,
@@ -52,7 +52,7 @@ public class TeamsApiController : ControllerBase
         User user = HttpContext.GetUser();
         Team team = _app.TeamControl.GetTeam(user.TeamName);
 
-        return team is null ? NoContent() : Ok(new TeamModel()
+        return team is null ? NoContent() : Ok(new TeamModel
         {
             Name = team.Name,
             Members = team.Members,
@@ -63,28 +63,24 @@ public class TeamsApiController : ControllerBase
     
     // POST api/teams/invite
     [HttpPost("invite")]
-    public ActionResult<TeamInviteModel> InviteUser()
+    public ActionResult<TeamInviteModel> InviteUser(TeamInviteInfo info)
     {
-        Dictionary<string, string> body = GetRequestBody(Request.Body);
-
         User user = HttpContext.GetUser();
         Team team = _app.TeamControl.GetTeam(user.TeamName);
         
-        string inviteCode = _app.TeamControl.CreateInvite(body["username"], team.Name);
+        string inviteCode = _app.TeamControl.CreateInvite(info.Username, team.Name);
 
-        return Ok(new TeamInviteModel() { Code = inviteCode });
+        return Ok(new TeamInviteModel { Code = inviteCode });
     }
     
     // PUT api/teams/accept
     [HttpPut("accept")]
-    public IActionResult AcceptInvite()
+    public IActionResult AcceptInvite(TeamAcceptInviteInfo info)
     {
-        Dictionary<string, string> body = GetRequestBody(Request.Body);
-
-        if (!_app.TeamControl.ValidateInviteCode(body["inviteCode"]))
+        if (!_app.TeamControl.ValidateInviteCode(info.InviteCode))
             return Unauthorized();
     
-        _app.TeamControl.AddMember(HttpContext.GetUser().UserName, body["inviteCode"]);
+        _app.TeamControl.AddMember(HttpContext.GetUser().UserName, info.InviteCode);
         return Ok();
     }
     
@@ -96,14 +92,6 @@ public class TeamsApiController : ControllerBase
         _app.TeamControl.RemoveMember(user.UserName, user.TeamName);
         return Ok();
     }
-    
-    // TODO: this should presumably be in each user's profile page? different API endpoint
-    // // GET api/teams/workouts/{username}
-    // [HttpGet("workouts/{username}")]
-    // public ActionResult<IEnumerable<Entry<Models.Workout>>> GetWorkouts(string username)
-    // {
-        
-    // }
     
     // POST api/teams/challenge
     [HttpPost("challenge")]

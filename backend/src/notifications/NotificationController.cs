@@ -31,15 +31,15 @@ public class NotificationController
     /// <summary>
     /// Generates a new notification to be sent out to the given recipients.
     /// </summary>
-    public void CreateNotification(string contents, string url, string buttonText, User[] recipients)
+    public void CreateNotification(string contents, string url, string buttonText, string[] recipients)
     {
-        foreach (User user in recipients)
+        foreach (var username in recipients)
         {
-            if (!pendingNotifications.ContainsKey(user.UserName))
-                pendingNotifications.Add(user.UserName, new List<Notification>());
+            if (!pendingNotifications.ContainsKey(username))
+                pendingNotifications.Add(username, new List<Notification>());
 
             Notification notification = new Notification(contents, url, buttonText);
-            pendingNotifications[user.UserName].Add(notification);
+            pendingNotifications[username].Add(notification);
         }
 
         NotifyOnlineUsers();

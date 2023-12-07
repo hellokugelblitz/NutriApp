@@ -47,4 +47,23 @@ public class WorkoutsApiController : ControllerBase
             .GenerateRecommendedWorkouts(_app.HistoryControl.GetWorkouts(user.UserName))
             .Select(workout => new WorkoutModel(workout)).ToArray();
     }
+    
+    // GET api/Workouts/{username}
+    [HttpGet("workouts/{username}")]
+    public ActionResult<IEnumerable<EntryModel<WorkoutModel>>> GetWorkouts(string username)
+    {
+        var user = HttpContext.GetUser();
+        
+        // Make sure the two users are on the same team
+        if (user.TeamName != _app.UserControl.GetUser(username)?.TeamName)
+            return Unauthorized($"User \"{username}\" is not on your team");
+
+        return _app.HistoryControl.GetWorkouts(username).Select(
+            ele => new EntryModel<WorkoutModel>
+            {
+                TimeStamp = ele.TimeStamp,
+                Value = WorkoutModel.FromWorkout(ele.Value)
+            }
+            ).ToArray();
+    }
 }

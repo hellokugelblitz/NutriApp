@@ -24,9 +24,41 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
         }
     };
 
+    // Try to get the user's wokrouts
+    const fetchWorkouts = async (username: string) => {
+        try {
+            console.log("Fetching workouts for " + username);
+            if (!locals.user) {
+                return undefined;
+            }
+
+            const res = await fetch(`http://localhost:5072/api/Workouts/workouts/${username}`, {
+                headers: {
+                    method: 'GET',
+                    sessionKey: locals.user.session_key
+                }
+            });
+
+            // If we get ok, then we have the workouts
+            // If not, then we're not on the same team, so return undefined
+            if (!res.ok) {
+                console.log("Failed to fetch workouts for " + username);
+                return undefined;
+            }
+
+            const data = await res.json();
+            console.dir(data);
+            return data;
+        } catch (error: any) {
+            console.error(`Error fetching workout data for ${username},`, error.message);
+            return null; // Return null or handle the error as needed
+        }
+    }
+
     //Return the user we have grabbed to the front
     return {
         visiting_user: fetchUser(params.username),
+        workouts: fetchWorkouts(params.username),
 		user: locals.user,
     }
 };
