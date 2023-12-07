@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	if (!locals.user) return { user: {}, team: team };
 
-	const response = await fetch("http://localhost:5072/api/teams", {
+	let response = await fetch("http://localhost:5072/api/teams", {
 		method: "GET",
 		headers: { "sessionKey": locals.user.session_key }
 	});
@@ -34,9 +34,15 @@ export const load: PageServerLoad = async ({ locals }) => {
 		console.log(`${response.status} : ${response.statusText}`)
 	}
 
+	response = await fetch("http://localhost:5072/api/teams/challenge", {
+		method: "GET",
+		headers: { "sessionKey": locals.user.session_key }
+	});
+
 	return {
 		user: locals.user,
-		team: team
+		team: team,
+		challenge: response.json()
 	};
 }
 
@@ -44,8 +50,6 @@ export const actions: Actions = {
 	invite: async ({ request, cookies }) => {
 		const data = await request.formData();
 		const username = data.get("username");
-
-		console.log(cookies.get("auth"));
 
 		await fetch("http://localhost:5072/api/teams/invite", {
 			method: "POST",
@@ -64,6 +68,19 @@ export const actions: Actions = {
 			method: "POST",
 			headers: { "sessionKey": cookies.get("auth") },
 			body: JSON.stringify({ "teamName": teamName })
+		}).then(() => {
+			throw redirect(303, "/protected/teams");
+		});
+	},
+
+	startChallenge: async ({ request, cookies }) => {
+		const data = await request.formData();
+		const startDate = data.get("startDate");
+
+		await fetch("http://localhost:5072/api/teams/challenge", {
+			method: "POST",
+			headers: { "sessionKey": cookies.get("auth") },
+			body: JSON.stringify({ "startDate": startDate })
 		}).then(() => {
 			throw redirect(303, "/protected/teams");
 		});
