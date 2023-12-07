@@ -31,7 +31,6 @@ public class UserApiController : ControllerBase
     public IActionResult UpdateUser(UpdateInfo info)
     {
         var user = HttpContext.GetUser();
-        Console.WriteLine(info);
         if(info.Password != "") _app.UserControl.ChangePassword(user.UserName, info.Password);
         user.UpdateUser(info);
 
