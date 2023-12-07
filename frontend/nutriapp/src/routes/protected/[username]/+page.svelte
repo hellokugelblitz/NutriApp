@@ -18,18 +18,18 @@
 
             <div class="p-4 md:p-5 w-96">
                 <!-- "action" here is the api endpoint for auth -->
-                <form class="space-y-4" method="POST">
+                <form class="space-y-4" method="POST" action="?/update">
                     <div>
                         <label for="username" class="block mb-2 text-sm font-medium text-gray-900 ">Your username:</label>
                         <h1 class="font-bold mx-2">{data.visiting_user.userName}</h1>
                     </div>
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Your password:</label>
-                        <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " required>
+                        <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 ">
                     </div>
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Your name:</label>
-                        <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " value="{data.visiting_user.name}" required>
+                        <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block w-full p-2.5 " value="{data.visiting_user.name}">
                     </div>
                     <div>
                         <label for="bio" class="block mb-2 text-sm font-medium text-gray-900">Your Bio:</label>
