@@ -2,5 +2,5 @@
 
 public struct CreateTeamInfo
 {
-    public string Name { get; set; }
+    public string TeamName { get; set; }
 }

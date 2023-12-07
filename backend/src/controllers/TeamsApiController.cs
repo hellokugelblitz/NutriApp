@@ -28,7 +28,7 @@ public class TeamsApiController : ControllerBase
     [HttpPost]
     public ActionResult<TeamModel> CreateTeam(CreateTeamInfo info)
     {
-        Team team = _app.TeamControl.CreateTeam(info.Name);
+        Team team = _app.TeamControl.CreateTeam(info.TeamName);
         User user = HttpContext.GetUser();
 
         if (team is null) return Conflict();
