@@ -79,6 +79,8 @@ public class App
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
         history.WeightChangedEvent += goal.WeightChangedHandler;
+        history.WorkoutLoggedEvent += goal.WorkoutLoggedHandler;
+        DayEndEvent += goal.DayEndHandler;
     }
     
 
