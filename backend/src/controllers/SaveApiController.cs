@@ -139,7 +139,7 @@ public class SaveApiController : ControllerBase
         string zipPath = user.UserName + ".zip";
 
         // Create the zip file and add the contents of the folder
-        ZipFile.CreateFromDirectory(folderName, zipPath);
+        ZipFile.CreateFromDirectory(SaveSystem.SavePath + "\\" + folderName, zipPath);
 
         // Read the zip file into a byte array
         var zipFileBytes = System.IO.File.ReadAllBytes(zipPath);
@@ -159,35 +159,31 @@ public class SaveApiController : ControllerBase
     {
         var folder = Request.Form.Files[0];
 
-        if (folder.Length > 0)
+        if (folder.Length == 0) return BadRequest("Folder is empty");
+
+        
+        // Specify the path where you want to save the zip file
+        var zipFilePath = Path.Combine("wwwroot", "uploads", $"{Path.GetRandomFileName()}.zip");
+
+        using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
+        using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create))
         {
-            // Specify the path where you want to save the zip file
-            var zipFilePath = Path.Combine("wwwroot", "uploads", $"{Path.GetRandomFileName()}.zip");
-
-            using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
-            using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create))
+            // Add all files from the selected folder to the zip archive
+            var files = GetAllFiles(folder);
+            foreach (var filePath in files)
             {
-                // Add all files from the selected folder to the zip archive
-                var files = GetAllFiles(folder);
-                foreach (var filePath in files)
-                {
-                    var entryName = Path.GetRelativePath(folder.FileName, filePath);
-                    var zipEntry = archive.CreateEntry(entryName);
+                var entryName = Path.GetRelativePath(folder.FileName, filePath);
+                var zipEntry = archive.CreateEntry(entryName);
 
-                    using (var entryStream = zipEntry.Open())
-                    using (var fileReadStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                    {
-                        fileReadStream.CopyTo(entryStream);
-                    }
+                using (var entryStream = zipEntry.Open())
+                using (var fileReadStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    fileReadStream.CopyTo(entryStream);
                 }
             }
-
-            return Ok(new { message = "Folder uploaded successfully", zipFilePath });
         }
-        else
-        {
-            return BadRequest("Folder is empty");
-        }
+        
+        return Ok(new { message = "Folder uploaded successfully", zipFilePath });
     }
     
     // Helper method to get all files in the selected folder and its subfolders
