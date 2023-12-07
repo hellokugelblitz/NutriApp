@@ -49,9 +49,6 @@ export const load: PageServerLoad = async ({ locals }) => {
         const weight_data: any[] = await weight_history.json();
         const calorie_data: any[] = await calorie_history.json();
         const meal_data: any[] = await meal_history.json();
-		console.log(calorie_data);
-		console.log(meal_data);
-
         // Combine all history types into a single array
         const allHistory: any[] = [...workout_data, ...weight_data, ...calorie_data, ...meal_data];
         // Sort the combined array by timestamp in descending order
@@ -79,6 +76,35 @@ export const load: PageServerLoad = async ({ locals }) => {
 		all_history: null
 	}
 }
+
+export const actions = {
+	undo: async ({cookies, request, locals}) => {
+		
+        try{
+			console.log("Commencing undo");
+            //Handling the event that there is no session key hehe
+            let session_key: string = locals.user?.session_key || '';
+			const response = await fetch('http://localhost:5072/api/Undo', {
+				method: 'PUT',
+				headers: {
+				'Content-Type': 'application/json',
+				'sessionKey': session_key
+				}
+			});
+
+			if (response.ok) {
+                //Changes have been made
+				console.log("Undo Command Done!");
+			} else {
+                //Had issue making changes
+				console.log(response);
+			}
+
+		} catch {
+            console.log("Something went wrong.")
+		}
+	}
+} satisfies Actions;
 
 
 
