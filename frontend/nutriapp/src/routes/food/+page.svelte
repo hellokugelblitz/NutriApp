@@ -4,6 +4,14 @@
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
     import Modal from "./Modal.svelte";
 
+    let ingredientsPage = 1;
+
+    function changePage(change: number) {
+        ingredientsPage += change;
+
+        if (ingredientsPage < 1) ingredientsPage = 1;
+    }
+
     let activeButton = "";
     let mealName = "";
     let recipeName = "";
@@ -81,13 +89,12 @@
             <p>Calories: ${ingredient.calories}</p>
             <p>Fat: ${ingredient.fat}</p>
             <p>Protein: ${ingredient.protein}</p>
-            <p>Fiber: ${ingredient.fiber}</p>
-            <p>Carbohydrates: ${ingredient.carbohydrates}</p>`;
+            <p>Fiber: ${ingredient.fiber}</p>`;
     }
 
     function formatRecipeContent(recipe: any) {
         let ingredientsHtml = recipe.ingredients
-            .map((ing: any) => `<li>${ing.name}: ${ing.quantity}</li>`)
+            .map((ing: any) => `<li>${ing.ingredient.name}: ${ing.amount}</li>`)
             .join("");
         let instructionsHtml = recipe.instructions
             .map((inst: any) => `<li>${inst}</li>`)
@@ -101,7 +108,7 @@
 
     function formatMealContent(meal: any) {
         let recipesHtml = meal.recipes
-            .map((rec: any) => `<li>${rec.name}: ${rec.quantity}</li>`)
+            .map((rec: any) => `<li>${rec.recipe.name}: ${rec.amount}</li>`)
             .join("");
         return `<h3>${meal.name}</h3>
                 <ul>${recipesHtml}</ul>`;
@@ -199,6 +206,15 @@
                             </li>
                         {/each}
                     </ul>
+                    <button
+                        class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
+                        on:click={() => changePage(1)}>Next</button
+                    >
+                    <button
+                        class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
+                        on:click={() => changePage(-1)}
+                        disabled={ingredientsPage === 1}>Previous</button
+                    >
                 </div>
                 <!-- Recipes Section -->
                 <div class="p-4 shadow-lg rounded-lg bg-white">

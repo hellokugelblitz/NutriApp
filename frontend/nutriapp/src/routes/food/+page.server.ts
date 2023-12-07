@@ -1,7 +1,12 @@
 import { redirect } from "@sveltejs/kit";
 import type { Action, Actions, PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ url, locals }) => {
+	const pageSize = 10;
+
+	const urlParams = new URLSearchParams(url.search);
+	const ingredientsPage = parseInt(urlParams.get('ingredientsPage') || '1');
+
 	try {
 		const [ingredientsResponse, recipesResponse, mealsResponse] = await Promise.all([
 			fetch('http://localhost:5072/api/Ingredients'),
@@ -13,11 +18,14 @@ export const load: PageServerLoad = async ({ locals }) => {
 		const recipes = await recipesResponse.json() || [];
 		const meals = await mealsResponse.json() || [];
 
+		const ingredientsStartIndex = (ingredientsPage - 1) * pageSize;
+
 		return {
 			user: locals.user,
-			ingredients: ingredients.slice(0, 10),
-			recipes: recipes.slice(0, 10),
-			meals: meals.slice(0, 10),
+			ingredients: ingredients.slice(ingredientsStartIndex, ingredientsStartIndex + pageSize),
+			recipes: recipes,
+			meals: meals,
+			ingredientsPage
 		};
 	} catch (error) {
 		console.error("Error fetching data:", error);
@@ -25,10 +33,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 			user: locals.user,
 			ingredients: [],
 			recipes: [],
-			meals: []
+			meals: [],
+			ingredientsPage
 		};
 	}
 }
+
 
 
 
