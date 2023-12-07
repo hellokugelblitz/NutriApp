@@ -1,6 +1,6 @@
 namespace NutriApp.Controllers.Models;
 
-public struct Goal
+public struct GoalModel
 {
     public string Type { get; set; }
     public double WeightGoal { get; set; }

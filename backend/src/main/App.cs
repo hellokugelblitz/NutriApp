@@ -77,6 +77,7 @@ public class App
         
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
+        history.WeightChangedEvent += goal.WeightChangedHandler;
     }
     
 
@@ -99,6 +100,9 @@ public class App
 
     public static void Main(string[] args)
     {
+        if (!Directory.Exists("data\\saves"))
+            Directory.CreateDirectory("data\\saves");
+
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         builder.Services.AddControllers();
 

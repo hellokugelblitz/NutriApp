@@ -1,4 +1,6 @@
 <script lang="ts">
+   import profilepic from '$lib/assets/profilepic.jpg';
+
     export let title: string;
     export let current_data: any;
 </script>
@@ -12,6 +14,7 @@
     
     <!-- Checking that the user is authenticated -->
     {#if current_data.user}
+    <div class="flex flex-row gap-8">
        <button type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
           Undo Last Action
  
@@ -24,6 +27,11 @@
           </svg>
  
        </button>
+
+       <a href="/protected/{current_data.user.username}">
+         <img class="w-10 h-10 p-1 rounded-max ring-2 ring-primary-green hover:ring-dark-green transition" alt="The project logo" src={profilepic} />
+       </a>
+    </div>
     {/if}
 
     </div>

@@ -89,6 +89,22 @@ public class FoodController : ISaveableController
 
         return null;
     }
+    
+    /// <summary>
+    /// Returns all recipes whose names contain the given search term.
+    /// </summary>
+    /// <param name="term">Search terms</param>
+    /// <returns>The recipes that match</returns>
+    public Recipe[] SearchRecipes(string term)
+    {
+        List<Recipe> matches = new List<Recipe>();
+
+        foreach (Recipe recipe in recipes)
+            if (recipe.Name.ToLower().Contains(term.ToLower().Trim()))
+                matches.Add(recipe);
+
+        return matches.ToArray();
+    }
 
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
@@ -114,6 +130,22 @@ public class FoodController : ISaveableController
     }
 
     /// <summary>
+    /// Returns all meals whose names contain the given search term.
+    /// </summary>
+    /// <param name="name">Search term</param>
+    /// <returns>The meals that match</returns>
+    public Meal[] SearchMeals(string name)
+    {
+        List<Meal> matches = new List<Meal>();
+        
+        foreach (Meal meal in meals)
+            if (meal.Name.ToLower().Contains(name.ToLower().Trim()))
+                matches.Add(meal);
+        
+        return matches.ToArray();
+    }
+
+    /// <summary>
     /// Gets a single ingredient by its unique name.
     /// </summary>
     public Ingredient GetIngredient(string name) => ingredientDatabase.Get(name);
@@ -126,18 +158,29 @@ public class FoodController : ISaveableController
     /// <summary>
     /// Returns stocks for all ingredients that the given user has more than zero of.
     /// </summary>
-    public IngredientStocks GetAllIngredientStocks(string username) => ingredientStocks[username];
+    public IngredientStocks GetAllIngredientStocks(string username)
+    {
+        ingredientStocks.TryGetValue(username, out var stocks);
+        return stocks;
+    }
 
     /// <summary>
     /// Returns how much of an ingredient the given user has.
     /// </summary>
-    public double GetSingleIngredientStock(string ingredientName, string username) => ingredientStocks[username].GetIngredientStock(ingredientName);
+    public double GetSingleIngredientStock(string ingredientName, string username)
+    {
+        ingredientStocks.TryGetValue(username, out var stocks);
+        return stocks?.GetIngredientStock(ingredientName) ?? 0.0;
+    }
 
     /// <summary>
     /// Checks if the given user has enough ingredients in stock for a given meal
     /// </summary>
     public bool EnoughIngredients(string mealName, string username)
     {
+        ingredientStocks.TryGetValue(username, out var stocks);
+        if (stocks == null) return false;
+        
         Meal mealConsumed = GetMeal(mealName);
 
         // Check ingredient stock
@@ -145,7 +188,7 @@ public class FoodController : ISaveableController
         {
             double requiredStock = mealConsumed.Ingredients[ingredient];
 
-            if (ingredientStocks[username].GetIngredientStock(ingredient.Name) < requiredStock)
+            if (stocks.GetIngredientStock(ingredient.Name) < requiredStock)
                 return false;
         }
 
@@ -183,12 +226,18 @@ public class FoodController : ISaveableController
     /// </summary>
     public void EditIngredientStock(string ingredientName, double change, string username)
     {
-        double newStock = ingredientStocks[username].GetIngredientStock(ingredientName) + change;
+        if (!ingredientStocks.TryGetValue(username, out var stocks))
+        {
+            stocks = new IngredientStocks();
+            ingredientStocks[username] = stocks;
+        }
+        
+        var newStock = stocks.GetIngredientStock(ingredientName) + change;
 
         if (newStock <= 0)
-            ingredientStocks[username].RemoveEntry(ingredientName);
+            stocks.RemoveEntry(ingredientName);
         else
-            ingredientStocks[username].SetEntry(ingredientName, newStock);
+            stocks.SetEntry(ingredientName, newStock);
     }
     
     public void SaveUser(string folderName)

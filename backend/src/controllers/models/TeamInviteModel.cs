@@ -1,6 +1,6 @@
 namespace NutriApp.Controllers.Models;
 
-public struct TeamInvite
+public struct TeamInviteModel
 {
     public string Code { get; set; }
 }

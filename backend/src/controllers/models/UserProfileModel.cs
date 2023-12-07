@@ -1,6 +1,6 @@
 namespace NutriApp.Controllers.Models;
 
-public struct UserProfile
+public struct UserProfileModel
 {
     public string Name { get; set; }
 }

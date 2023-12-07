@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using NutriApp.Controllers.Models;
 using NutriApp.Save;
 using NutriApp.Notifications;
 
@@ -23,7 +24,7 @@ public class User : ISaveObject
 
     public User()
     {
-        
+        notifications = new List<Notification>();
     }
     
     public User(string username, string name, int height, DateTime birthday, string bio, string teamName="")
@@ -75,14 +76,9 @@ public class User : ISaveObject
 
     public void ReceiveNotification(Notification notification) => notifications.Add(notification);
 
-    // public T FromDictionary<T>(Dictionary<string, string> data) where T: ISaveObject
-    // {
-    //     return new User(
-    //         data["username"],
-    //         data["name"],
-    //         Int32.Parse(data["height"]),
-    //         DateTime.Parse(data["birthday"]),
-    //         data["bio"],
-    //         data["teamName"]);
-    // }
+    public void UpdateUser(UpdateInfo info)
+    {
+        Name = info.Name;
+        Bio = info.Bio;
+    }
 }

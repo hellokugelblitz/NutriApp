@@ -84,16 +84,16 @@
 
         <!-- History view panel -->
         {#if $page.data.user}
-            <div class="hidden justify-left col-span-1 row-span-2 col-start-1 row-start-1 p-6 mb-4 h-96 w-full border-4 border-primary-green rounded-full bg-white md:col-span-2 md:flex flex-col">
+            <!-- <div class="hidden justify-left col-span-1 row-span-2 col-start-1 row-start-1 p-6 mb-4 h-96 w-full border-4 border-primary-green rounded-full bg-white md:col-span-2 md:flex flex-col">
                 <p class="text-xl text-gray-800 pb-8">
                     Your History
                 </p>
 
                 <div class="bg-gray-200 w-full h-3/4 overflow-y-scroll rounded-full">
-                    <!-- This is placeholder -->
+
                     <ul>
                         {#each {length: list_length} as _, i} 
-                            <!-- Bottom of list -->
+       
                             {#if i > list_length-2}
                                 <li class="list-none list-inside">
                                     <div class="border-gray-500 w-full h-12 px-8 py-3">
@@ -101,7 +101,7 @@
                                     </div>
                                 </li>
 
-                            <!-- Other list items -->
+          
                             {:else}
                                 <li class="list-none list-inside">
                                     <div class="border-gray-500 border-b-2 w-full h-12 px-8 py-3">
@@ -112,7 +112,7 @@
                         {/each}
                     </ul>
                 </div>
-            </div>
-            {/if}
+            </div> -->
+        {/if}
     </div>
 </div>

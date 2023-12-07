@@ -5,7 +5,9 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using NutriApp.Controllers.Models;
 using NutriApp.Undo;
+using NutriApp.Notifications;
 
 namespace NutriApp;
 
@@ -96,6 +98,7 @@ public class UserController : ISaveableController
         Guid userGuid = Guid.NewGuid();
         _loadedUsers.Remove(username, out User user);
         AddUserToDictionaries(userGuid, user);
+        NotificationController.Instance.SendPendingNotifications(user);
         return (userGuid, user);
     }
 
