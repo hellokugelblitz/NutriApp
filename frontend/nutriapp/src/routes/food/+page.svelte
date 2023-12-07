@@ -5,9 +5,10 @@
 
     let activeButton = "";
     let exit = false;
+    let mealName = "";
 
-    function sendToast() {
-        toast.push("You can do this action yet :(", { classes: ["custom"] });
+    function consumeMeal() {
+        toast.push("Consumed Meal: " + mealName);
     }
 </script>
 
@@ -15,7 +16,7 @@
 
 <div class="p-4 md:ml-64 mx-0 max-w-6xl">
     {#if activeButton == ""}
-        {#if $page.data.user}
+        {#if !$page.data.user}
             <div class="grid md:grid-cols-3 gap-4 text-center">
                 <!-- Ingredients Section -->
                 <div class="p-4 shadow-lg rounded-lg bg-white">
@@ -139,24 +140,36 @@
                 <div class="p-4 shadow-lg rounded-lg bg-white">
                     <h1 class="text-2xl font-bold mb-4">Consume a Meal</h1>
 
-                    <label for="name">
-                        <span class="text-gray-700 font-bold">Meal Name</span>
-                        <input
-                            type="text"
-                            name="name"
-                            id="name"
-                            class="border-2 border-black rounded-md p-2 ml-2"
-                            placeholder="Meal Name"
-                        />
-                    </label>
+                    <form action="?/consume" method="POST">
+                        <div>
+                            <label for="meal" class="text-gray-700 font-bold"
+                                >Meal Name</label
+                            >
+                            <input
+                                bind:value={mealName}
+                                type="text"
+                                name="mealName"
+                                id="mealName"
+                                class="border-2 border-black rounded-md p-2 ml-2"
+                                placeholder="Meal Name"
+                                required
+                            />
+                        </div>
 
-                    <button
-                        class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded mt-4"
-                        on:click={() => {
-                            exit = false;
-                            activeButton = "";
-                        }}>Submit</button
-                    >
+                        <button
+                            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded float-right"
+                            on:click={() => {
+                                if (mealName == "") {
+                                    // Nothing
+                                } else {
+                                    exit = false;
+                                    activeButton = "";
+                                    consumeMeal();
+                                    mealName = "";
+                                }
+                            }}>Submit</button
+                        >
+                    </form>
                 </div>
                 <div class="p-4 shadow-lg rounded-lg bg-white">
                     <h1 class="text-2xl font-bold mb-4">Meals</h1>
@@ -174,7 +187,7 @@
                 </div>
             </div>
             <button
-                class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded mt-4"
+                class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded mt-4 float-right"
                 on:click={() => (activeButton = "")}>Back</button
             >
         {/if}
