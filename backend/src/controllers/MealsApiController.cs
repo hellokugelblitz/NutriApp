@@ -72,13 +72,14 @@ public class MealsApiController : ControllerBase
     [Authorize]
     public IActionResult EditMeal(string name, CreateMealInfo info)
     {
-        // TODO: Implement edit on the backend
-        
-        if (name != info.Name)
-        {
-            return BadRequest();
-        }
 
+        Meal meal = _app.FoodControl.GetMeal(name);
+        meal.Children.Clear();
+        foreach (var recipe in info.Recipes.Keys)
+        {
+            meal.AddChild(_app.FoodControl.GetRecipe(recipe), info.Recipes[recipe]);
+        }
+        
         return NoContent();
     }
     

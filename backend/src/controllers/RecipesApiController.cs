@@ -72,18 +72,20 @@ public class RecipesApiController : ControllerBase
         _app.FoodControl.AddRecipe(recipe);
         return NoContent();
     }
-    
+
     // PUT api/Recipes/{name}
     [HttpPut("{name}")]
     [Authorize]
     public IActionResult EditRecipe(string name, CreateRecipeInfo info)
     {
-        // TODO: Implement edit on backend
-        if (name != info.Name)
+        Recipe recipe = _app.FoodControl.GetRecipe(name);
+        recipe.SetInstructions(info.Instructions);
+        recipe.Children.Clear();
+        foreach (var recipeName in info.Ingredients.Keys)
         {
-            return BadRequest();
+            recipe.AddChild(_app.FoodControl.GetIngredient(recipeName), info.Ingredients[recipeName]);
         }
-        
+
         return NoContent();
     }
 }
