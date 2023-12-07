@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp.Controllers.Models;
 using NutriApp;
+using NutriApp.Controllers.Middleware;
+using NutriApp.Goal;
 
 namespace NutriApp.Controllers;
 
@@ -21,43 +23,62 @@ public class GoalApiController : ControllerBase
     
     // GET api/Goal
     [HttpGet]
-    public async Task<ActionResult<Models.GoalModel>> GetGoal()
+    public ActionResult<GoalModel> GetGoal()
     {
-        // Create a dummy goal
-        var goal = new Models.GoalModel
+        var user = HttpContext.GetUser();
+        var goal = _app.GoalControl.GetGoal(user.UserName);
+        var currentWeight = _app.HistoryControl.CurrentWeight(user.UserName);
+        
+        var targetMinusCurrent = goal.WeightGoal - currentWeight;
+        
+        return new GoalModel
         {
-            Type = "lose",
-            WeightGoal = 150,
-            DailyCalorieGoal = 2000
+            Type = targetMinusCurrent switch
+            {
+                > 5 => "gain",
+                < -5 => "lose",
+                _ => "maintain"
+            },
+            WeightGoal = goal.WeightGoal,
+            DailyCalorieGoal = goal.DailyCalorieGoal
         };
-        return goal;
     }
     
     // PUT api/Goal/{weightGoal}
     [HttpPut("{weightGoal:double}")]
-    public async Task<IActionResult> ChangeGoal(double weightGoal)
+    public IActionResult ChangeGoal(double weightGoal)
     {
+        var user = HttpContext.GetUser();
+        _app.GoalControl.SetGoalBasedOnWeightDifference(weightGoal, user.UserName);
         return NoContent();
     }
     
     // POST api/Goal/{dailyWeight}
     [HttpPost("{dailyWeight:double}")]
-    public async Task<IActionResult> EnterDailyWeight(double dailyWeight)
+    public IActionResult EnterDailyWeight(double dailyWeight)
     {
+        var user = HttpContext.GetUser();
+        _app.HistoryControl.SetWeight(dailyWeight, user.UserName);
         return NoContent();
     }
     
     // PUT api/Goal/fitness
     [HttpPut("fitness")]
-    public async Task<IActionResult> IncorporateFitness()
+    public IActionResult IncorporateFitness()
     {
+        _app.GoalControl.IncorporateFitness(HttpContext.GetUser().UserName);
         return NoContent();
     }
     
     // DELETE api/Goal/fitness
     [HttpDelete("fitness")]
-    public async Task<IActionResult> RemoveFitness()
+    public IActionResult RemoveFitness()
     {
+        var currentGoal = _app.GoalControl.GetGoal(HttpContext.GetUser().UserName);
+        if (currentGoal is not FitnessGoal)
+            return BadRequest("The current goal is not a fitness goal.");
+        
+        _app.GoalControl.SetGoalBasedOnWeightDifference(currentGoal.WeightGoal, HttpContext.GetUser().UserName);
         return NoContent();
     }
 }
