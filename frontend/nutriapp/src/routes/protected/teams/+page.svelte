@@ -4,6 +4,7 @@
    import Nav from '$lib/ui/Nav.svelte';
    import { page } from '$app/stores';
    
+   let username = '';
    export let data;
 </script>
 
@@ -17,9 +18,16 @@
             <span class="text-xl font-bold">{data.team.name}</span>
             <span class="text-md text-gray-400">({data.team.members.length} members)</span>
          </div>
-         {#each data.team.members as member}
-            <p class="text-lg text-gray-600">{member}</p>
-         {/each}
+         <div class="mb-8">
+            {#each data.team.members as member}
+               <p class="text-lg text-gray-600">{member}</p>
+            {/each}
+         </div>
+
+         <form method="post">
+            <input bind:value={username} name="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-green focus:border-primary-green block p-2.5 " placeholder="Username" required>
+            <button type="submit" class="text-white bg-dark-green mt-2 hover:bg-primary-green focus:ring-4 focus:outline-none focus:ring-light-green font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all">Invite user</button>
+         </form>
 
          <div class="mt-6 mb-2">
             <span class="text-xl font-bold">Current Challenge</span>

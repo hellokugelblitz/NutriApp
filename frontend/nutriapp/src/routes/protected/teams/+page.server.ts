@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+import { redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -38,3 +39,18 @@ export const load: PageServerLoad = async ({ locals }) => {
 		team: team
 	};
 }
+
+export const actions: Actions = { default: async ({ request, cookies }) => {
+	const data = await request.formData();
+	const username = data.get("username");
+
+	console.log(cookies.get("auth"));
+
+	await fetch("http://localhost:5072/api/teams/invite", {
+		method: "POST",
+		headers: { "sessionKey": cookies.get("auth") },
+		body: JSON.stringify({ "username": username })
+	}).then(() => {
+		throw redirect(303, "/protected/teams");
+	});
+}};
