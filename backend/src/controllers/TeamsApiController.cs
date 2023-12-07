@@ -3,8 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NutriApp.Controllers.Models;
+using NutriApp.Teams;
 using NutriApp;
+using System.IO;
+using NutriApp.Controllers.Middleware;
 
 namespace NutriApp.Controllers;
 
@@ -20,73 +24,115 @@ public class TeamsApiController : ControllerBase
         _app = app;
     }
     
-    // POST api/Teams
+    // POST api/teams
     [HttpPost]
-    public async Task<ActionResult<TeamModel>> CreateTeam(TeamModel teamModel)
+    public ActionResult<TeamModel> CreateTeam()
     {
-        return teamModel;
+        Team team = _app.TeamControl.CreateTeam(GetRequestBody(Request.Body)["teamName"]);
+        User user = HttpContext.GetUser();
+
+        if (team is null) return Conflict();
+
+        team.AddMember(user.UserName);
+        user.TeamName = team.Name;
+
+        return Ok(new TeamModel()
+        {
+            Name = team.Name,
+            Members = team.Members,
+            ChallengeStartDate = team.ChallengeStartDate,
+            ChallengeEndDate = team.ChallengeEndDate
+        });
+    }
+
+    // GET api/teams
+    [HttpGet]
+    public ActionResult<TeamModel> GetTeam()
+    {
+        User user = HttpContext.GetUser();
+        Team team = _app.TeamControl.GetTeam(user.TeamName);
+
+        return team is null ? NoContent() : Ok(new TeamModel()
+        {
+            Name = team.Name,
+            Members = team.Members,
+            ChallengeStartDate = team.ChallengeStartDate,
+            ChallengeEndDate = team.ChallengeEndDate
+        });
     }
     
-    // POST api/Teams/invite/{username}
-    [HttpPost("invite/{username}")]
-    public async Task<ActionResult<TeamInviteModel>> InviteUser(string username)
+    // POST api/teams/invite
+    [HttpPost("invite")]
+    public ActionResult<TeamInviteModel> InviteUser()
     {
-        return new TeamInviteModel { Code = "nutricode" };
+        Dictionary<string, string> body = GetRequestBody(Request.Body);
+
+        User user = HttpContext.GetUser();
+        Team team = _app.TeamControl.GetTeam(user.TeamName);
+        
+        string inviteCode = _app.TeamControl.CreateInvite(body["username"], team.Name);
+
+        return Ok(new TeamInviteModel() { Code = inviteCode });
     }
     
-    // PUT api/Teams/invite/accept/{inviteCode}
-    [HttpPut("invite/accept/{inviteCode}")]
-    public async Task<ActionResult<TeamModel>> AcceptInvite(string inviteCode)
+    // PUT api/teams/accept
+    [HttpPut("accept")]
+    public IActionResult AcceptInvite()
     {
-        return new TeamModel { Name = "NutriTeam" };
+        Dictionary<string, string> body = GetRequestBody(Request.Body);
+
+        if (!_app.TeamControl.ValidateInviteCode(body["inviteCode"]))
+            return Unauthorized();
+    
+        _app.TeamControl.AddMember(HttpContext.GetUser().UserName, body["inviteCode"]);
+        return Ok();
     }
     
-    // PUT api/Teams/leave
+    // PUT api/teams/leave
     [HttpPut("leave")]
-    public async Task<IActionResult> LeaveTeam()
+    public IActionResult LeaveTeam()
     {
+        User user = HttpContext.GetUser();
+        _app.TeamControl.RemoveMember(user.UserName, user.TeamName);
         return Ok();
     }
     
-    // GET api/Teams/workouts/{username}
-    [HttpGet("workouts/{username}")]
-    public async Task<ActionResult<IEnumerable<EntryModel<Models.WorkoutModel>>>> GetWorkouts(string username)
-    {
-        // Some dummy workout structs
-        EntryModel<Models.WorkoutModel>[] workouts =
-        {
-            new()
-                { Value = new() { Name = "Morning Jog", Minutes = 60, Intensity = 10 } },
-            new()
-                { Value = new() { Name = "Afternoon Jog", Minutes = 60, Intensity = 10 } },
-            new()
-                { Value = new() { Name = "Evening Jog", Minutes = 60, Intensity = 10 } }
-        };
+    // TODO: this should presumably be in each user's profile page? different API endpoint
+    // // GET api/teams/workouts/{username}
+    // [HttpGet("workouts/{username}")]
+    // public ActionResult<IEnumerable<Entry<Models.Workout>>> GetWorkouts(string username)
+    // {
         
-        return workouts;
-    }
+    // }
     
-    // POST api/Teams/challenge
+    // POST api/teams/challenge
     [HttpPost("challenge")]
-    public async Task<IActionResult> CreateChallenge()
+    public IActionResult CreateChallenge()
     {
+        Dictionary<string, string> body = GetRequestBody(Request.Body);
+
+        System.DateTime startDate = System.DateTime.Parse(body["startDate"]);
+        Team team = _app.TeamControl.GetTeam(HttpContext.GetUser().TeamName);
+
+        team.StartNewChallenge(startDate);
         return Ok();
     }
     
-    // GET api/Teams/challenge
+    // GET api/teams/challenge
     [HttpGet("challenge")]
-    public async Task<ActionResult<List<UserProfileModel>>> GetChallengeRanking()
+    public ActionResult<Dictionary<string, int>> GetChallengeRanking()
     {
-        // Some dummy user profile structs
-        UserProfileModel[] users =
-        {
-            new() { Name = "Dan Donchuk" },
-            new() { Name = "Raynard Miot" },
-            new() { Name = "Danny Gramowski" },
-            new() { Name = "Austyn Wright" },
-            new() { Name = "Jack Lindsey-Noble" }
-        };
-        
-        return users.ToList();
+        Dictionary<string, int> response = _app.TeamControl.GetChallengeParticipants(HttpContext.GetUser().TeamName);
+        return Ok(response);
+    }
+
+    private Dictionary<string, string> GetRequestBody(Stream body)
+    {
+        string requestString;
+
+        using (StreamReader reader = new StreamReader(Request.Body))
+            requestString = reader.ReadToEndAsync().Result;
+
+        return JsonConvert.DeserializeObject<Dictionary<string, string>>(requestString);
     }
 }

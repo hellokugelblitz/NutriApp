@@ -7,6 +7,7 @@ public class Notification
     private DateTime timestamp;
     private string contents;
     private string url;
+    private string buttonText;
 
     /// <summary>
     /// The date/time at which the notification was created (not necessarily when
@@ -26,15 +27,21 @@ public class Notification
     public string Url => url;
 
     /// <summary>
+    /// Text to display on notification's button (e.g. "Accept", "View", etc.)
+    /// </summary>
+    public string ButtonText => buttonText;
+
+    /// <summary>
     /// Has the user read this notification?
     /// </summary>
     public bool Read { get; set; }
 
-    public Notification(string contents, string url)
+    public Notification(string contents, string url, string buttonText)
     {
         this.timestamp = DateTime.Now;
         this.contents = contents;
         this.url = url;
+        this.buttonText = buttonText;
         this.Read = false;
     }
 }
