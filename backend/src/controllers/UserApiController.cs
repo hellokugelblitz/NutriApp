@@ -27,10 +27,10 @@ public class UserApiController : ControllerBase
 
     // POST api/User/update
     [HttpPost("update")]
+    [Authorize]
     public IActionResult UpdateUser(UpdateInfo info)
     {
         var user = HttpContext.GetUser();
-
         if(info.Password != "") _app.UserControl.ChangePassword(user.UserName, info.Password);
         user.UpdateUser(info);
 

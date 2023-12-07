@@ -1,5 +1,5 @@
 /** @type {import('./$types').Actions} */
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from "./$types"
 
 
@@ -33,7 +33,44 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
 };
 
 export const actions = {
-	default: async (event) => {
-		// TODO: This will submit all of the information passed into the form and update it on the serverside. 
+	update: async ({cookies, request, locals}) => {
+		
+        const data = await request.formData();
+
+        const password = data.get('password');
+        const name = data.get('name');
+        const bio = data.get('bio');
+
+        const body = {
+            password: password,
+            name: name,
+            bio: bio
+        }
+
+        try{
+            //Handling the event that there is no session key hehe
+            let session_key: string = locals.user?.session_key || '';
+			const response = await fetch('http://localhost:5072/api/User/update', {
+				method: 'POST',
+				headers: {
+				'Content-Type': 'application/json',
+				'sessionKey': session_key
+				},
+                body: JSON.stringify(body)
+			});
+
+			if (response.ok) {
+                //Changes have been made
+
+			} else {
+                //Had issue making changes
+				console.log(response);
+			}
+
+		} catch {
+            console.log("Something went wrong.")
+		}
+
+        throw redirect(302, '/protected/' + locals.user?.username);
 	}
 } satisfies Actions;
