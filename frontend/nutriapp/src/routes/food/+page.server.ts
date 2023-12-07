@@ -1,5 +1,5 @@
 import { redirect } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
+import type { Action, Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
 	try {
@@ -27,5 +27,17 @@ export const load: PageServerLoad = async ({ locals }) => {
 			recipes: [],
 			meals: []
 		};
+	}
+}
+
+const consumeMeal: Action = async (mealName) => {
+	try {
+		const response = await fetch(`http://localhost:5072/api/Meals/consume/${mealName}`, {
+			method: 'POST'
+		});
+
+		
+	} catch (error) {
+		console.error("Error consuming meal:", error);
 	}
 }
