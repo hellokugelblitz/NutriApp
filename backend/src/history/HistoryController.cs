@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using NutriApp.Food;
 using NutriApp.Save;
 using NutriApp.Workout;
+using NutriApp.Notifications;
 
 namespace NutriApp.History;
 
@@ -51,6 +52,19 @@ public class HistoryController : ISaveableController
         
         userHistory.Workouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
         userWorkouts.Add(new Entry<Workout.Workout>(_app.TimeStamp, workout));
+        
+        // Get list of team members, but remove the active user from it - should not send notification to yourself
+        User user = _app.UserControl.GetUser(username);
+        List<string> teamMembers = _app.TeamControl.GetTeam(user.TeamName).Members.ToList();
+        teamMembers.Remove(username);
+        User[] teammates = teamMembers.Select(_app.UserControl.GetUser).ToArray();
+
+        NotificationController.Instance.CreateNotification(
+            $"{username} logged a workout: {workout.Name}",
+            $"/protected/{username}",
+            "View profile",
+            teammates
+        );
     }
 
     public delegate void WeightChanged(double weight, string username);
