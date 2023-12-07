@@ -49,6 +49,8 @@ export const load: PageServerLoad = async ({ locals }) => {
         const weight_data: any[] = await weight_history.json();
         const calorie_data: any[] = await calorie_history.json();
         const meal_data: any[] = await meal_history.json();
+		console.log(calorie_data);
+		console.log(meal_data);
 
         // Combine all history types into a single array
         const allHistory: any[] = [...workout_data, ...weight_data, ...calorie_data, ...meal_data];

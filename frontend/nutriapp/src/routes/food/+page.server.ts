@@ -61,6 +61,7 @@ export const actions: Actions = {
 				console.log("Meal consumed successfully: " + mealName);
 				throw redirect(302, "/food");
 			} else {
+				console.log(response)
 				console.log("The meal you have provided does not exist: " + mealName);
 			}
 		} catch (error) {
@@ -101,7 +102,7 @@ export const actions: Actions = {
 		console.log(recipeData);
 
 		try {
-			const response = await fetch(`http://localhost:5072/api/Recipes/`, {
+			const response = await fetch(`http://localhost:5072/api/Recipes`, {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json',
@@ -110,11 +111,12 @@ export const actions: Actions = {
 				body: JSON.stringify(recipeData)
 			});
 
-			if (response.status === 201) {
+			if (response.status === 204) {
 				console.log("Recipe added successfully: " + recipeName);
 				throw redirect(302, "/food");
 			} else {
-				console.log("The ingredients you added doesn't exist: " + recipeIngredients);
+				console.log(response.status);
+				console.log("The ingredients you added doesn't exist: ", recipeIngredients);
 			}
 		} catch (error) {
 			if (error instanceof Error) {
@@ -146,7 +148,7 @@ export const actions: Actions = {
 		console.log(JSON.stringify(mealData));
 
 		try {
-			const response = await fetch(`http://localhost:5072/api/Meals/`, {
+			const response = await fetch(`http://localhost:5072/api/Meals`, {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json',

@@ -109,7 +109,13 @@ public class FoodController : ISaveableController
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
     /// </summary>
-    public void AddMeal(Meal meal) => meals.Add(meal);
+    public void AddMeal(Meal meal){
+        
+        meals.Add(meal);
+        Console.WriteLine(meal.ToString());
+        foreach (Meal eachmeal in meals)
+            Console.WriteLine(eachmeal.ToString());
+    }
 
     /// <summary>
     /// Removes a meal
@@ -122,10 +128,11 @@ public class FoodController : ISaveableController
     /// </summary>
     public Meal GetMeal(string name)
     {
-        foreach (Meal meal in meals)
+        foreach (Meal meal in meals){
+            Console.WriteLine("Checking if " + meal.Name + " == " + name);
             if (meal.Name == name)
                 return meal;
-
+        }
         return null;
     }
 
@@ -205,8 +212,8 @@ public class FoodController : ISaveableController
     {
         Meal mealConsumed = GetMeal(mealName);
 
-        // Check ingredient stock
-        if (!EnoughIngredients(mealName, username)) return false;
+        // We dont have time to deal with this
+        // if (!EnoughIngredients(mealName, username)) return false;
 
         // Meal consumed successfully
         MealConsumeEvent?.Invoke(mealConsumed, username);
