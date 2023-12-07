@@ -23,9 +23,17 @@
                     {#each workouts as workout, i}
                       <li class="list-none list-inside" class:even={i % 2 === 0}>
                         <div class="border-gray-500 border-b-2 w-full h-24 px-8 py-3">
-                          <p>Workout Name: <span class="font-bold">{workout.name}</span></p>
-                          <p>Time Spent: {workout.minutes} minutes</p>
-                          <p>Intensity: {workout.intensity}</p>
+                          <p>Name: <span class="font-bold">{workout.name}</span></p>
+                          <p>Minutes: {workout.minutes}</p>
+                          {#if workout.intensity == "10"}
+                            <p>Intensity: <span class="text-orange-500">MEDIUM</span></p>
+                          {:else if workout.intensity == "5"}
+                            <p>Intensity: <span class="text-primary-green">LOW</span></p>
+                          {:else if workout.intensity == "15"}
+                            <p>Intensity: <span class="text-nutri-red">HIGH</span></p>
+                          {:else}
+                            <p>Intensity: <span class="text-red-900">UNREAL</span></p>
+                          {/if}
                         </div>
                       </li>
                     {/each}
