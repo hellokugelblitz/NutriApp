@@ -6,6 +6,7 @@ using NutriApp.Controllers.Models;
 using NutriApp;
 using NutriApp.Controllers.Middleware;
 using NutriApp.Goal;
+using NutriApp.Undo;
 
 namespace NutriApp.Controllers;
 
@@ -49,7 +50,13 @@ public class GoalApiController : ControllerBase
     public IActionResult ChangeGoal(double weightGoal)
     {
         var user = HttpContext.GetUser();
+        
+        var prevGoal = _app.GoalControl.GetGoal(user.UserName);
         _app.GoalControl.SetGoalBasedOnWeightDifference(weightGoal, user.UserName);
+        
+        var sessionKey = HttpContext.GetSessionKey();
+        _app.UserControl.AddUndoCommand(sessionKey, new UndoSetWeightGoal(_app, user, prevGoal));
+        
         return NoContent();
     }
     
@@ -59,6 +66,10 @@ public class GoalApiController : ControllerBase
     {
         var user = HttpContext.GetUser();
         _app.HistoryControl.SetWeight(dailyWeight, user.UserName);
+        
+        var sessionKey = HttpContext.GetSessionKey();
+        _app.UserControl.AddUndoCommand(sessionKey, new UndoSetWeight(_app, user));
+        
         return NoContent();
     }
     
