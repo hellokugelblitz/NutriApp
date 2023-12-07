@@ -78,6 +78,11 @@ public class App
         food.MealConsumeEvent += goal.ConsumeMealHandler;
         food.MealConsumeEvent += history.AddMeal;
         history.WeightChangedEvent += goal.WeightChangedHandler;
+
+        Recipe recipe = new Recipe("mac and cheese");
+        recipe.AddInstruction("bake them kids");
+        recipe.AddChild(FoodControl.GetIngredient("CHEESE,BRICK"), 3);
+        recipe.AddChild(FoodControl.GetIngredient("PASTA,DRY,ENR"), 1);
     }
     
 
@@ -153,6 +158,7 @@ public class App
                 app.saveSystem.SaveController();
             });
             
+        
         webapp.Run();
     }
 
