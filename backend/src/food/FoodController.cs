@@ -89,6 +89,22 @@ public class FoodController : ISaveableController
 
         return null;
     }
+    
+    /// <summary>
+    /// Returns all recipes whose names contain the given search term.
+    /// </summary>
+    /// <param name="term">Search terms</param>
+    /// <returns>The recipes that match</returns>
+    public Recipe[] SearchRecipes(string term)
+    {
+        List<Recipe> matches = new List<Recipe>();
+
+        foreach (Recipe recipe in recipes)
+            if (recipe.Name.ToLower().Contains(term.ToLower().Trim()))
+                matches.Add(recipe);
+
+        return matches.ToArray();
+    }
 
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
@@ -111,6 +127,22 @@ public class FoodController : ISaveableController
                 return meal;
 
         return null;
+    }
+
+    /// <summary>
+    /// Returns all meals whose names contain the given search term.
+    /// </summary>
+    /// <param name="name">Search term</param>
+    /// <returns>The meals that match</returns>
+    public Meal[] SearchMeals(string name)
+    {
+        List<Meal> matches = new List<Meal>();
+        
+        foreach (Meal meal in meals)
+            if (meal.Name.ToLower().Contains(name.ToLower().Trim()))
+                matches.Add(meal);
+        
+        return matches.ToArray();
     }
 
     /// <summary>
@@ -146,6 +178,9 @@ public class FoodController : ISaveableController
     /// </summary>
     public bool EnoughIngredients(string mealName, string username)
     {
+        ingredientStocks.TryGetValue(username, out var stocks);
+        if (stocks == null) return false;
+        
         Meal mealConsumed = GetMeal(mealName);
 
         // Check ingredient stock
@@ -153,7 +188,7 @@ public class FoodController : ISaveableController
         {
             double requiredStock = mealConsumed.Ingredients[ingredient];
 
-            if (ingredientStocks[username].GetIngredientStock(ingredient.Name) < requiredStock)
+            if (stocks.GetIngredientStock(ingredient.Name) < requiredStock)
                 return false;
         }
 
