@@ -47,14 +47,16 @@ export const actions: Actions = {
 				});
 
 				if (response.status === 204) {
-					redirect(302, '/food');
-					alert("Consumed Meal: " + mealName);
+					console.log("Meal consumed successfully: " + mealName);
+					throw redirect(302, "/food");
 				} else {
 					console.log("The meal you have provided does not exist: " + mealName);
 				}
 			}
 		} catch (error) {
-			console.error("Error consuming meal:", error);
+			if (error instanceof Error) {
+				console.error("Error consuming meal:", error);
+			}
 		}
 	}
 }

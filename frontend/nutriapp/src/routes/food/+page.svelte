@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { page } from "$app/stores";
     import Nav from "$lib/ui/Nav.svelte";
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
@@ -7,8 +7,17 @@
     let exit = false;
     let mealName = "";
 
-    function consumeMeal() {
-        toast.push("Consumed Meal: " + mealName);
+    function sendToast(message: string) {
+        toast.push(message);
+        resetAfterDelay();
+    }
+
+    function resetAfterDelay() {
+        setTimeout(() => {
+            exit = false;
+            activeButton = "";
+            mealName = "";
+        }, 1000);
     }
 </script>
 
@@ -159,13 +168,8 @@
                         <button
                             class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded float-right"
                             on:click={() => {
-                                if (mealName == "") {
-                                    // Nothing
-                                } else {
-                                    exit = false;
-                                    activeButton = "";
-                                    consumeMeal();
-                                    mealName = "";
+                                if (mealName != "") {
+                                    sendToast("Consumed Meal: " + mealName);
                                 }
                             }}>Submit</button
                         >
