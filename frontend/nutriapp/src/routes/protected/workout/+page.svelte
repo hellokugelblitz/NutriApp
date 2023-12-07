@@ -51,7 +51,15 @@
                           <p>Logged at: <span class="font-bold">{workout.timeStamp}</span></p>
                           <p>Workout Name: {workout.value.name}</p>
                           <p>Minutes: {workout.value.minutes}</p>
-                          <p>Intensity: {workout.value.intensity}</p>
+                          {#if workout.value.intensity == "10"}
+                            <p>Intensity: <span class="text-orange-500">MEDIUM</span></p>
+                          {:else if workout.value.intensity == "5"}
+                            <p>Intensity: <span class="text-primary-green">LOW</span></p>
+                          {:else if workout.value.intensity == "15"}
+                            <p>Intensity: <span class="text-nutri-red">HIGH</span></p>
+                          {:else}
+                            <p>Intensity: <span class="text-red-900">UNREAL</span></p>
+                          {/if}
                         </div>
                       </li>
                     {/each}
