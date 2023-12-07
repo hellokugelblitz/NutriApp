@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NutriApp.Controllers.Models;
+using NutriApp.Teams;
 using NutriApp;
 using System.IO;
 using NutriApp.Controllers.Middleware;
@@ -25,17 +26,17 @@ public class TeamsApiController : ControllerBase
     
     // POST api/teams
     [HttpPost]
-    public ActionResult<Team> CreateTeam()
+    public ActionResult<TeamModel> CreateTeam()
     {
-        Teams.Team team = _app.TeamControl.CreateTeam(GetRequestBody(Request.Body)["teamName"]);
+        Team team = _app.TeamControl.CreateTeam(GetRequestBody(Request.Body)["teamName"]);
         User user = HttpContext.GetUser();
+
+        if (team is null) return Conflict();
 
         team.AddMember(user.UserName);
         user.TeamName = team.Name;
 
-        if (team is null) return Conflict();
-
-        return Ok(new Team()
+        return Ok(new TeamModel()
         {
             Name = team.Name,
             Members = team.Members,
@@ -46,12 +47,12 @@ public class TeamsApiController : ControllerBase
 
     // GET api/teams
     [HttpGet]
-    public ActionResult<Team> GetTeam()
+    public ActionResult<TeamModel> GetTeam()
     {
         User user = HttpContext.GetUser();
-        Teams.Team team = _app.TeamControl.GetTeam(user.TeamName);
+        Team team = _app.TeamControl.GetTeam(user.TeamName);
 
-        return team is null ? NoContent() : Ok(new Team()
+        return team is null ? NoContent() : Ok(new TeamModel()
         {
             Name = team.Name,
             Members = team.Members,
@@ -62,16 +63,16 @@ public class TeamsApiController : ControllerBase
     
     // POST api/teams/invite
     [HttpPost("invite")]
-    public ActionResult<TeamInvite> InviteUser()
+    public ActionResult<TeamInviteModel> InviteUser()
     {
         Dictionary<string, string> body = GetRequestBody(Request.Body);
 
         User user = HttpContext.GetUser();
-        Teams.Team team = _app.TeamControl.GetTeam(user.TeamName);
+        Team team = _app.TeamControl.GetTeam(user.TeamName);
         
         string inviteCode = _app.TeamControl.CreateInvite(body["username"], team.Name);
 
-        return Ok(new TeamInvite() { Code = inviteCode });
+        return Ok(new TeamInviteModel() { Code = inviteCode });
     }
     
     // PUT api/teams/accept
@@ -111,7 +112,7 @@ public class TeamsApiController : ControllerBase
         Dictionary<string, string> body = GetRequestBody(Request.Body);
 
         System.DateTime startDate = System.DateTime.Parse(body["startDate"]);
-        Teams.Team team = _app.TeamControl.GetTeam(HttpContext.GetUser().TeamName);
+        Team team = _app.TeamControl.GetTeam(HttpContext.GetUser().TeamName);
 
         team.StartNewChallenge(startDate);
         return Ok();
