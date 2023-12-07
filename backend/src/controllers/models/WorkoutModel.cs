@@ -16,4 +16,11 @@ public struct WorkoutModel
     }
     
     public Workout.Workout ToWorkout() => new Workout.Workout(Name, Minutes, Intensity);
+
+    public static WorkoutModel FromWorkout(Workout.Workout workout) => new WorkoutModel
+    {
+        Name = workout.Name,
+        Minutes = workout.Minutes,
+        Intensity = workout.Intensity.Value()
+    };
 }
