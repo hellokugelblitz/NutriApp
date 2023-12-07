@@ -40,6 +40,19 @@
         mealRecipes = mealRecipes.filter((_, i) => i !== index);
     }
 
+    let purchaseIngredients = [{ name: "", quantity: 0 }];
+
+    function addPurchaseIngredient() {
+        purchaseIngredients = [
+            ...purchaseIngredients,
+            { name: "", quantity: 0 },
+        ];
+    }
+
+    function removePurchaseIngredient(index: number) {
+        purchaseIngredients = purchaseIngredients.filter((_, i) => i !== index);
+    }
+
     function sendToast(message: string) {
         toast.push(message);
         resetAfterDelay();
@@ -491,9 +504,98 @@
     {:else if activeButton == "shopping"}
         <div class="p-4 shadow-lg rounded-lg bg-white">
             <h1 class="text-2xl font-bold mb-4 text-center">Shopping Cart</h1>
-
-            <div></div>
+            <ul>
+                {#each $page.data.shoppingList as item}
+                    <li>
+                        <span>{item.ingredientName}</span> -
+                        <span>{item.amount}</span>
+                    </li>
+                {/each}
+            </ul>
         </div>
+
+        <button
+            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded mt-4"
+            on:click={() => (activeButton = "purchase")}
+            >Purchase Ingredients</button
+        >
+        <button
+            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded mt-4 float-right"
+            on:click={() => (activeButton = "")}>Back</button
+        >
+    {:else if activeButton == "purchase"}
+        <div class="grid md:grid-cols-2 gap-4 text-center">
+            <div class="p-4 shadow-lg rounded-lg bg-white">
+                <h1 class="text-2xl font-bold mb-4 text-center">
+                    Purchase Ingredients
+                </h1>
+                <form action="?/purchase" method="POST">
+                    <div class="flex flex-wrap justify-center gap-4">
+                        {#each purchaseIngredients as ingredient, index}
+                            <div class="flex items-center mb-2">
+                                <input
+                                    type="text"
+                                    bind:value={ingredient.name}
+                                    name={`shoppingIngredientName${index}`}
+                                    placeholder="Ingredient Name"
+                                    class="border-2 border-black rounded-md p-2 ml-2"
+                                />
+                                <input
+                                    type="number"
+                                    bind:value={ingredient.quantity}
+                                    name={`shoppingIngredientQuantity${index}`}
+                                    placeholder="Quantity"
+                                    class="border-2 border-black rounded-md p-2 ml-2"
+                                />
+                                {#if index !== 0}
+                                    <button
+                                        type="button"
+                                        class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
+                                        on:click={() =>
+                                            removePurchaseIngredient(index)}
+                                        >Remove</button
+                                    >
+                                {/if}
+                            </div>
+                        {/each}
+
+                        <button
+                            type="button"
+                            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
+                            on:click={addPurchaseIngredient}
+                            >Add Ingredient</button
+                        >
+
+                        <button
+                            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
+                            on:click={() => {
+                                sendToast("Purchased Ingredients");
+                            }}>Purchase</button
+                        >
+                    </div>
+                </form>
+            </div>
+
+            <div class="p-4 shadow-lg rounded-lg bg-white">
+                <h1 class="text-2xl font-bold mb-4">Ingredients</h1>
+                <ul>
+                    {#each $page.data.ingredients as ingredient}
+                        <li>
+                            <button
+                                class="text-left w-full hover:bg-gray-100 p-2 rounded transition duration-200 ease-in-out"
+                            >
+                                {ingredient.name}
+                            </button>
+                        </li>
+                    {/each}
+                </ul>
+            </div>
+        </div>
+
+        <button
+            class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded mt-4 float-right"
+            on:click={() => (activeButton = "shopping")}>Back</button
+        >
     {/if}
 </div>
 

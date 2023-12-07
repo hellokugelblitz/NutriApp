@@ -13,9 +13,17 @@ export const load: PageServerLoad = async ({ locals }) => {
 			fetch('http://localhost:5072/api/Meals')
 		]);
 
+		const shoppingListResponse = await fetch('http://localhost:5072/api/ShoppingList', {
+			headers: {
+				'Content-type': 'application/json',
+				"sessionKey": locals.user?.session_key || '',
+			}
+		});
+
 		const ingredients = await ingredientsResponse.json() || [];
 		const recipes = await recipesResponse.json() || [];
 		const meals = await mealsResponse.json() || [];
+		const shoppingList = await shoppingListResponse.json() || [];
 
 		const ingredientsStartIndex = (ingredientsPage - 1) * pageSize;
 
@@ -24,6 +32,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			ingredients: ingredients.slice(ingredientsStartIndex, ingredientsStartIndex + pageSize),
 			recipes: recipes,
 			meals: meals,
+			shoppingList: shoppingList,
 			ingredientsPage
 		};
 	} catch (error) {
@@ -33,6 +42,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			ingredients: [],
 			recipes: [],
 			meals: [],
+			shoppingList: [],
 			ingredientsPage
 		};
 	}
@@ -161,6 +171,48 @@ export const actions: Actions = {
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error("Error adding meal:", error);
+			}
+		}
+	},
+
+	purchase: async ({ request, locals }) => {
+		const data = await request.formData();
+
+		const purchaseIngredients = [];
+
+		for (let i = 0; data.has(`shoppingIngredientName${i}`); i++) {
+			const ingredientName = data.get(`shoppingIngredientName${i}`) as string;
+			const ingredientQuantity = parseInt(data.get(`shoppingIngredientQuantity${i}`) as string);
+
+			if (ingredientName && !isNaN(ingredientQuantity)) {
+				purchaseIngredients.push({ Name: ingredientName, Quantity: ingredientQuantity });
+			}
+		}
+
+		console.log(JSON.stringify(purchaseIngredients));
+
+		try {
+			const response = await fetch(`http://localhost:5072/api/Ingredients/purchase`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					"sessionKey": locals.user?.session_key || '',
+				},
+				body: JSON.stringify(purchaseIngredients)
+			});
+
+			console.log(response);
+
+			if (response.status === 204) {
+				console.log("Ingredients purchased successfully: ", purchaseIngredients);
+				throw redirect(302, "/food");
+			} else {
+				console.log("Status Code: ", response.status);
+				console.log("The ingredients you added might not exist or other error: ", purchaseIngredients);
+			}
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error("Error purchasing ingredient:", error);
 			}
 		}
 	}

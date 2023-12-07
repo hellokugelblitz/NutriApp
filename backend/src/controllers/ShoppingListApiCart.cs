@@ -25,7 +25,7 @@ public class ShoppingListApiCart : ControllerBase
     public ActionResult<IEnumerable<ShoppingListEntryModel>> GetShoppingList()
     {
         var user = HttpContext.GetUser();
-        return _app.ShoppingListControl.GetShoppingList(user.UserName)
+        return _app.ShoppingListControl.GetShoppingList(user.Name)
             .Entries.Select(ShoppingListEntryModel.FromEntry).ToList();
     }
 }
