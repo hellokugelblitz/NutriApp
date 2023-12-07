@@ -19,7 +19,9 @@
          </div>
          <div class="mb-8">
             {#each data.team.members as member}
-               <p class="text-lg text-gray-600">{member}</p>
+               <a href="/protected/{member}">
+                  <p class="text-lg text-gray-600 hover:bg-gray-100">{member}</p>
+               </a>
             {/each}
          </div>
 
