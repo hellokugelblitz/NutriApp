@@ -33,7 +33,7 @@ export const authenticateUser = async (event: RequestEvent) => {
 
 				const user = {
 					session_key: sessionKey,
-					username: username
+					username: username,
 				}
 				return user;
 				
