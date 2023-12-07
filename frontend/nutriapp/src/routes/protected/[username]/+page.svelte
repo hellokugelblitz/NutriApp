@@ -66,6 +66,33 @@
                     </div>
                 </div>
             {/if}
+            {#if data.workouts}
+                <div class="relative pt-8 h-32">
+                    <h2> <span class="absolute font-bold left-4 top-2"> User Workouts: </span></h2>
+                    <div class="absolute bg-gray-100 rounded-full p-4 top-8 w-full h-full">
+                        {#if !data.workouts.length}
+                            <h2><span class="font-bold italic text-gray-300">This user has no workouts</span> </h2>
+                        {:else}
+                            {#each data.workouts as workouts, i}
+                                <div class="border-gray-500 border-b-2 w-full h-fit px-8 py-3">
+                                    <p>Logged at: <span class="font-bold">{workouts.timeStamp}</span></p>
+                                    <p>Workout Name: {workouts.value.name}</p>
+                                    <p>Minutes: {workouts.value.minutes}</p>
+                                    {#if workouts.value.intensity == "10"}
+                                        <p>Intensity: <span class="text-orange-500">MEDIUM</span></p>
+                                    {:else if workouts.value.intensity == "5"}
+                                        <p>Intensity: <span class="text-primary-green">LOW</span></p>
+                                    {:else if workouts.value.intensity == "15"}
+                                        <p>Intensity: <span class="text-nutri-red">HIGH</span></p>
+                                    {:else}
+                                        <p>Intensity: <span class="text-red-900">UNREAL</span></p>
+                                    {/if}
+                                </div>
+                            {/each}
+                        {/if}
+                    </div>
+                </div>
+            {/if}
         </div>
     </div>
 

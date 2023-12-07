@@ -84,6 +84,9 @@ public class App
         recipe.AddInstruction("bake them kids");
         recipe.AddChild(FoodControl.GetIngredient("CHEESE,BRICK"), 3);
         recipe.AddChild(FoodControl.GetIngredient("PASTA,DRY,ENR"), 1);
+        
+        history.WorkoutLoggedEvent += goal.WorkoutLoggedHandler;
+        DayEndEvent += goal.DayEndHandler;
     }
     
 

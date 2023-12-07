@@ -44,6 +44,9 @@ public class HistoryController : ISaveableController
         _app = app;
         _saveSystem = saveSystem;
     }
+    
+    public delegate void WorkoutLogged(Workout.Workout workout, string username);
+    public event WorkoutLogged WorkoutLoggedEvent;
 
     public void AddWorkout(Workout.Workout workout, string username)
     {
@@ -75,6 +78,8 @@ public class HistoryController : ISaveableController
             "View profile",
             teamMembers.ToArray()
         );
+        
+        WorkoutLoggedEvent?.Invoke(workout, username);
     }
 
     public delegate void WeightChanged(double weight, string username);

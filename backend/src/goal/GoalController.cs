@@ -1,3 +1,4 @@
+using System;
 using NutriApp.Save;
 
 namespace NutriApp.Goal;
@@ -16,9 +17,19 @@ public class GoalController : ISaveableController
     private readonly ISaveSystem saveSystem;
 
     private Dictionary<string, Goal> goals = new();
+    private Dictionary<string, double> dailyCalories = new();
 
     public Goal GetGoal(string username) => goals[username];
     public void SetGoal(Goal goal, string username) => goals[username] = goal;
+
+    public double GetDailyCalories(string username) => dailyCalories[username];
+    public void SetDailyCalories(double cals, string username) => dailyCalories[username] = double.Max(cals, 0);
+    public void EditDailyCalories(string username, double cals)
+    {
+        var amt = dailyCalories[username];
+        dailyCalories[username] = double.Max(amt + cals, 0);
+    }
+    
     public GoalController(App app, ISaveSystem saveSystem)
     {
         this.app = app;
@@ -53,12 +64,35 @@ public class GoalController : ISaveableController
     /// <summary>
     /// Handles the event of the user consuming a meal.
     /// </summary>
-    /// <param name="_">Required param to fulfill <c>MealEventHandler</c> signature</param>
+    /// <param name="meal">Mela that was consumed</param>
     /// <param name="username">username of user</param>
-    public void ConsumeMealHandler(Meal _, string username)
+    public void ConsumeMealHandler(Meal meal, string username)
     {
+        EditDailyCalories(username, meal.Calories);
         if (CheckUserExceededCalorieGoal(username))
             PassedCalorieGoalEvent?.Invoke();
+    }
+    
+    /// <summary>
+    /// Handles the event of the user logging a workout.
+    /// </summary>
+    /// <param name="workout">The workout that was logged</param>
+    /// <param name="username">The user's username</param>
+    public void WorkoutLoggedHandler(Workout.Workout workout, string username)
+    {
+        EditDailyCalories(username, -workout.GetCaloriesBurned());
+    }
+
+    /// <summary>
+    /// Handles the event of the day ending.
+    /// </summary>
+    /// <param name="_">The new date</param>
+    public void DayEndHandler(DateTime _)
+    {
+        foreach (var (username, _) in dailyCalories)
+        {
+            SetDailyCalories(0, username);
+        }
     }
 
     /// <summary>
@@ -117,22 +151,36 @@ public class GoalController : ISaveableController
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);
         saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"goal"), goals[username].ToDictionary());
+        saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName, "calorieProgress"), 
+            new Dictionary<string, string> { { "calories", dailyCalories[username].ToString() }, { "date", app.TimeStamp.ToString() } });
         goals.Remove(username);
+        dailyCalories.Remove(username);
     }
 
     public void LoadUser(string folderName)
     {
-        Dictionary<string, string> data = saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "goal"));
+        var goalData = saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "goal"));
         string username = SaveSystem.GetUsernameFromFile(folderName);
         
-        var weightGoal = double.Parse(data["WeightGoal"]);
-        var isFitness = data.ContainsKey("isFitness");
+        var weightGoal = double.Parse(goalData["WeightGoal"]);
+        var isFitness = goalData.ContainsKey("isFitness");
         
         var goal = GetGoalBasedOnWeightDifference(weightGoal, username);
         
         if (isFitness)
             goal = new FitnessGoal(goal, app.GetRecommendedWorkouts(username));
         goals[username] = goal;
+        
+        var calorieData = saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "calorieProgress"));
+        var lastTime = DateTime.Parse(calorieData["date"]);
+        
+        // If the days are not the same, reset the daily calories
+        if (lastTime.Day != app.TimeStamp.Day)
+            dailyCalories[username] = 0;
+        else 
+        {
+            dailyCalories[username] = double.Parse(calorieData["calories"]);
+        }
     }
 
     public void SaveController()
@@ -143,7 +191,7 @@ public class GoalController : ISaveableController
 
     public void AddNewUser(User user)
     {
-        if(goals.ContainsKey(user.UserName)) return;
-        goals[user.UserName] = new DefaultGoal();
+        goals.TryAdd(user.UserName, new DefaultGoal());
+        dailyCalories.TryAdd(user.UserName, 0);
     }
 }
