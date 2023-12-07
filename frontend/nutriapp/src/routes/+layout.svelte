@@ -192,11 +192,6 @@
                </form>
                
             </li>
-            <form action="?/exportUser" method="POST">
-                  <button  class="flex items-center p-2 rounded-lg text-white hover:bg-dark-dark-green group transition-all"> 
-                        <span class="flex-1 ms-6 whitespace-nowrap">Export</span>
-                  </button>
-            </form>
          {/if}
       </ul>
 

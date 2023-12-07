@@ -50,7 +50,6 @@ export const load: PageServerLoad = async ({ locals }) => {
         const calorie_data: any[] = await calorie_history.json();
         const meal_data: any[] = await meal_history.json();
 		console.log(calorie_data);
-		console.log(meal_data);
 
         // Combine all history types into a single array
         const allHistory: any[] = [...workout_data, ...weight_data, ...calorie_data, ...meal_data];
@@ -80,8 +79,39 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 }
 
+export const actions: Actions = {
+	exportUser: async ({ request, locals }) => {
+		console.log('export');
+		const sessionKey = locals.user?.session_key || ""
+		const response = await fetch('http://localhost:5072/api/Save/export/user', {
+		method: 'GET',
+		headers: {
+			sessionKey: sessionKey
+		}
+		});
+		console.log(response)
+		
+		const blob = await response.blob();
+		const url = URL.createObjectURL(blob);
 
+		// Create a link element
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = 'exported_user_data.csv'; // You can set the desired filename
 
+		// Append the link to the body
+		document.body.appendChild(link);
+
+		// Trigger a click on the link to start the download
+		link.click();
+
+		// Remove the link from the DOM
+		document.body.removeChild(link);
+
+		// Revoke the URL to free up resources
+		URL.revokeObjectURL(url);
+	}
+}
 // export const actions: Actions = {
 // 	login: async ({ cookies }) => {
 //         console.log("logging in...")

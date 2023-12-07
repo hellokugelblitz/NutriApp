@@ -173,6 +173,11 @@
                     <button on:click={list_meals}  class="w-fit mt-6 px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
                         View Meal History
                     </button>
+                    <form action="?/exportUser" method="POST">
+                        <button  class="w-fit mt-6 px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out"> 
+                              Export
+                        </button>
+                  </form>
                 </div>
             </div>
         {/if}
