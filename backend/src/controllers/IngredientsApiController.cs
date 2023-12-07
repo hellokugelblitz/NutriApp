@@ -9,6 +9,7 @@ using NutriApp.Controllers.Models;
 using NutriApp;
 using NutriApp.Controllers.Middleware;
 using NutriApp.Food;
+using NutriApp.Undo;
 using Ingredient = NutriApp.Controllers.Models.IngredientModel;
 
 namespace NutriApp.Controllers;
@@ -61,6 +62,10 @@ public class IngredientsApiController : ControllerBase
         {
             _app.FoodControl.EditIngredientStock(purchase.Name, purchase.Quantity, user.UserName);
         }
+
+        var sessionKey = HttpContext.GetSessionKey();
+        _app.UserControl.AddUndoCommand(sessionKey, new UndoPurchaseFood(_app, user));
+        
         return NoContent();
     }
 }

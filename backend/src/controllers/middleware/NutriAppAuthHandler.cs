@@ -27,6 +27,7 @@ public class NutriAppAuthHandler : AuthenticationHandler<NutriAppAuthSchemeOptio
     }
 
     public const string SESSION_HEADER_NAME = "sessionKey";
+    public const string SESSION_CLAIM_NAME = "SessionKey";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
@@ -60,7 +61,7 @@ public class NutriAppAuthHandler : AuthenticationHandler<NutriAppAuthSchemeOptio
         var claims = new[]
         {
             new Claim(ClaimTypes.Name, user.UserName), 
-            new Claim("SessionKey", sessionKey)
+            new Claim(SESSION_CLAIM_NAME, sessionKey)
         };
         var identity = new ClaimsIdentity(claims, Scheme.Name);
         var principal = new ClaimsPrincipal(identity);

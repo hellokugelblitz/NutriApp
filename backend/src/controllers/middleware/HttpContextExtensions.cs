@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace NutriApp.Controllers.Middleware;
 
@@ -14,5 +16,13 @@ public static class HttpContextExtensions
     public static User GetUser(this HttpContext context)
     {
         return (User) context.Items["User"]!;
+    }
+    
+    public static Guid GetSessionKey(this HttpContext context)
+    {
+        var sessionKey = context.User.Claims
+            .FirstOrDefault(c => c.Type == NutriAppAuthHandler.SESSION_CLAIM_NAME)!.Value;
+        Guid.TryParse(sessionKey, out var guid);
+        return guid;
     }
 }
