@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import Nav from "$lib/ui/Nav.svelte";
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
+    import Modal from "./Modal.svelte";
 
     let activeButton = "";
     let mealName = "";
@@ -49,16 +50,61 @@
     }
 
     let isModalOpen = false;
-    let selectedItem = null;
+    let modalTitle = "";
+    let modalContent = "";
 
-    function openModal(item: any) {
-        selectedItem = item;
+    function openModal(item: any, itemType: string) {
+        modalTitle = item.name;
+        modalContent = formatContent(item, itemType);
         isModalOpen = true;
     }
 
     function closeModal() {
         isModalOpen = false;
-        selectedItem = null;
+    }
+
+    function formatContent(item: any, itemType: string) {
+        switch (itemType) {
+            case "ingredient":
+                return formatIngredientContent(item);
+            case "recipe":
+                return formatRecipeContent(item);
+            case "meal":
+                return formatMealContent(item);
+            default:
+                return "No details available";
+        }
+    }
+
+    function formatIngredientContent(ingredient: any) {
+        return `<p>Name: ${ingredient.name}</p>
+            <p>Calories: ${ingredient.calories}</p>
+            <p>Fat: ${ingredient.fat}</p>
+            <p>Protein: ${ingredient.protein}</p>
+            <p>Fiber: ${ingredient.fiber}</p>
+            <p>Carbohydrates: ${ingredient.carbohydrates}</p>`;
+    }
+
+    function formatRecipeContent(recipe: any) {
+        let ingredientsHtml = recipe.ingredients
+            .map((ing: any) => `<li>${ing.name}: ${ing.quantity}</li>`)
+            .join("");
+        let instructionsHtml = recipe.instructions
+            .map((inst: any) => `<li>${inst}</li>`)
+            .join("");
+        return `<h3>${recipe.name}</h3>
+                <h4>Ingredients</h4>
+                <ul>${ingredientsHtml}</ul>
+                <h4>Instructions</h4>
+                <ol>${instructionsHtml}</ol>`;
+    }
+
+    function formatMealContent(meal: any) {
+        let recipesHtml = meal.recipes
+            .map((rec: any) => `<li>${rec.name}: ${rec.quantity}</li>`)
+            .join("");
+        return `<h3>${meal.name}</h3>
+                <ul>${recipesHtml}</ul>`;
     }
 </script>
 
@@ -145,6 +191,8 @@
                             <li>
                                 <button
                                     class="text-left w-full hover:bg-gray-100 p-2 rounded transition duration-200 ease-in-out"
+                                    on:click={() =>
+                                        openModal(ingredient, "ingredient")}
                                 >
                                     {ingredient.name}
                                 </button>
@@ -160,6 +208,7 @@
                             <li>
                                 <button
                                     class="text-left w-full hover:bg-gray-100 p-2 rounded transition duration-200 ease-in-out"
+                                    on:click={() => openModal(recipe, "recipe")}
                                 >
                                     {recipe.name}
                                 </button>
@@ -175,6 +224,7 @@
                             <li>
                                 <button
                                     class="text-left w-full hover:bg-gray-100 p-2 rounded transition duration-200 ease-in-out"
+                                    on:click={() => openModal(meal, "meal")}
                                 >
                                     {meal.name}
                                 </button>
@@ -431,3 +481,10 @@
         </div>
     {/if}
 </div>
+
+<Modal
+    showModal={isModalOpen}
+    title={modalTitle}
+    content={modalContent}
+    onClose={closeModal}
+/>
