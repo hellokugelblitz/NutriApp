@@ -19,7 +19,18 @@ public class HistoryController : ISaveableController
     private const string EntryValueSep = ","; //seperator between values of the entrie and generic(datetime,weight)
     private const string EntrySep = " | "; //seperator between entries
 
-    public List<Entry<Workout.Workout>> GetWorkouts(string username) => history[username].Workouts;
+    public List<Entry<Workout.Workout>> GetWorkouts(string username)
+    {
+        history.TryGetValue(username, out var userHistory);
+        if (userHistory == null)
+        {
+            userHistory = new HistoryObject(_app.FoodControl);
+            history[username] = userHistory;
+            return new List<Entry<Workout.Workout>>();
+        }
+        
+        return userHistory.Workouts;
+    }
     public List<Entry<Workout.Workout>> GetPersistentWorkouts(string username) => workouts[username];
     public List<Entry<Meal>> GetMeals(string username) => history[username].Meals;
     public List<Entry<CalorieTracker>> GetCalories(string username) => history[username].Calories;
