@@ -54,11 +54,6 @@ export const load: PageServerLoad = async ({ locals }) => {
         const allHistory: any[] = [...workout_data, ...weight_data, ...calorie_data, ...meal_data];
         // Sort the combined array by timestamp in descending order
 		allHistory.sort((a, b) => new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime());	
-		console.log(workout_data);
-		console.log(weight_data);
-		console.log(calorie_data);
-		console.log(meal_data);
-		console.log(allHistory);
 	
 			return {
 				user: locals.user,
