@@ -31,6 +31,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 		}
 	}
 	else {
+		return {
+			user: locals.user,
+			team: team,
+			challenge: []
+		};
+
 		console.log(`${response.status} : ${response.statusText}`)
 	}
 
