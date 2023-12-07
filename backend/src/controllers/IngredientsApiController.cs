@@ -21,9 +21,9 @@ public class IngredientsApiController : ControllerBase
     
     // GET api/Ingredients
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients()
+    public async Task<ActionResult<IEnumerable<IngredientModel>>> GetIngredients()
     {
-        Ingredient[] ings =
+        IngredientModel[] ings =
         {
             // Some dummy ingredient structs
             new()
@@ -59,9 +59,9 @@ public class IngredientsApiController : ControllerBase
     
     // GET api/Ingredients/{name}
     [HttpGet("{name}")]
-    public async Task<ActionResult<Ingredient>> GetIngredient(string name)
+    public async Task<ActionResult<IngredientModel>> GetIngredient(string name)
     {
-        Ingredient ing = new()
+        IngredientModel ing = new()
         {
             Name = name,
             Calories = 95,
@@ -75,9 +75,9 @@ public class IngredientsApiController : ControllerBase
     
     // GET api/Ingredients/search/{name}
     [HttpGet("search/{name}")]
-    public async Task<ActionResult<IEnumerable<Ingredient>>> SearchIngredients(string name)
+    public async Task<ActionResult<IEnumerable<IngredientModel>>> SearchIngredients(string name)
     {
-        Ingredient[] ings =
+        IngredientModel[] ings =
         {
             // Some dummy ingredient structs that share similar names
             new()

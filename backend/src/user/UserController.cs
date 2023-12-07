@@ -5,6 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using NutriApp.Undo;
 
 namespace NutriApp;
 
@@ -22,6 +23,9 @@ public class UserController : ISaveableController
     //the load will dump the user here. then login can pull it from here and remove it.
     //I am doing this to make it thread safe
     private Dictionary<string, User> _loadedUsers = new();
+
+    // A dictionary to store undo stacks for each user
+    private Dictionary<Guid, UndoController<UndoCommand>> _userUndoControllerStacks = new();
 
     public UserController(ISaveSystem saveSystem)
     {
@@ -44,7 +48,7 @@ public class UserController : ISaveableController
 
         return _usersFromUsername[username];
     }
-    
+
     // I would use GetUser to test for a user's existence, but
     // _userFromUsername isn't populated correctly on start up (I think)
     // while _userLoginInfo is.
@@ -64,9 +68,15 @@ public class UserController : ISaveableController
 
     public (Guid, User) CreateUser(User user, string password)
     {
+        if (_userLoginInfo.ContainsKey(user.UserName)) throw new InvalidUsernameException();
         Guid userGuid = Guid.NewGuid();
         AddUserToDictionaries(userGuid, user, password);
         return (userGuid, user);
+    }
+
+    public void ChangePassword(string username, string newPassword)
+    {
+        _userLoginInfo[username] = HashPassword(newPassword);
     }
 
     /// <summary>
@@ -77,11 +87,11 @@ public class UserController : ISaveableController
     /// <returns>a tuple of a new session key and loaded user</returns>
     /// <exception cref="InvalidPasswordException">throws an exception if the user exists but the password was wrong</exception>
     /// <exception cref="InvalidUsernameException">throws an exception if the user is not in the system</exception>
-    public (Guid, User) Login(string username, string password) 
+    public (Guid, User) Login(string username, string password)
     {
         if (!_userLoginInfo.ContainsKey(username)) throw new InvalidUsernameException();
         if (_userLoginInfo[username] != HashPassword(password)) throw new InvalidPasswordException();
-        
+
         _saveSystem.LoadUser(_saveSystem.GetNewestFolder(username));
         Guid userGuid = Guid.NewGuid();
         _loadedUsers.Remove(username, out User user);
@@ -102,9 +112,9 @@ public class UserController : ISaveableController
 
     public void SaveUser(string folderName)
     {
-        string username = SaveSystem.GetUsernameFromFile(folderName);
-        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"user"), _usersFromUsername[username].ToDictionary());
-        _usersFromUsername.Remove(username);
+        var split = SaveSystem.SplitFileName(folderName);
+        string username = split[0];
+        _saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName, "user"), _usersFromUsername[username].ToDictionary());
     }
 
     public void LoadUser(string folderName)
@@ -133,19 +143,19 @@ public class UserController : ISaveableController
     public void LoadController()
     {
         string filePath = SaveSystem.SavePath + "\\userLogins.json";
-        if(!File.Exists(filePath))return;
-        
+        if (!File.Exists(filePath)) return;
+
         using (var file = File.OpenText(filePath))
         {
             _userLoginInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(file.ReadLine());
-            
+
         }
-        
+
     }
 
     public void AddNewUser(User user)
     {
-        _usersFromUsername[user.UserName] = user;    
+        _usersFromUsername[user.UserName] = user;
     }
 
     public string HashPassword(string password)
@@ -170,5 +180,26 @@ public class UserController : ISaveableController
             _userLoginInfo[user.UserName] = HashPassword(password);
         }
         _saveSystem.AddNewUser(user);
+    }
+
+    // Get the userUndoCOntrollerStack
+    public UndoController<UndoCommand> GetUndoStack(Guid sessionKey)
+    {
+        return _userUndoControllerStacks[sessionKey];
+    }
+
+    public void AddUndoCommand(Guid sessionKey, UndoCommand undoCommand)
+    {
+        if (!_userUndoControllerStacks.ContainsKey(sessionKey))
+        {
+            _userUndoControllerStacks[sessionKey] = new UndoController<UndoCommand>();
+        }
+
+        _userUndoControllerStacks[sessionKey].Add(undoCommand);
+    }
+
+    public void Undo(Guid sessionKey)
+    {
+        _userUndoControllerStacks[sessionKey].Undo();
     }
 }

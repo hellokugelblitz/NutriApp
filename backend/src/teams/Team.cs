@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NutriApp.Save;
 
 namespace NutriApp.Teams;
@@ -74,7 +75,12 @@ public class Team : ISaveObject
     public void FromDictionary(Dictionary<string, string> data)
     {
         name = data["Name"];
-        
-        
+        members = data["Members"].Split(memberSeperator).ToList();
+    }
+
+    public override bool Equals(object obj)
+    {
+        Team team = obj as Team;
+        return team is not null && members.SequenceEqual(team.members);
     }
 }

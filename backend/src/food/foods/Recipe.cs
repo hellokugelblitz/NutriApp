@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace NutriApp.Food;
@@ -41,6 +42,13 @@ public class Recipe : PreparedFood<Ingredient>
         }
 
         return output;
+    }
+
+    public override bool Equals(object other)
+    {
+        Recipe obj = other as Recipe;
+        
+        return obj is not null && Name == obj.Name && instructions.SequenceEqual(obj.instructions);
     }
 }
 

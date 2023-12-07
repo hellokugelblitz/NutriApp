@@ -3,17 +3,20 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace NutriApp.Controllers.Middleware;
 
-public class NutriAppAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public class NutriAppAuthHandler : AuthenticationHandler<NutriAppAuthSchemeOptions>
 {
     private readonly App _app;
+    public const string SCHEME_NAME = "NutriAppAuthScheme";
     
     public NutriAppAuthHandler(
-        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        IOptionsMonitor<NutriAppAuthSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
         ISystemClock clock,
@@ -23,24 +26,36 @@ public class NutriAppAuthHandler : AuthenticationHandler<AuthenticationSchemeOpt
         _app = app;
     }
 
-    public const string SessionHeaderName = "sessionKey";
+    public const string SESSION_HEADER_NAME = "sessionKey";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        // Check that the endpoint that is being called
+        // requires authorization.
+        // It should be noted that normally this would be done automatically by the framework,
+        // but for some reason it isn't
+        if (Context.GetEndpoint()?.Metadata.GetMetadata<IAuthorizeData>() == null)
+        {
+            return Task.FromResult(AuthenticateResult.NoResult());
+        }
+        
         // Get the session header value
-        if (!Request.Headers.TryGetValue(SessionHeaderName, out var sessionHeaderValues))
+        if (!Request.Headers.TryGetValue(SESSION_HEADER_NAME, out var sessionHeaderValues))
         {
             return Task.FromResult(AuthenticateResult.Fail("Missing session header"));
         }
         
         // Get the session key
         var sessionKey = sessionHeaderValues[0]!;
-        
-        var user = _app.UserControl.GetUser(Guid.Parse(sessionKey));
+
+        Guid.TryParse(sessionKey, out var sessionGuid);
+        var user = _app.UserControl.GetUser(sessionGuid);
         if (user == null)
         {
             return Task.FromResult(AuthenticateResult.Fail("Invalid session key"));
         }
+
+        Context.Items["User"] = user;
         
         var claims = new[]
         {

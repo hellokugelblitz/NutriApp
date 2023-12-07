@@ -43,6 +43,7 @@ public class App
     public WorkoutController WorkoutControl => workout;
     public FoodController FoodControl => food;
     public UserController UserControl => userCtrl;
+    public TeamController TeamControl => team;
     public DateTime TimeStamp => date;
 
     public double DayLength
@@ -60,7 +61,7 @@ public class App
         saveSystem = new SaveSystem();
         userCtrl = new UserController(saveSystem);
         workout = new WorkoutController();
-        food = new FoodController(this);
+        food = new FoodController(this, saveSystem);
         history = new HistoryController(this, saveSystem);
         goal = new GoalController(this, saveSystem);
         team = new TeamController(this, saveSystem);
@@ -106,8 +107,10 @@ public class App
 
         builder.Services.AddSingleton(_ => new App(1));
 
-        builder.Services.AddAuthentication("NutriAppScheme")
-            .AddScheme<AuthenticationSchemeOptions, NutriAppAuthHandler>("NutriAppScheme", _ => { });
+        builder.Services.AddAuthentication(
+                options => options.DefaultScheme = NutriAppAuthHandler.SCHEME_NAME)
+            .AddScheme<NutriAppAuthSchemeOptions, NutriAppAuthHandler>(
+                NutriAppAuthHandler.SCHEME_NAME, _ => { });
         builder.Services.AddAuthorization();
 
         builder.Services.AddSwaggerGen(c =>

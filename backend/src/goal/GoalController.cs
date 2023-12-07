@@ -117,6 +117,7 @@ public class GoalController : ISaveableController
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);
         saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"goal"), goals[username].ToDictionary());
+        goals.Remove(username);
     }
 
     public void LoadUser(string folderName)

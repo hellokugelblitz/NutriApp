@@ -33,8 +33,8 @@ public class TestHistoryController
         
         Recipe recipe = new Recipe("mac and cheese");
         recipe.AddInstruction("bake them kids");
-        recipe.AddChild(new Ingredient("cheese", 150, 1.5d, 1.5d, 1.5d, 1.5d), 3);
-        recipe.AddChild(new Ingredient("noodles", 75, 1, 1, 1, 1), 1);
+        recipe.AddChild(_app.FoodControl.GetIngredient("CHEESE,BRICK"), 3);
+        recipe.AddChild(_app.FoodControl.GetIngredient("PASTA,DRY,ENR"), 1);
         _app.FoodControl.AddRecipe(recipe);
         
         Meal meal = new Meal("mac");
@@ -56,13 +56,14 @@ public class TestHistoryController
     {
         Setup();
     
-        Assert.AreEqual(history.GetCalorieCount(testUser.UserName), 450);
+        Assert.AreEqual(history.GetCalorieCount(testUser.UserName), 1484);
     }
 
     [TestMethod]
 
     public void TestSaveLoad()
     {
+        
         Setup();
         ClearDirectory();
         var saveSystem = _app.SaveSyst;
@@ -84,6 +85,23 @@ public class TestHistoryController
         Assert.IsTrue(previousData.Item2.SequenceEqual(newData.Item2));
         Assert.IsTrue(previousData.Item3.SequenceEqual(newData.Item3));
         Assert.IsTrue(previousData.Item4.SequenceEqual(newData.Item4));
+    }
+
+    [TestMethod]
+    public void TestSaveLoadController()
+    {
+        ClearDirectory();
+        Setup();
+        
+        var saveSystem = _app.SaveSyst;
+
+        var adapter = new JSONAdapter();
+        saveSystem.SetFileType(adapter);
+        var data = _app.HistoryControl.GetPersistentWorkouts(testUser.UserName).ToArray();
+        saveSystem.SaveController();
+
+        _app = new App(1);
+        Assert.IsTrue(data.SequenceEqual(_app.HistoryControl.GetPersistentWorkouts(testUser.UserName).ToArray()));
     }
     
     /// <summary>

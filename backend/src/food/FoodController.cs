@@ -14,8 +14,8 @@ namespace NutriApp.Food;
 public class FoodController : ISaveableController
 {
     private readonly string ingredientStockPath = $"{Persistence.FoodDataPath}\\ingredient_stock.json";
-    private readonly string recipePath = $"{Persistence.FoodDataPath}\\recipes.json";
-    private readonly string mealPath = $"{Persistence.FoodDataPath}\\meals.json";
+    private readonly string recipePath = SaveSystem.SavePath + "\\recipes.json";
+    private readonly string mealPath = SaveSystem.SavePath + "\\meals.json";
 
     private List<Recipe> recipes;
     private List<Meal> meals;
@@ -28,6 +28,7 @@ public class FoodController : ISaveableController
     private ShoppingListCriteria recipeCriteria;
     private App app;
     private IngredientDatabase ingredientDatabase;
+    private ISaveSystem saveSystem;
 
     /// <summary>
     /// Retrieves all recipes any user has created.
@@ -39,9 +40,10 @@ public class FoodController : ISaveableController
     /// </summary>
     public Meal[] Meals => meals.ToArray();
 
-    public FoodController(App app)
+    public FoodController(App app, ISaveSystem saveSystem)
     {
         this.app = app;
+        this.saveSystem = saveSystem;
         ingredientDatabase = new InMemoryIngredientDatabase();
         shoppingList = new ShoppingListController();
         recipeCriteria = new SpecificRecipeCriteria(shoppingList, this);
@@ -51,18 +53,26 @@ public class FoodController : ISaveableController
         meals = new List<Meal>();
 
         shoppingList.SetCriteria(recipeCriteria);
-        
+
         foreach (string username in ingredientStocks.Keys)
             shoppingList.Update(Recipes, username);
     }
-    
+
     /// <summary>
     /// Adds a recipe with some pre-configured attributes to the user's saved recipes.
     /// </summary>
     public void AddRecipe(Recipe recipe)
     {
         recipes.Add(recipe);
-        
+
+        foreach (string username in ingredientStocks.Keys)
+            shoppingList.Update(Recipes, username);
+    }
+
+    public void RemoveRecipe(Recipe recipe)
+    {
+        recipes.Remove(recipe);
+
         foreach (string username in ingredientStocks.Keys)
             shoppingList.Update(Recipes, username);
     }
@@ -79,11 +89,16 @@ public class FoodController : ISaveableController
 
         return null;
     }
-    
+
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
     /// </summary>
     public void AddMeal(Meal meal) => meals.Add(meal);
+
+    /// <summary>
+    /// Removes a meal
+    /// </summary>
+    public void RemoveMeal(Meal meal) => meals.Remove(meal);
 
     /// <summary>
     /// Retrieves a meal given its unique name. Returns null if there is no
@@ -136,7 +151,7 @@ public class FoodController : ISaveableController
 
         return true;
     }
-    
+
     /// <summary>
     /// Consumes a meal if there is enough ingredient stock. Returns true if meal consumption
     /// was successful, false otherwise.
@@ -175,40 +190,105 @@ public class FoodController : ISaveableController
         else
             ingredientStocks[username].SetEntry(ingredientName, newStock);
     }
-
-    public delegate void MealEventHandler(Meal meal, string username);
-    public event MealEventHandler MealConsumeEvent;
-
-    public void AddNewUser(User user)
+    
+    public void SaveUser(string folderName)
     {
-        // Create a new entry for ingredient stock
-        // Call the ShoppingListController to add that user to the shopping list dictionary
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"food"), ingredientStocks[username].ToDictionary());
+        ingredientStocks.Remove(username);
     }
 
-    public void SaveUser(string username)
+    public void LoadUser(string folderName)
     {
-        // Save ingredient stocks for a user
-    }
-
-    public void LoadUser(string username)
-    {
-        // Load ingredient stocks for a user
+        string username = SaveSystem.GetUsernameFromFile(folderName);
+        Dictionary<string, string> data = saveSystem.GetFileSaver().Load(SaveSystem.GetFullPath(folderName, "food"));
+        IngredientStocks stock = new IngredientStocks();
+        stock.FromDictionary(data);
+        ingredientStocks[username] = stock;
     }
 
     public void SaveController()
     {
-        // Save recipes and meals
+        // Serialize each recipe
+        List<SerializableRecipe> recipesToWrite = new List<SerializableRecipe>();
+        foreach (Recipe recipe in recipes)
+        {
+            SerializableRecipe recipeToWrite = new SerializableRecipe(recipe.Name, recipe.Instructions);
+            Dictionary<Ingredient, double>.KeyCollection ingredients = recipe.Children.Keys;
+            foreach (Ingredient ingredient in ingredients)
+                recipeToWrite.AddChild(ingredient.Name, recipe.Children[ingredient]);
+            recipesToWrite.Add(recipeToWrite);
+        }
+        string recipeJson = JsonConvert.SerializeObject(recipesToWrite);
+        File.WriteAllText(recipePath, recipeJson);
+        
+        // Serialize each meal
+        List<SerializablePreparedFood> mealsToWrite = new List<SerializablePreparedFood>();
+        foreach (Meal meal in meals)
+        {
+            SerializablePreparedFood mealToWrite = new SerializablePreparedFood(meal.Name);
+            Dictionary<Recipe, double>.KeyCollection ingredients = meal.Children.Keys;
+            foreach (Recipe recipe in ingredients)
+                mealToWrite.AddChild(recipe.Name, meal.Children[recipe]);
+            mealsToWrite.Add(mealToWrite);
+        }
+        string mealJson = JsonConvert.SerializeObject(mealsToWrite);
+        File.WriteAllText(mealPath, mealJson);
     }
 
     public void LoadController()
     {
-        // Load recipes and meals
+        if (!File.Exists(recipePath) || !File.Exists(mealPath))
+            return;
+        
+        // Load recipes
+        string recipeJson = File.ReadAllText(recipePath);
+        SerializableRecipe[] loadedRecipes = JsonConvert.DeserializeObject<SerializableRecipe[]>(recipeJson);
+        foreach (SerializableRecipe loadedRecipe in loadedRecipes)
+        {
+            Recipe recipe = new Recipe(loadedRecipe.Name);
+            
+            foreach (string step in loadedRecipe.Instructions)
+                recipe.AddInstruction(step);
+            foreach (KeyValuePair<string, double> ingredient in loadedRecipe.Children)
+            {
+                string name = ingredient.Key;
+                double quantity = ingredient.Value;
+                recipe.AddChild(ingredientDatabase.Get(name), quantity);
+            }
+            recipes.Add(recipe);
+        }
+        
+        // Load meals
+        string mealJson = File.ReadAllText(mealPath);
+        SerializablePreparedFood[] loadedMeals = JsonConvert.DeserializeObject<SerializablePreparedFood[]>(mealJson);
+        foreach (SerializablePreparedFood loadedMeal in loadedMeals)
+        {
+            Meal meal = new Meal(loadedMeal.Name);
+            
+            foreach (KeyValuePair<string, double> recipe in loadedMeal.Children)
+            {
+                string name = recipe.Key;
+                double quantity = recipe.Value;
+                meal.AddChild(GetRecipe(name), quantity);
+            }
+            meals.Add(meal);
+        }
     }
+
+    public void AddNewUser(User user)
+    {
+        ingredientStocks[user.UserName] = new IngredientStocks();
+        shoppingList.AddUser(user.UserName);
+    }
+    
+    public delegate void MealEventHandler(Meal meal, string username);
+    public event MealEventHandler MealConsumeEvent;
 }
 
-public class IngredientStocks
+public class IngredientStocks: ISaveObject
 {
-    private Dictionary<string, double> stocks;
+    public Dictionary<string, double> stocks { get; private set; }
 
     public IngredientStocks()
     {
@@ -245,5 +325,21 @@ public class IngredientStocks
         if (!stocks.ContainsKey(ingredientName)) return 0;
 
         return stocks[ingredientName];
+    }
+
+    public Dictionary<string, string> ToDictionary()
+    {
+        return stocks.ToDictionary(x => x.Key, x => x.Value.ToString());
+    }
+
+    public void FromDictionary(Dictionary<string, string> data)
+    {
+        stocks = data.ToDictionary(x => x.Key, x => double.Parse(x.Value));
+    }
+
+    public override bool Equals(object other)
+    {
+        IngredientStocks obj = other as IngredientStocks;
+        return obj is not null && stocks.SequenceEqual(obj.stocks);
     }
 }
