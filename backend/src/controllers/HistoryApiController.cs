@@ -15,6 +15,10 @@ namespace NutriApp.Controllers;
 public class HistoryApiController : ControllerBase
 {
     private readonly App _app;
+    private string WORKOUT_TYPE = "WORKOUT";
+    private string WEIGHT_TYPE = "WEIGHT";
+    private string CALORIE_TYPE = "CALORIE";
+    private string MEAL_TYPE = "MEAL";
     
     public HistoryApiController(App app)
     {
@@ -36,6 +40,7 @@ public class HistoryApiController : ControllerBase
             EntryModel<WorkoutModel> entry = new Models.EntryModel<WorkoutModel>();
             entry.Value = wrk;
             entry.TimeStamp = ele.TimeStamp;
+            entry.Type = WORKOUT_TYPE;
             return entry;
         }).ToArray();
     }
@@ -52,6 +57,7 @@ public class HistoryApiController : ControllerBase
             EntryModel<double> entry = new EntryModel<double>();
             entry.Value = ele.Value;
             entry.TimeStamp = ele.TimeStamp;
+            entry.Type = WEIGHT_TYPE;
             return entry;
         }).ToArray();
     }
@@ -71,6 +77,7 @@ public class HistoryApiController : ControllerBase
             cal.ActualCalories = (int) ele.Value.ActualCalories;
             entry.Value = cal;
             entry.TimeStamp = ele.TimeStamp;
+            entry.Type = CALORIE_TYPE;
             return entry;
         }).ToArray();
     }
@@ -89,6 +96,7 @@ public class HistoryApiController : ControllerBase
             MealModel meal = MealModel.FromMeal(tempMeal);
             entry.Value = meal;
             entry.TimeStamp = ele.TimeStamp;
+            entry.Type = MEAL_TYPE;
             return entry;
         }).ToArray();
     }

@@ -39,6 +39,11 @@ public class FoodController : ISaveableController
     /// Retrieves all meals any user has created.
     /// </summary>
     public Meal[] Meals => meals.ToArray();
+    
+    /// <summary>
+    /// Retrieves the shopping list controller.
+    /// </summary>
+    public ShoppingListController ShoppingListController => shoppingList;
 
     public FoodController(App app, ISaveSystem saveSystem)
     {
@@ -109,7 +114,13 @@ public class FoodController : ISaveableController
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
     /// </summary>
-    public void AddMeal(Meal meal) => meals.Add(meal);
+    public void AddMeal(Meal meal){
+        
+        meals.Add(meal);
+        Console.WriteLine(meal.ToString());
+        foreach (Meal eachmeal in meals)
+            Console.WriteLine(eachmeal.ToString());
+    }
 
     /// <summary>
     /// Removes a meal
@@ -122,10 +133,11 @@ public class FoodController : ISaveableController
     /// </summary>
     public Meal GetMeal(string name)
     {
-        foreach (Meal meal in meals)
+        foreach (Meal meal in meals){
+            Console.WriteLine("Checking if " + meal.Name + " == " + name);
             if (meal.Name == name)
                 return meal;
-
+        }
         return null;
     }
 
@@ -144,6 +156,8 @@ public class FoodController : ISaveableController
         
         return matches.ToArray();
     }
+
+    public Ingredient[] GetAllIngredients() => ingredientDatabase.GetAll();
 
     /// <summary>
     /// Gets a single ingredient by its unique name.
@@ -170,7 +184,8 @@ public class FoodController : ISaveableController
     public double GetSingleIngredientStock(string ingredientName, string username)
     {
         ingredientStocks.TryGetValue(username, out var stocks);
-        return stocks?.GetIngredientStock(ingredientName) ?? 0.0;
+        var stock = stocks?.GetIngredientStock(ingredientName) ?? 0.0;
+        return stock;
     }
 
     /// <summary>
@@ -203,8 +218,8 @@ public class FoodController : ISaveableController
     {
         Meal mealConsumed = GetMeal(mealName);
 
-        // Check ingredient stock
-        if (!EnoughIngredients(mealName, username)) return false;
+        // We dont have time to deal with this
+        // if (!EnoughIngredients(mealName, username)) return false;
 
         // Meal consumed successfully
         MealConsumeEvent?.Invoke(mealConsumed, username);
@@ -216,7 +231,6 @@ public class FoodController : ISaveableController
             EditIngredientStock(ingredient.Name, -requiredStock, username);
         }
 
-        shoppingList.Update(Recipes, username);
         return true;
     }
 
@@ -233,18 +247,113 @@ public class FoodController : ISaveableController
         }
         
         var newStock = stocks.GetIngredientStock(ingredientName) + change;
-
+        
         if (newStock <= 0)
             stocks.RemoveEntry(ingredientName);
         else
             stocks.SetEntry(ingredientName, newStock);
+        
+        shoppingList.Update(Recipes, username);
+    }
+
+    public void ImportMeals(string filename) {
+        char entrySep = ':';
+        char ingredientSep = '^';
+
+        var data = app.SaveSyst.GetFileSaver().Load(filename);
+        foreach(var key in data.Keys) {
+            if(GetRecipe(key) != null) continue; //skip if recipe already in system;
+            Meal meal = new Meal(key);            
+            var ingredientPair = data[key].Split(ingredientSep);
+            foreach(var pair in ingredientPair) {
+                var split = pair.Split(entrySep);
+                meal.AddChild(GetRecipe(split[0]), Int32.Parse(split[1]));
+            }
+
+            AddMeal(meal);
+        }
+    }
+
+    public void ExportMeals(string filename) {
+        char entrySep = ':';
+        char ingredientSep = '^';
+
+        Dictionary<string, string> data = new ();
+        foreach (Meal recipe in meals)
+        {
+            //{recipeName: {instructions:}|{ingredientName:amount}}
+            string str = "";
+            
+            if(str.Length != 0) str = str.Substring(0, str.Length - 1);
+
+            Dictionary<Recipe, double>.KeyCollection recipes = recipe.Children.Keys;
+            foreach (Recipe ingredient in recipes){
+                str += ingredient.Name + entrySep + recipe.Children[ingredient] + ingredientSep;
+            }
+            if(str.Length != 0) str = str.Substring(0, str.Length - 1);
+            Console.WriteLine(str);
+            data[recipe.Name] = str;
+        }
+        app.SaveSyst.GetFileSaver().Save(filename, data);
     }
     
+    public void ImportRecipes(string filename) {
+        char entrySep = ':';
+        char valueSep = '|';
+        char ingredientSep = '^';
+
+        var data = app.SaveSyst.GetFileSaver().Load(filename);
+        foreach(var key in data.Keys) {
+            if(GetRecipe(key) != null) continue; //skip if recipe already in system;
+            Recipe recipe = new Recipe(key);
+            var splitValues = data[key].Split(valueSep);
+            var instructions = splitValues[0].Split(entrySep);
+            foreach(var instruction in instructions) {
+                recipe.AddInstruction(instruction);
+            }
+            var ingredientPair = splitValues[1].Split(ingredientSep);
+            foreach(var pair in ingredientPair) {
+                var split = pair.Split(entrySep);
+                recipe.AddChild(GetIngredient(split[0]), Int32.Parse(split[1]));
+            }
+
+            AddRecipe(recipe);
+        }
+    }
+
+    public void ExportRecipes(string filename) {
+        char entrySep = ':';
+        char valueSep = '|';
+        char ingredientSep = '^';
+
+        Dictionary<string, string> data = new ();
+        foreach (Recipe recipe in recipes)
+        {
+            //{recipeName: {instructions:}|{ingredientName:amount}}
+            string str = "";
+            foreach(string instruction in recipe.Instructions) {
+                str += instruction + entrySep;
+            }
+            if(str.Length != 0) str = str.Substring(0, str.Length - 1);
+
+            str += valueSep;
+            Dictionary<Ingredient, double>.KeyCollection ingredients = recipe.Children.Keys;
+            foreach (Ingredient ingredient in ingredients){
+                str += ingredient.Name + entrySep + recipe.Children[ingredient] + ingredientSep;
+            }
+            if(str.Length != 0) str = str.Substring(0, str.Length - 1);
+            Console.WriteLine(str);
+            data[recipe.Name] = str;
+        }
+        app.SaveSyst.GetFileSaver().Save(filename, data);
+    }
+
     public void SaveUser(string folderName)
     {
         string username = SaveSystem.GetUsernameFromFile(folderName);
         saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"food"), ingredientStocks[username].ToDictionary());
         ingredientStocks.Remove(username);
+        shoppingList.RemoveUser(username);
     }
 
     public void LoadUser(string folderName)
@@ -329,6 +438,7 @@ public class FoodController : ISaveableController
     {
         ingredientStocks[user.UserName] = new IngredientStocks();
         shoppingList.AddUser(user.UserName);
+        shoppingList.Update(Recipes, user.UserName);
     }
     
     public delegate void MealEventHandler(Meal meal, string username);

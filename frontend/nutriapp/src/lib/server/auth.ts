@@ -30,10 +30,12 @@ export const authenticateUser = async (event: RequestEvent) => {
 				// session key and return for use in locals.
 				const responseData = await response.json();
 				const username: string = responseData.userName;
+				const notifications: string[] = responseData.notifications;
 
 				const user = {
 					session_key: sessionKey,
-					username: username
+					username: username,
+					notifications: notifications
 				}
 				return user;
 				

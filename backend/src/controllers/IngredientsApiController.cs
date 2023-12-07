@@ -24,6 +24,14 @@ public class IngredientsApiController : ControllerBase
     {
         _app = app;
     }
+
+    // GET api/Ingredients
+    [HttpGet]
+    public ActionResult<IEnumerable<IngredientModel>> GetIngredients()
+    {
+        var ings = _app.FoodControl.GetAllIngredients();
+        return ings.Select(IngredientModel.FromIngredient).ToList();
+    }
     
     // GET api/Ingredients/{name}
     [HttpGet("{name}")]

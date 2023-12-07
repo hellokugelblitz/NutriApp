@@ -11,6 +11,9 @@ export default {
         xl: '1280px',
         twoxl: '1536px',
       },
+      spacing: {
+        '128': '32rem',
+      },
       colors: {
         'darkish-green': '#36633f',
         'dark-green': '#386641',
