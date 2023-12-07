@@ -42,12 +42,14 @@ public class TeamController : ISaveableController
     /// Creates a new team with the given name. Returns true if successfully created, false otherwise
     /// (typically if name is already taken).
     /// </summary>
-    public bool CreateTeam(string name)
+    public Team CreateTeam(string name)
     {
-        if (GetTeam(name) != null) return false;
+        if (GetTeam(name) != null) return null;
 
-        teams.Add(new Team(name));
-        return true;
+        Team team = new Team(name);
+
+        teams.Add(team);
+        return team;
     }
 
     /// <summary>
@@ -67,7 +69,11 @@ public class TeamController : ISaveableController
         User recipient = app.UserControl.GetUser(username);
 
         // TODO: actually incorporate invite code into notification
-        NotificationController.Instance.CreateNotification($"You have been invited to join team {teamName}", "localhost:5173", new User[] { recipient });
+        NotificationController.Instance.CreateNotification(
+            $"Team invite: {teamName}",
+            $"/protected/teams/join/{code}",
+            "Accept",
+            new User[] { recipient });
         return code;
     }
 
@@ -117,15 +123,15 @@ public class TeamController : ISaveableController
 
         foreach (string username in team.Members)
         {
+            if (!result.ContainsKey(username))
+                    result.Add(username, 0);
+
             Entry<Workout.Workout>[] workoutEntries = app.HistoryControl.GetWorkouts(username).ToArray();
             
             foreach (Entry<Workout.Workout> entry in workoutEntries)
             {
                 if (entry.TimeStamp < team.ChallengeStartDate || entry.TimeStamp > team.ChallengeEndDate)
                     continue;
-
-                if (!result.ContainsKey(username))
-                    result.Add(username, 0);
                 
                 result[username] += entry.Value.Minutes;
             }

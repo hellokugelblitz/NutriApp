@@ -31,14 +31,14 @@ public class NotificationController
     /// <summary>
     /// Generates a new notification to be sent out to the given recipients.
     /// </summary>
-    public void CreateNotification(string contents, string url, User[] recipients)
+    public void CreateNotification(string contents, string url, string buttonText, User[] recipients)
     {
         foreach (User user in recipients)
         {
             if (!pendingNotifications.ContainsKey(user.UserName))
                 pendingNotifications.Add(user.UserName, new List<Notification>());
 
-            Notification notification = new Notification(contents, url);
+            Notification notification = new Notification(contents, url, buttonText);
             pendingNotifications[user.UserName].Add(notification);
         }
 
@@ -71,7 +71,5 @@ public class NotificationController
             user.ReceiveNotification(notification);
 
         pendingNotifications[user.UserName].Clear();
-
-        // TODO: also send server-side event to notify client in real time
     }
 }

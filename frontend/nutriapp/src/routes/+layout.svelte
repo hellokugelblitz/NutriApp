@@ -95,7 +95,7 @@
                   </svg>
 
                   <span class="flex-1 ms-6 whitespace-nowrap">Notifications</span>
-                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium bg-lime-600 bg-opacity-25 rounded-full text-lime-100">3</span>
+                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium bg-lime-600 bg-opacity-25 rounded-full text-lime-100">{$page.data.user.notifications.length}</span>
                </a>
             </li>
 

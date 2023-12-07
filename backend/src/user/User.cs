@@ -24,7 +24,7 @@ public class User : ISaveObject
 
     public User()
     {
-        
+        notifications = new List<Notification>();
     }
     
     public User(string username, string name, int height, DateTime birthday, string bio, string teamName="")
