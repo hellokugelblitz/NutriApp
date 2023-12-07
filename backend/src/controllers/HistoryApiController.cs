@@ -86,7 +86,7 @@ public class HistoryApiController : ControllerBase
         {
             Models.EntryModel<MealModel> entry = new Models.EntryModel<MealModel>();
             Food.Meal tempMeal = _app.FoodControl.GetMeal(ele.Value.Name);
-            MealModel meal = new MealModel(tempMeal);
+            MealModel meal = MealModel.FromMeal(tempMeal);
             entry.Value = meal;
             entry.TimeStamp = ele.TimeStamp;
             return entry;
