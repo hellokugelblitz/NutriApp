@@ -17,18 +17,22 @@
         
         {:else}
             {#each data.user.notifications as notification}
-                <span class="text-gray-400">{new Date(notification.timestamp).toLocaleString("en-us")}</span>
-                <span class="ml-3">{notification.contents}</span>
+                <div class="columns-2 mb-3">
+                    <div class="col-span-1">
+                        <span class="text-gray-400">{new Date(notification.timestamp).toLocaleString("en-us")}</span>
+                        <span class="ml-3">{notification.contents}</span>
+                    </div>
 
-                <span>
-                    <a href={notification.url}>
-                        <button
-                            type="button"
-                            class="mx-8 px-3 py-1 float-center text-xs font-medium items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
-                            {notification.buttonText}
-                        </button>
-                    </a>
-                </span>
+                    <div class="col-span-1">
+                        <a href={notification.url}>
+                            <button
+                                type="button"
+                                class="mx-8 px-3 py-1 text-xs font-medium items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
+                                {notification.buttonText}
+                            </button>
+                        </a>
+                    </div>
+                </div>
             {/each}
         {/if}
     </div>

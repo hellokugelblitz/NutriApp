@@ -40,17 +40,32 @@ export const load: PageServerLoad = async ({ locals }) => {
 	};
 }
 
-export const actions: Actions = { default: async ({ request, cookies }) => {
-	const data = await request.formData();
-	const username = data.get("username");
+export const actions: Actions = { 
+	invite: async ({ request, cookies }) => {
+		const data = await request.formData();
+		const username = data.get("username");
 
-	console.log(cookies.get("auth"));
+		console.log(cookies.get("auth"));
 
-	await fetch("http://localhost:5072/api/teams/invite", {
-		method: "POST",
-		headers: { "sessionKey": cookies.get("auth") },
-		body: JSON.stringify({ "username": username })
-	}).then(() => {
-		throw redirect(303, "/protected/teams");
-	});
-}};
+		await fetch("http://localhost:5072/api/teams/invite", {
+			method: "POST",
+			headers: { "sessionKey": cookies.get("auth") },
+			body: JSON.stringify({ "username": username })
+		}).then(() => {
+			throw redirect(303, "/protected/teams");
+		});
+	},
+
+	create: async ({ request, cookies }) => {
+		const data = await request.formData();
+		const teamName = data.get("teamName");
+
+		await fetch("http://localhost:5072/api/teams", {
+			method: "POST",
+			headers: { "sessionKey": cookies.get("auth") },
+			body: JSON.stringify({ "teamName": teamName })
+		}).then(() => {
+			throw redirect(303, "/protected/teams");
+		});
+	}
+};
