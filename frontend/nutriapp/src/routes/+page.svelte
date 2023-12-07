@@ -2,6 +2,7 @@
     import { SvelteToast, toast } from '@zerodevx/svelte-toast'
     import { page } from '$app/stores';
     import Nav from '$lib/ui/Nav.svelte';
+    import Workouts from './svg/Workouts.svelte';
 
     //A little tester function
     function sendToast(){
@@ -10,19 +11,34 @@
 
     //Grab the data for the user.
     export let data;
+    const { workouts } = data;
+    const { weights } = data;
+    const { calories } = data;
+    const { meals } = data;
+    const { all_history } = data;
+    let all_view = "ALL";
+    let workout_view = "WORKOUT";
+    let weight_view = "WEIGHT"
+    let calorie_view = "CALORIE"
+    let meal_view = "MEAL"
 
     //For the test history
-    let list_length = 14;
+    let current_list_view = all_history;
+    function list_all(){current_list_view = all_history;}
+    function list_workouts(){current_list_view = workouts;}
+    function list_weights(){current_list_view = weights;}
+    function list_calories(){current_list_view = calories;}
+    function list_meals(){current_list_view = meals;}
 </script>
 
  <Nav title="Dashboard" current_data={$page.data}/>
 
  <!-- GRID -->
-<div class=" p-4 md:ml-64 mx-0 max-screen max-w-6xl max-h-full">
+<div class=" p-4 px-16 md:ml-64 mx-0 max-screen max-w-full max-h-full">
 
     <div class="grid grid-cols-3 grid-rows-2 gap-4">
 
-        <div class="flex-col justify-left col-start-1 col-span-3 row-start-1 row-span-3 p-6 max-h-fit mb-4 border-4 border-gray-225 rounded-full bg-white relative">
+        <div class="flex-col justify-left col-start-1 col-span-3 row-start-1 row-span-3 p-6 max-h-96 mb-4 border-4 border-gray-225 rounded-full bg-white relative">
             {#if !$page.data.user}
                 <p class="text-4xl text-gray-800 font-extrabold">
                     Hello, you are currently a <span class="font-bold text-primary-green">Guest<span>!
@@ -84,35 +100,81 @@
 
         <!-- History view panel -->
         {#if $page.data.user}
-            <!-- <div class="hidden justify-left col-span-1 row-span-2 col-start-1 row-start-1 p-6 mb-4 h-96 w-full border-4 border-primary-green rounded-full bg-white md:col-span-2 md:flex flex-col">
+            <div class="hidden justify-left col-span-3 row-span-2 col-start-1 row-start-2 p-6 mb-4 h-96 w-full border-4 border-primary-green rounded-full bg-white md:flex flex-col">
                 <p class="text-xl text-gray-800 pb-8">
                     Your History
                 </p>
 
-                <div class="bg-gray-200 w-full h-3/4 overflow-y-scroll rounded-full">
+                <div class="border-2 border-black w-full h-56 overflow-y-scroll rounded-full">
 
                     <ul>
-                        {#each {length: list_length} as _, i} 
-       
-                            {#if i > list_length-2}
-                                <li class="list-none list-inside">
-                                    <div class="border-gray-500 w-full h-12 px-8 py-3">
-                                        <p>Added Meal: <span class="font-bold">GURL DINNER</span></p>
-                                    </div>
-                                </li>
-
-          
-                            {:else}
-                                <li class="list-none list-inside">
-                                    <div class="border-gray-500 border-b-2 w-full h-12 px-8 py-3">
-                                        <p>Added Meal: <span class="font-bold">Girl Dinner</span></p>
-                                    </div>
-                                </li>
-                            {/if}
-                        {/each}
+                        {#if current_list_view}
+                             {#each current_list_view as item, i}
+                                    {#if item.type == weight_view}
+                                        <li class="list-none list-inside">
+                                            <div class="border-gray-500 border-b-2 w-full h-fit px-8 py-3">
+                                                <p>Updated Weight to: <span class="font-bold text-dark-green">{item.value}</span></p>
+                                                <p>Timestamp: {item.timeStamp}</p>
+                                            </div>
+                                        </li>
+                                    {:else if item.type == workout_view}
+                                        <li class="list-none list-inside">
+                                            <div class="border-gray-500 border-b-2 w-full h-fit px-8 py-3">
+                                                <p>Added Workout: <span class="font-bold text-dark-green">{item.value.name}</span></p>
+                                                <p>Timestamp: {item.timeStamp}</p>
+                                            </div>
+                                        </li>
+                                    {:else if item.type == meal_view}
+                                        <li class="list-none list-inside">
+                                            <div class="border-gray-500 border-b-2 w-full h-fit px-8 py-3">
+                                                <p>Added Meal: <span class="font-bold text-dark-green">{item.value.name}</span></p>
+                                                <p>Timestamp: {item.timeStamp}</p>
+                                            </div>
+                                        </li>
+                                    {:else if item.type == calorie_view}
+                                        <li class="list-none list-inside">
+                                            <div class="border-gray-500 border-b-2 w-full h-fit px-8 py-3">
+                                                <p>Calorie Intake Updated: <span class="font-bold text-dark-green">{item.value.name}</span></p>
+                                                <p>Timestamp: {item.timeStamp}</p>
+                                            </div>
+                                        </li>
+                                    {/if}
+                            {/each}
+                        {/if}
                     </ul>
                 </div>
-            </div> -->
+                <div class="flex flex-row gap-4">
+                    <form method="POST" action="?/undo">
+                        <button type="submit" class="w-fit mt-6 px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
+                            Undo Last Action
+                
+                            <svg class="flex-shrink-0 w-5 h-5 transition duration-75 ml-2 text-white group-hover:text-white" viewBox="0 0 20.298 20.298" xml:space="preserve">
+                            <path d="M0.952,11.102c0-0.264,0.213-0.474,0.475-0.474h2.421c0.262,0,0.475,0.21,0.475,0.474
+                                c0,3.211,2.615,5.826,5.827,5.826s5.827-2.615,5.827-5.826c0-3.214-2.614-5.826-5.827-5.826c-0.34,0-0.68,0.028-1.016,0.089
+                                v1.647c0,0.193-0.116,0.367-0.291,0.439C8.662,7.524,8.46,7.482,8.322,7.347L3.49,4.074c-0.184-0.185-0.184-0.482,0-0.667
+                                l4.833-3.268c0.136-0.136,0.338-0.176,0.519-0.104c0.175,0.074,0.291,0.246,0.291,0.438V1.96c0.34-0.038,0.68-0.057,1.016-0.057
+                                c5.071,0,9.198,4.127,9.198,9.198c0,5.07-4.127,9.197-9.198,9.197C5.079,20.299,0.952,16.172,0.952,11.102z"/>
+                            </svg>
+                
+                        </button>
+                    </form>
+                    <button on:click={list_all}  class="w-fit mt-6 px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
+                    View All History
+                    </button>
+                    <button on:click={list_workouts}  class="w-fit mt-6 px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
+                        View Workouts
+                    </button>
+                    <button on:click={list_weights}  class="w-fit mt-6 px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
+                        View Weight History
+                    </button>
+                    <button on:click={list_calories}  class="w-fit mt-6 px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
+                        View Calorie History
+                    </button>
+                    <button on:click={list_meals}  class="w-fit mt-6 px-3 py-2 text-xs font-medium text-center inline-flex items-center text-black bg-white rounded-lg border-2 border-black border-solid  hover:bg-gray-200 active:ring-4 active:outline-none active:ring-primary-green transition ease-in-out">
+                        View Meal History
+                    </button>
+                </div>
+            </div>
         {/if}
     </div>
 </div>
