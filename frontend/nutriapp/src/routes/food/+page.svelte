@@ -3,14 +3,9 @@
     import Nav from "$lib/ui/Nav.svelte";
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
     import Modal from "./Modal.svelte";
+    // import { _changePage } from "./+page.server";
 
     let ingredientsPage = 1;
-
-    function changePage(change: number) {
-        ingredientsPage += change;
-
-        if (ingredientsPage < 1) ingredientsPage = 1;
-    }
 
     let activeButton = "";
     let mealName = "";
@@ -206,15 +201,19 @@
                             </li>
                         {/each}
                     </ul>
-                    <button
+                    <!-- <button
                         class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
-                        on:click={() => changePage(1)}>Next</button
+                        on:click={() => {
+                            ingredientsPage++;
+                        }}>Next</button
                     >
                     <button
                         class="bg-dark-green hover:bg-dark-dark-green text-white py-2 px-4 rounded"
-                        on:click={() => changePage(-1)}
+                        on:click={() => {
+                            ingredientsPage--;
+                        }}
                         disabled={ingredientsPage === 1}>Previous</button
-                    >
+                    > -->
                 </div>
                 <!-- Recipes Section -->
                 <div class="p-4 shadow-lg rounded-lg bg-white">
