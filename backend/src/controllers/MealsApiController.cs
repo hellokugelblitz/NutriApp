@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using NutriApp.Controllers.Models;
 using NutriApp;
 using NutriApp.Controllers.Middleware;
 using NutriApp.Food;
+using NutriApp.Undo;
 using System;
 
 namespace NutriApp.Controllers;
@@ -65,6 +67,10 @@ public class MealsApiController : ControllerBase
             return BadRequest(new { message = "Some recipes don't exist", badRecipes });
         
         _app.FoodControl.AddMeal(meal);
+
+        var sessionKey = HttpContext.GetSessionKey();
+        _app.UserControl.AddUndoCommand(sessionKey, new UndoCreateMeal(_app, meal));
+        
         return NoContent();
     }
     
@@ -97,7 +103,12 @@ public class MealsApiController : ControllerBase
         
         var user = HttpContext.GetUser();
 
-        return _app.FoodControl.ConsumeMeal(name, user.UserName) ?
-            NoContent() : BadRequest("You don't have enough ingredients in stock");
+        if (!_app.FoodControl.ConsumeMeal(name, user.UserName)) 
+            return BadRequest("Not enough ingredients");
+        
+        var sessionKey = HttpContext.GetSessionKey();
+        _app.UserControl.AddUndoCommand(sessionKey, new UndoConsumeMeal(_app, user, name));
+        
+        return NoContent();
     }
 }

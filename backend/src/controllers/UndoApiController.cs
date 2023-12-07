@@ -1,7 +1,10 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriApp;
+using NutriApp.Controllers.Middleware;
 
 namespace NutriApp.Controllers;
 
@@ -19,8 +22,10 @@ public class UndoApiController : ControllerBase
     
     // PUT api/Undo
     [HttpPut]
-    public async Task<IActionResult> Put()
+    public IActionResult Put()
     {
-        return Ok();
+        var sessionKey = HttpContext.GetSessionKey();
+        _app.UserControl.Undo(sessionKey);
+        return NoContent();
     }
 }
