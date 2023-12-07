@@ -80,6 +80,5 @@ public class User : ISaveObject
     {
         Name = info.Name;
         Bio = info.Bio;
-        
     }
 }
