@@ -64,6 +64,8 @@ public class Team : ISaveObject
     public Dictionary<string, string> ToDictionary()
     {
         Dictionary<string, string> data = new();
+        if(members.Count == 0) return null;
+
         data["Name"] = name;
         string str = "";
         members.ForEach((ele) => str += ele + memberSeperator);
@@ -74,8 +76,10 @@ public class Team : ISaveObject
 
     public void FromDictionary(Dictionary<string, string> data)
     {
+        if(data.Count == 0) return;
+
         name = data["Name"];
-        members = data["Members"].Split(memberSeperator).ToList();
+        if(data.ContainsKey("Members")) members = data["Members"].Split(memberSeperator).ToList();
     }
 
     public override bool Equals(object obj)

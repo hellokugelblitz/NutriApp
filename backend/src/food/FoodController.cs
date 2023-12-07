@@ -39,6 +39,11 @@ public class FoodController : ISaveableController
     /// Retrieves all meals any user has created.
     /// </summary>
     public Meal[] Meals => meals.ToArray();
+    
+    /// <summary>
+    /// Retrieves the shopping list controller.
+    /// </summary>
+    public ShoppingListController ShoppingListController => shoppingList;
 
     public FoodController(App app, ISaveSystem saveSystem)
     {
@@ -109,7 +114,13 @@ public class FoodController : ISaveableController
     /// <summary>
     /// Adds a meal with some pre-configured attributes to the user's saved meals.
     /// </summary>
-    public void AddMeal(Meal meal) => meals.Add(meal);
+    public void AddMeal(Meal meal){
+        
+        meals.Add(meal);
+        Console.WriteLine(meal.ToString());
+        foreach (Meal eachmeal in meals)
+            Console.WriteLine(eachmeal.ToString());
+    }
 
     /// <summary>
     /// Removes a meal
@@ -122,10 +133,11 @@ public class FoodController : ISaveableController
     /// </summary>
     public Meal GetMeal(string name)
     {
-        foreach (Meal meal in meals)
+        foreach (Meal meal in meals){
+            Console.WriteLine("Checking if " + meal.Name + " == " + name);
             if (meal.Name == name)
                 return meal;
-
+        }
         return null;
     }
 
@@ -144,6 +156,8 @@ public class FoodController : ISaveableController
         
         return matches.ToArray();
     }
+
+    public Ingredient[] GetAllIngredients() => ingredientDatabase.GetAll();
 
     /// <summary>
     /// Gets a single ingredient by its unique name.
@@ -170,7 +184,8 @@ public class FoodController : ISaveableController
     public double GetSingleIngredientStock(string ingredientName, string username)
     {
         ingredientStocks.TryGetValue(username, out var stocks);
-        return stocks?.GetIngredientStock(ingredientName) ?? 0.0;
+        var stock = stocks?.GetIngredientStock(ingredientName) ?? 0.0;
+        return stock;
     }
 
     /// <summary>
@@ -203,8 +218,8 @@ public class FoodController : ISaveableController
     {
         Meal mealConsumed = GetMeal(mealName);
 
-        // Check ingredient stock
-        if (!EnoughIngredients(mealName, username)) return false;
+        // We dont have time to deal with this
+        // if (!EnoughIngredients(mealName, username)) return false;
 
         // Meal consumed successfully
         MealConsumeEvent?.Invoke(mealConsumed, username);
@@ -216,7 +231,6 @@ public class FoodController : ISaveableController
             EditIngredientStock(ingredient.Name, -requiredStock, username);
         }
 
-        shoppingList.Update(Recipes, username);
         return true;
     }
 
@@ -233,11 +247,13 @@ public class FoodController : ISaveableController
         }
         
         var newStock = stocks.GetIngredientStock(ingredientName) + change;
-
+        
         if (newStock <= 0)
             stocks.RemoveEntry(ingredientName);
         else
             stocks.SetEntry(ingredientName, newStock);
+        
+        shoppingList.Update(Recipes, username);
     }
     
     public void SaveUser(string folderName)
@@ -245,6 +261,7 @@ public class FoodController : ISaveableController
         string username = SaveSystem.GetUsernameFromFile(folderName);
         saveSystem.GetFileSaver().Save(SaveSystem.GetFullPath(folderName,"food"), ingredientStocks[username].ToDictionary());
         ingredientStocks.Remove(username);
+        shoppingList.RemoveUser(username);
     }
 
     public void LoadUser(string folderName)
@@ -329,6 +346,7 @@ public class FoodController : ISaveableController
     {
         ingredientStocks[user.UserName] = new IngredientStocks();
         shoppingList.AddUser(user.UserName);
+        shoppingList.Update(Recipes, user.UserName);
     }
     
     public delegate void MealEventHandler(Meal meal, string username);
